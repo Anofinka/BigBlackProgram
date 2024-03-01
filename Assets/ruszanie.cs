@@ -1,37 +1,82 @@
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.AI;
+using static UnityEngine.GraphicsBuffer;
 
-public class PoruszaniePostacia : MonoBehaviour
+public class PlayerController : MonoBehaviour
 {
-    private NavMeshAgent agent;
+    const string IDLE = "Idle";
+    const string WALK = "Walk";
 
-    void Start()
+    CustomActions input;
+
+    NavMeshAgent agent;
+    Animator animator;
+
+    [Header("Movement")]
+    [SerializeField] ParticleSystem clickEffect;
+    [SerializeField] LayerMask clickableLayers;
+
+    float lookRotationSpeed = 8f;
+
+    void Awake()
     {
-        // Inicjalizacja komponentu NavMeshAgent
         agent = GetComponent<NavMeshAgent>();
+        animator = GetComponent<Animator>();
+
+        input = new CustomActions();
+        AssignInputs();
     }
 
-    void Update()
+    void AssignInputs()
     {
-        // Sprawdzenie czy u¿ytkownik klikn¹³ prawym przyciskiem myszy
-        if (Input.GetMouseButtonDown(0))
-        {
-            // Tworzenie promienia z pozycji myszy w œwiecie do p³aszczyzny gry
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            RaycastHit hit;
+        input.Main.Move.performed += ctx => ClickToMove();
+    }
 
-            // Sprawdzenie, czy promieñ przecina obiekt w grze
-            if (Physics.Raycast(ray, out hit))
-            {
-                // Przesuniêcie postaci do pozycji klikniêcia
-                PoruszDoPozycji(hit.point);
-            }
+    void ClickToMove()
+    {
+        RaycastHit hit;
+        if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit, 100, clickableLayers))
+        {
+            agent.destination = hit.point;
+            if (clickEffect != null)
+            { Instantiate(clickEffect, hit.point + new Vector3(0, 0.1f, 0), clickEffect.transform.rotation); }
         }
     }
 
-    void PoruszDoPozycji(Vector3 pozycja)
+    void OnEnable()
+    { input.Enable(); }
+
+    void OnDisable()
+    { input.Disable(); }
+
+    void Update()
     {
-        // Przesuniêcie postaci do zadanej pozycji przy u¿yciu NavMeshAgent
-        agent.SetDestination(pozycja);
+        FaceTarget();
+        SetAnimations();
+    }
+
+    void FaceTarget()
+    {
+        if (agent.destination == transform.position) return;
+
+        Vector3 facing = Vector3.zero;
+      
+      
+         facing = agent.destination; 
+
+        Vector3 direction = (facing - transform.position).normalized;
+        Quaternion lookRotation = Quaternion.LookRotation(new Vector3(direction.x, 0, direction.z));
+        transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * lookRotationSpeed);
+    }
+
+    void SetAnimations()
+    {
+        if (agent.velocity == Vector3.zero)
+        { animator.Play(IDLE); }
+        else
+        { animator.Play(WALK); }
     }
 }

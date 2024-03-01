@@ -1,23 +1,20 @@
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
-public class CameraFollow : MonoBehaviour
+public class CameraController : MonoBehaviour
 {
-    public Transform player;
-    public Vector3 cameraOffset = new Vector3(0f, 2f, -5f);
+    public Transform target;
+
+    public float smoothSpeed = 8f;
+    public Vector3 offset;
 
     void Update()
     {
-        if (player != null)
-        {
-            // Ustaw pozycjê kamery na pozycjê gracza plus przesuniêcie (cameraOffset)
-            transform.position = player.position + cameraOffset;
+        if (target == null) return;
 
-            // Opcjonalnie: Ustaw kamery w górê, jeœli zawsze chcesz, aby patrzy³a w dó³
-            // transform.LookAt(player.position);
-        }
-        else
-        {
-            Debug.LogWarning("Gracz nie zosta³ przypisany do kamery!");
-        }
+        Vector3 desiredPosition = new Vector3(target.position.x + offset.x, target.position.y + offset.y, target.position.z + offset.z);
+        Vector3 smoothedPosition = Vector3.Lerp(transform.position, desiredPosition, smoothSpeed * Time.deltaTime);
+        transform.position = smoothedPosition;
     }
 }
