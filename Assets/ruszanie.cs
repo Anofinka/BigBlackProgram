@@ -4,6 +4,8 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.AI;
 using static UnityEngine.GraphicsBuffer;
+using System.Net.NetworkInformation;
+using Unity.VisualScripting;
 
 public class PlayerController : MonoBehaviour
 {
@@ -11,20 +13,26 @@ public class PlayerController : MonoBehaviour
     const string WALK = "Walk";
 
     CustomActions input;
-
+    UnityEngine.Object pint;
     NavMeshAgent agent;
     Animator animator;
+    Transform particletransform;
+    //ParticleSystem particlesystem;
 
     [Header("Movement")]
-    [SerializeField] ParticleSystem clickEffect;
+    //[SerializeField] ParticleSystem clickEffect;
+    //[SerializeField] Transform transpart;
+    public Object clickEffectObj;
     [SerializeField] LayerMask clickableLayers;
-
+    Object swap;
     float lookRotationSpeed = 8f;
 
     void Awake()
     {
         agent = GetComponent<NavMeshAgent>();
         animator = GetComponent<Animator>();
+        particletransform = clickEffectObj.GetComponent<Transform>();
+        //particlesystem = clickEffectObj.GetComponent<ParticleSystem>();
 
         input = new CustomActions();
         AssignInputs();
@@ -40,9 +48,24 @@ public class PlayerController : MonoBehaviour
         RaycastHit hit;
         if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit, 100, clickableLayers))
         {
+
+
+            
+
             agent.destination = hit.point;
-            if (clickEffect != null)
-            { Instantiate(clickEffect, hit.point + new Vector3(0, 0.1f, 0), clickEffect.transform.rotation); }
+            if (clickEffectObj != null) 
+            {
+                //Instantiate(clickEffect, hit.point + new Vector3(0, 0.1f, 0), clickEffect.transform.rotation); //old
+                
+                Destroy(swap);
+                swap = Instantiate(clickEffectObj, hit.point + new Vector3(0, 0.1f, 0), particletransform.rotation);
+
+                //particletransform.position = agent.destination;   //DELETE COMMS IF U WANT
+                //transpart.transform.position = agent.destination;
+                //clickEffect.Play();
+
+                
+            }
         }
     }
 
