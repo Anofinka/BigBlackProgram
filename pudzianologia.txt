@@ -6,4 +6,9 @@
     }
  void ClickToMove()
 {
+    }
+Pudianamlod
+if (ruchanie w dupe) 
+{
+kekW
 }
