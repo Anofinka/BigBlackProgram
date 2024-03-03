@@ -1,8 +1,4 @@
-lol
-tfoj stary
-xxddddd
-huj <3
-huj 2
-ruchanie w cyce 
-sex
-huja....
+ void AssignInputs()
+    {
+        input.Main.Move.performed += ctx => ClickToMove();
+    }
