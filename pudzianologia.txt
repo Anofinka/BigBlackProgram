@@ -1,6 +1,11 @@
- void AssignInputs()
+ void AssignInputs(int huj, int cyce)
     {
         input.Main.Move.performed += ctx => ClickToMove();
+	if (huj>cyce)
+	huj++;
+    }
+ void ClickToMove()
+{
     }
 Pudianamlod
 if (ruchanie w dupe) 
