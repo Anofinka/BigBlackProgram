@@ -4,8 +4,8 @@ using UnityEngine.AI;
 
 public class PlayerController : MonoBehaviour
 {
-    const string IDLE = "Idle";
-    const string WALK = "Walk";
+    //const string IDLE = "Idle";
+    //const string WALK = "Walk";
 
     CustomActions input;
     UnityEngine.Object pint;

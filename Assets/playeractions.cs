@@ -3,8 +3,6 @@ using UnityEngine;
 public class playeractions : MonoBehaviour
 {
     Animator anim;
- 
-    [Header("Narazie nie dziala vvv")]
     [SerializeField] private CapsuleCollider meleerangecolid;
 
     private void Awake()
@@ -16,26 +14,19 @@ public class playeractions : MonoBehaviour
     {
         attackmelee();        
     }
-
     void attackmelee()
     {
         if (Input.GetKeyDown(KeyCode.E) && !anim.GetBool("walk"))
-        {
-            
-            Debug.Log("attack");
+        { //attack animation
             anim.SetTrigger("attack");
-
         }
-
-/*        if (meleerangecolid.gameObject.CompareTag("enemy"))
-        {
-            Debug.Log("gotcha");
-        }*/
     }
-
-/*    private void OnTriggerStay(Collider other)
+    private void OnTriggerStay(Collider other)
     {
-        
-    }*/
-
+        if (Input.GetKeyDown(KeyCode.E) && !anim.GetBool("walk") && other.CompareTag("enemy"))
+        {
+            Debug.Log(other.name + " dosta³a bu³e");
+            // Tu zaimplementuj funkcje do ataku melee (odejmowanie hp przeciwnikom)
+        }
+    }
 }
