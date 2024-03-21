@@ -1,4 +1,3 @@
-using System.Threading;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
@@ -27,6 +26,7 @@ public class PlayerController : MonoBehaviour
     GameObject enemyobject;
     Outline enemyoutline;
 
+    Outline lastHitOutline;
 
 
     void Awake()
@@ -34,27 +34,16 @@ public class PlayerController : MonoBehaviour
         agent = GetComponent<NavMeshAgent>();
         animator = GetComponent<Animator>();
         particletransform = clickEffectObj.GetComponent<Transform>();
-
         //particlesystem = clickEffectObj.GetComponent<ParticleSystem>();
-        
         input = new CustomActions();
         AssignInputs();
-
-
-
     }
 
     void AssignInputs()
-    {
-        input.Main.Move.performed += ctx => ClickToMove();
-    }
-
-    
+    { input.Main.Move.performed += ctx => ClickToMove(); }
 
     void ClickToMove()
     {
-        //enemyoutline.enabled = false;
-        
 
         //ClickOnMonster
         if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit, 100)
@@ -66,6 +55,13 @@ public class PlayerController : MonoBehaviour
         else if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit, 100, clickableLayers))
         {
             agent.destination = hit.point;
+
+            if (lastHitOutline != null) // jesli dodasz kolejne else to zrob z tego voida do ka¿dej
+            {
+                lastHitOutline.enabled = false;
+                lastHitOutline = null;
+            }
+
             if (clickEffectObj != null)
             {
                 //Instantiate(clickEffect, hit.point + new Vector3(0, 0.1f, 0), clickEffect.transform.rotation); //old
@@ -112,17 +108,25 @@ public class PlayerController : MonoBehaviour
         else
         { animator.Play(WALK); }
     }
-    void enemyposition(RaycastHit monster)
+    void enemyposition(RaycastHit hit)
     {
         Debug.Log("enemy spotted");
-        agent.SetDestination(monster.point);
-
-        enemyobject = monster.collider.gameObject;
+        agent.SetDestination(hit.point);
+        enemyobject = hit.collider.gameObject;
         enemyoutline = enemyobject.GetComponent<Outline>();
 
-        enemyoutline.enabled = true;
-        enemyoutline.OutlineMode = Outline.Mode.OutlineAll;
-        
+        if (enemyoutline != null)
+        {
+            if (lastHitOutline != null) lastHitOutline.enabled = false;
+            enemyoutline.enabled = true; //enemyoutline.OutlineMode = Outline.Mode.OutlineVisible;
+            lastHitOutline = enemyoutline;
+        }
+    }
+
+    void cancelOutline()
+    {
+        if (lastHitOutline != null)
+        { lastHitOutline.enabled = false; lastHitOutline = null; }
     }
 
 }
