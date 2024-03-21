@@ -1,12 +1,6 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.InputSystem;
-using UnityEngine.AI;
-using static UnityEngine.GraphicsBuffer;
-using System.Net.NetworkInformation;
 using Unity.VisualScripting;
-using UnityEngine.EventSystems;
+using UnityEngine;
+using UnityEngine.AI;
 
 public class PlayerController : MonoBehaviour
 {
@@ -28,48 +22,55 @@ public class PlayerController : MonoBehaviour
     Object swap;
     float lookRotationSpeed = 8f;
 
+    RaycastHit hit;
+    GameObject enemyobject;
+    Outline enemyoutline;
+
+    Outline lastHitOutline;
+
+
     void Awake()
     {
         agent = GetComponent<NavMeshAgent>();
         animator = GetComponent<Animator>();
         particletransform = clickEffectObj.GetComponent<Transform>();
         //particlesystem = clickEffectObj.GetComponent<ParticleSystem>();
-
         input = new CustomActions();
         AssignInputs();
     }
 
     void AssignInputs()
-    {
-        input.Main.Move.performed += ctx => ClickToMove();
-    }
+    { input.Main.Move.performed += ctx => ClickToMove(); }
 
     void ClickToMove()
     {
-        RaycastHit hit;
-        if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit, 100, clickableLayers))
+
+        //ClickOnMonster
+        if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit, 100)
+            && hit.collider.CompareTag("enemy"))
         {
+            enemyposition(hit);
+        }
+        //ClickOnTerrain
+        else if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit, 100, clickableLayers))
+        {
+            agent.destination = hit.point;
 
-
-            if (EventSystem.current.IsPointerOverGameObject())
+            if (lastHitOutline != null) // jesli dodasz kolejne else to zrob z tego voida do ka¿dej
             {
-                Debug.Log("Klikniêto na elemencie UI!");
-                return;
+                lastHitOutline.enabled = false;
+                lastHitOutline = null;
             }
 
-            agent.destination = hit.point;
-            if (clickEffectObj != null) 
+            if (clickEffectObj != null)
             {
                 //Instantiate(clickEffect, hit.point + new Vector3(0, 0.1f, 0), clickEffect.transform.rotation); //old
-                
                 Destroy(swap);
                 swap = Instantiate(clickEffectObj, hit.point + new Vector3(0, 0.1f, 0), particletransform.rotation);
 
                 //particletransform.position = agent.destination;   //DELETE COMMS IF U WANT
                 //transpart.transform.position = agent.destination;
                 //clickEffect.Play();
-
-                
             }
         }
     }
@@ -91,9 +92,9 @@ public class PlayerController : MonoBehaviour
         if (agent.destination == transform.position) return;
 
         Vector3 facing = Vector3.zero;
-      
-      
-         facing = agent.destination; 
+
+
+        facing = agent.destination;
 
         Vector3 direction = (facing - transform.position).normalized;
         Quaternion lookRotation = Quaternion.LookRotation(new Vector3(direction.x, 0, direction.z));
@@ -107,4 +108,25 @@ public class PlayerController : MonoBehaviour
         else
         { animator.Play(WALK); }
     }
+    void enemyposition(RaycastHit hit)
+    {
+        Debug.Log("enemy spotted");
+        agent.SetDestination(hit.point);
+        enemyobject = hit.collider.gameObject;
+        enemyoutline = enemyobject.GetComponent<Outline>();
+
+        if (enemyoutline != null)
+        {
+            if (lastHitOutline != null) lastHitOutline.enabled = false;
+            enemyoutline.enabled = true; //enemyoutline.OutlineMode = Outline.Mode.OutlineVisible;
+            lastHitOutline = enemyoutline;
+        }
+    }
+
+    void cancelOutline()
+    {
+        if (lastHitOutline != null)
+        { lastHitOutline.enabled = false; lastHitOutline = null; }
+    }
+
 }
