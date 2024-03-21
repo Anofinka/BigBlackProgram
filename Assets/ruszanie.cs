@@ -26,8 +26,7 @@ public class PlayerController : MonoBehaviour
     GameObject enemyobject;
     Outline enemyoutline;
 
-    Outline lastHitOutline;
-
+    Outline lastHitOutline;   
 
     void Awake()
     {
@@ -37,6 +36,7 @@ public class PlayerController : MonoBehaviour
         //particlesystem = clickEffectObj.GetComponent<ParticleSystem>();
         input = new CustomActions();
         AssignInputs();
+        
     }
 
     void AssignInputs()
@@ -57,10 +57,7 @@ public class PlayerController : MonoBehaviour
             agent.destination = hit.point;
 
             if (lastHitOutline != null) // jesli dodasz kolejne else to zrob z tego voida do ka¿dej
-            {
-                lastHitOutline.enabled = false;
-                lastHitOutline = null;
-            }
+            {lastHitOutline.enabled = false; lastHitOutline = null;}
 
             if (clickEffectObj != null)
             {
@@ -90,10 +87,7 @@ public class PlayerController : MonoBehaviour
     void FaceTarget()
     {
         if (agent.destination == transform.position) return;
-
         Vector3 facing = Vector3.zero;
-
-
         facing = agent.destination;
 
         Vector3 direction = (facing - transform.position).normalized;
@@ -103,14 +97,13 @@ public class PlayerController : MonoBehaviour
 
     void SetAnimations()
     {
-        if (agent.velocity == Vector3.zero)
-        { animator.Play(IDLE); }
+        if (agent.velocity != Vector3.zero)
+        {animator.SetBool("walk", true);}
         else
-        { animator.Play(WALK); }
+        {animator.SetBool("walk", false);}
     }
     void enemyposition(RaycastHit hit)
-    {
-        Debug.Log("enemy spotted");
+    { //func to check monster or ground
         agent.SetDestination(hit.point);
         enemyobject = hit.collider.gameObject;
         enemyoutline = enemyobject.GetComponent<Outline>();
@@ -122,11 +115,12 @@ public class PlayerController : MonoBehaviour
             lastHitOutline = enemyoutline;
         }
     }
-
-    void cancelOutline()
+/*    void cancelOutline()
     {
         if (lastHitOutline != null)
         { lastHitOutline.enabled = false; lastHitOutline = null; }
-    }
+    }*/
+
+
 
 }
