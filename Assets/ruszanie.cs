@@ -1,11 +1,12 @@
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.EventSystems;
 
 public class PlayerController : MonoBehaviour
 {
-    const string IDLE = "Idle";
-    const string WALK = "Walk";
+    //const string IDLE = "Idle";
+    //const string WALK = "Walk";
 
     CustomActions input;
     UnityEngine.Object pint;
@@ -21,8 +22,8 @@ public class PlayerController : MonoBehaviour
     [SerializeField] LayerMask clickableLayers;
     Object swap;
     float lookRotationSpeed = 8f;
-
     RaycastHit hit;
+
     GameObject enemyobject;
     Outline enemyoutline;
 
@@ -44,7 +45,7 @@ public class PlayerController : MonoBehaviour
 
     void ClickToMove()
     {
-
+        
         //ClickOnMonster
         if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit, 100)
             && hit.collider.CompareTag("enemy"))
@@ -54,6 +55,12 @@ public class PlayerController : MonoBehaviour
         //ClickOnTerrain
         else if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit, 100, clickableLayers))
         {
+            if (EventSystem.current.IsPointerOverGameObject())
+            {
+                Debug.Log("Klikniêto na elemencie UI!"); //nie usuwac lmao (jestem zajebiscie madry, przez brak return przycisk inv nie dzialal)
+                return;
+            }
+
             agent.destination = hit.point;
 
             if (lastHitOutline != null) // jesli dodasz kolejne else to zrob z tego voida do ka¿dej
