@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
+using Unity.VisualScripting;
+using System.Linq.Expressions;
 
 public class InventoryItem : MonoBehaviour, IPointerClickHandler
 {
@@ -20,10 +22,12 @@ public class InventoryItem : MonoBehaviour, IPointerClickHandler
 
     public void Initialize(Item item, InventorySlot parent)
     {
+        
         activeSlot = parent;
         activeSlot.myItem = this;
         myItem = item;
         itemIcon.sprite = item.sprite;
+           
     }
 
     public void OnPointerClick(PointerEventData eventData)
