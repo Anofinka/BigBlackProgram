@@ -2,6 +2,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 public class PlayerController : MonoBehaviour
 {
@@ -27,7 +28,9 @@ public class PlayerController : MonoBehaviour
     GameObject enemyobject;
     Outline enemyoutline;
 
-    Outline lastHitOutline;   
+    Outline lastHitOutline;
+
+    private Vector3 lastMousePosition;
 
     void Awake()
     {
@@ -37,7 +40,8 @@ public class PlayerController : MonoBehaviour
         //particlesystem = clickEffectObj.GetComponent<ParticleSystem>();
         input = new CustomActions();
         AssignInputs();
-        
+        lastHitOutline = null;
+
     }
 
     void AssignInputs()
@@ -45,7 +49,6 @@ public class PlayerController : MonoBehaviour
 
     void ClickToMove()
     {
-        
         //ClickOnMonster
         if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit, 100)
             && hit.collider.CompareTag("enemy"))
@@ -62,10 +65,10 @@ public class PlayerController : MonoBehaviour
             }
 
             agent.destination = hit.point;
-
+            /*
             if (lastHitOutline != null) // jesli dodasz kolejne else to zrob z tego voida do ka¿dej
             {lastHitOutline.enabled = false; lastHitOutline = null;}
-
+            */
             if (clickEffectObj != null)
             {
                 //Instantiate(clickEffect, hit.point + new Vector3(0, 0.1f, 0), clickEffect.transform.rotation); //old
@@ -89,6 +92,8 @@ public class PlayerController : MonoBehaviour
     {
         FaceTarget();
         SetAnimations();
+
+        mousepos();
     }
 
     void FaceTarget()
@@ -105,29 +110,54 @@ public class PlayerController : MonoBehaviour
     void SetAnimations()
     {
         if (agent.velocity != Vector3.zero)
-        {animator.SetBool("walk", true);}
+        { animator.SetBool("walk", true); }
         else
-        {animator.SetBool("walk", false);}
+        { animator.SetBool("walk", false); }
     }
     void enemyposition(RaycastHit hit)
     { //func to check monster or ground
         agent.SetDestination(hit.point);
-        enemyobject = hit.collider.gameObject;
-        enemyoutline = enemyobject.GetComponent<Outline>();
 
-        if (enemyoutline != null)
-        {
-            if (lastHitOutline != null) lastHitOutline.enabled = false;
-            enemyoutline.enabled = true; //enemyoutline.OutlineMode = Outline.Mode.OutlineVisible;
-            lastHitOutline = enemyoutline;
-        }
     }
-/*    void cancelOutline()
+    /*    void cancelOutline()
+        {
+            if (lastHitOutline != null)
+            { lastHitOutline.enabled = false; lastHitOutline = null; }
+        }*/
+
+    void mousepos()
     {
-        if (lastHitOutline != null)
+        //MonsterCheck
+        if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit, 100)
+            && hit.collider.CompareTag("enemy"))
+        {
+
+            //outline awake
+            enemyobject = hit.collider.gameObject;
+            enemyoutline = enemyobject.GetComponent<Outline>();
+            
+
+            //enemyoutline = gameObject.AddComponent<Outline>();
+            
+
+                Debug.Log(lastHitOutline);
+                //Debug.Log(enemyoutline);
+            
+
+            if (enemyoutline != null) //jesli enemy ma collider
+            {
+
+
+                //lastHitOutline.OutlineColor = Color.red;
+                //if (lastHitOutline != null) lastHitOutline.enabled = false;
+                //enemyoutline.OutlineWidth = 5f;
+                enemyoutline.enabled = true; //enemyoutline.OutlineMode = Outline.Mode.OutlineVisible;
+                lastHitOutline = enemyoutline;
+            }
+        }
+        else if (lastHitOutline != null) // jesli dodasz kolejne else to zrob z tego voida do ka¿dej
         { lastHitOutline.enabled = false; lastHitOutline = null; }
-    }*/
 
-
+    }
 
 }
