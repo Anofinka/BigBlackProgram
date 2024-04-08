@@ -128,35 +128,35 @@ public class PlayerController : MonoBehaviour
     void mousepos()
     {
         //MonsterCheck
-        if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit, 100)
-            && hit.collider.CompareTag("enemy"))
+        if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit, 100) && hit.collider.CompareTag("enemy"))
         {
-
             //outline awake
             enemyobject = hit.collider.gameObject;
             enemyoutline = enemyobject.GetComponent<Outline>();
-            
 
-            //enemyoutline = gameObject.AddComponent<Outline>();
-            
-
-                Debug.Log(lastHitOutline);
-                //Debug.Log(enemyoutline);
-            
-
-            if (enemyoutline != null) //jesli enemy ma collider
+            if (enemyoutline != null) //jesli enemy ma outline
             {
+                // Wy³¹cz poprzedni kontur, jeœli istnieje
+                if (lastHitOutline != null && lastHitOutline != enemyoutline)
+                {
+                    lastHitOutline.enabled = false;
+                }
 
-
-                //lastHitOutline.OutlineColor = Color.red;
-                //if (lastHitOutline != null) lastHitOutline.enabled = false;
-                //enemyoutline.OutlineWidth = 5f;
-                enemyoutline.enabled = true; //enemyoutline.OutlineMode = Outline.Mode.OutlineVisible;
+                // W³¹cz kontur dla bie¿¹cego obiektu
+                enemyoutline.enabled = true;
                 lastHitOutline = enemyoutline;
             }
         }
-        else if (lastHitOutline != null) // jesli dodasz kolejne else to zrob z tego voida do ka¿dej
-        { lastHitOutline.enabled = false; lastHitOutline = null; }
+        else
+        {
+            // Wy³¹cz kontur, jeœli kursor nie jest nad obiektem
+            if (lastHitOutline != null)
+            {
+                lastHitOutline.enabled = false;
+                lastHitOutline = null;
+            }
+        }
+
 
     }
 
