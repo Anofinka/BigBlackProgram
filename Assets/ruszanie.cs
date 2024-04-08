@@ -132,7 +132,7 @@ public class PlayerController : MonoBehaviour
         {
             //outline awake
             enemyobject = hit.collider.gameObject;
-            enemyoutline = enemyobject.GetComponent<Outline>();
+            enemyoutline = enemyobject.GetComponent<Outline>(); //AddComponent jak do wszystkich taki sam outline mozna
 
             if (enemyoutline != null) //jesli enemy ma outline
             {
