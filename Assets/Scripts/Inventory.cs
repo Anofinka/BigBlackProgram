@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 public class Inventory : MonoBehaviour
@@ -98,5 +99,10 @@ public class Inventory : MonoBehaviour
     {
         int random = Random.Range(0, items.Length);
         return items[random];
+    }
+    void OnMouseDown()
+    {
+        // this object was clicked - do something
+        Destroy(this.gameObject);
     }
 }
