@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
-
+using UnityEngine.UI;
 
 public class EnemyMove : MonoBehaviour
 {
@@ -22,6 +22,13 @@ public class EnemyMove : MonoBehaviour
     public float attackRange = 2.0f;
     public float runRange = 12.0f;
     public AudioSource attackSound;
+    public float enemyHealth;
+    private int currentHealth;
+    private bool isAlive = true;
+    public Image healtBar;
+    private float fillHealth;
+    public GameObject mainCam;
+    
 
 
     
@@ -35,6 +42,10 @@ public class EnemyMove : MonoBehaviour
     
     void Update()
     {
+
+        healtBar.fillAmount = SaveScript.enemyHealth;
+
+    healtBar.transform.LookAt(mainCam.transform.position);
         if(outlineOn== false)
         {
             outlineOn = true;
@@ -72,6 +83,8 @@ public class EnemyMove : MonoBehaviour
                 {
                  isAttacking= true;
                  anim.SetTrigger("attack");
+                Debug.Log("Straciles 10hp");
+
                  if(attackSound != null) 
                     {
                         attackSound.Play(); 
