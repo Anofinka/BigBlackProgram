@@ -19,6 +19,8 @@ public static bool weaponChange = false;
 public static bool carryingWeapon = false;
 public static int armor = 0;
 public static bool changeArmor = false;
+public static float playerHealth = 1f;
+public static float enemyHealth = 1f;
 // Start is called before the first frame update
 void Start()
 {

@@ -32,6 +32,12 @@ public class PlayerController : MonoBehaviour
 
     private Vector3 lastMousePosition;
 
+    public Image healthImage;
+
+    //HP 
+  
+ 
+
     void Awake()
     {
         agent = GetComponent<NavMeshAgent>();
@@ -60,13 +66,13 @@ public class PlayerController : MonoBehaviour
         {
             if (EventSystem.current.IsPointerOverGameObject())
             {
-                Debug.Log("Klikniêto na elemencie UI!"); //nie usuwac lmao (jestem zajebiscie madry, przez brak return przycisk inv nie dzialal)
+                Debug.Log("Klikniï¿½to na elemencie UI!"); //nie usuwac lmao (jestem zajebiscie madry, przez brak return przycisk inv nie dzialal)
                 return;
             }
 
             agent.destination = hit.point;
             /*
-            if (lastHitOutline != null) // jesli dodasz kolejne else to zrob z tego voida do ka¿dej
+            if (lastHitOutline != null) // jesli dodasz kolejne else to zrob z tego voida do kaï¿½dej
             {lastHitOutline.enabled = false; lastHitOutline = null;}
             */
             if (clickEffectObj != null)
@@ -92,6 +98,8 @@ public class PlayerController : MonoBehaviour
     {
         FaceTarget();
         SetAnimations();
+        healthImage.fillAmount = SaveScript.playerHealth;
+       
 
         mousepos();
     }
@@ -136,20 +144,20 @@ public class PlayerController : MonoBehaviour
 
             if (enemyoutline != null) //jesli enemy ma outline
             {
-                // Wy³¹cz poprzedni kontur, jeœli istnieje
+                // Wyï¿½ï¿½cz poprzedni kontur, jeï¿½li istnieje
                 if (lastHitOutline != null && lastHitOutline != enemyoutline)
                 {
                     lastHitOutline.enabled = false;
                 }
 
-                // W³¹cz kontur dla bie¿¹cego obiektu
+                // Wï¿½ï¿½cz kontur dla bieï¿½ï¿½cego obiektu
                 enemyoutline.enabled = true;
                 lastHitOutline = enemyoutline;
             }
         }
         else
         {
-            // Wy³¹cz kontur, jeœli kursor nie jest nad obiektem
+            // Wyï¿½ï¿½cz kontur, jeï¿½li kursor nie jest nad obiektem
             if (lastHitOutline != null)
             {
                 lastHitOutline.enabled = false;
@@ -159,5 +167,10 @@ public class PlayerController : MonoBehaviour
 
 
     }
+
+    
+
+
+
 
 }
