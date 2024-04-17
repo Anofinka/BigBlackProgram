@@ -6,7 +6,6 @@ using UnityEngine.UI;
 
 public class EnemyMove : MonoBehaviour
 {
-
     public GameObject thisEnemy;
     private bool outlineOn = false;
     private NavMeshAgent nav;
@@ -23,14 +22,11 @@ public class EnemyMove : MonoBehaviour
     public float runRange = 12.0f;
     public AudioSource attackSound;
     public float enemyHealth;
-    private int currentHealth;
+    private int maxHealth = 100; // Ustaw maksymalne zdrowie wroga
     private bool isAlive = true;
     public Image healtBar;
     private float fillHealth;
     public GameObject mainCam;
-    
-
-
     
     void Start()
     {
@@ -39,14 +35,18 @@ public class EnemyMove : MonoBehaviour
         anim = GetComponent<Animator>();
     }
 
-    
     void Update()
     {
+        // Aktualizacja fillAmount na podstawie aktualnej ilości zdrowia wroga
+        fillHealth = enemyHealth / maxHealth; // Obliczenie procentowego zdrowia
+        healtBar.fillAmount = fillHealth; // Aktualizacja fillAmount na healthBar
 
-        healtBar.fillAmount = SaveScript.enemyHealth;
+        // Ustawienie paska zdrowia w stronę kamery
+        healtBar.transform.LookAt(mainCam.transform.position);
 
-    healtBar.transform.LookAt(mainCam.transform.position);
-        if(outlineOn== false)
+        // Reszta kodu...
+        
+        if(outlineOn == false)
         {
             outlineOn = true;
             if(SaveScript.theTarget == thisEnemy)
@@ -70,7 +70,6 @@ public class EnemyMove : MonoBehaviour
         {
            anim.SetBool("running", true); 
            isAttacking = false;
-
         }
         enemyInfo = anim.GetCurrentAnimatorStateInfo(0);
         distance = Vector3.Distance(transform.position,player.transform.position);
@@ -83,12 +82,12 @@ public class EnemyMove : MonoBehaviour
                 {
                  isAttacking= true;
                  anim.SetTrigger("attack");
-                Debug.Log("Straciles 10hp");
+                 Debug.Log("Straciles 10hp");
 
                  if(attackSound != null) 
-                    {
-                        attackSound.Play(); 
-                    }
+                 {
+                     attackSound.Play(); 
+                 }
                 }
             }
             if(distance < attackRange && enemyInfo.IsTag("attack"))
@@ -98,13 +97,11 @@ public class EnemyMove : MonoBehaviour
                 isAttacking = false;
                }
             }
-             
         }
         else
         {
             nav.isStopped = false;
             nav.destination = player.transform.position;
         }
-        
     }
 }
