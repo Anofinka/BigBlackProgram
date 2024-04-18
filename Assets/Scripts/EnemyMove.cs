@@ -23,7 +23,6 @@ public class EnemyMove : MonoBehaviour
     public AudioSource attackSound;
     public float enemyHealth;
     private int maxHealth = 100; // Ustaw maksymalne zdrowie wroga
-    private bool isAlive = true;
     public Image healtBar;
     private float fillHealth;
     public GameObject mainCam;
