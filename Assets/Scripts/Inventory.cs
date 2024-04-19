@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using static UnityEditor.Progress;
 
 public class Inventory : MonoBehaviour
 {
@@ -26,25 +27,25 @@ public class Inventory : MonoBehaviour
     void Awake()
     {
         Singleton = this;
-        giveItemBtn.onClick.AddListener( delegate { SpawnInventoryItem(); } );
+        giveItemBtn.onClick.AddListener(delegate { SpawnInventoryItem(); });
     }
 
     void Update()
     {
-        if(carriedItem == null) return;
+        if (carriedItem == null) return;
 
         carriedItem.transform.position = Input.mousePosition;
     }
 
     public void SetCarriedItem(InventoryItem item)
     {
-        if(carriedItem != null)
+        if (carriedItem != null)
         {
-            if(item.activeSlot.myTag != SlotTag.None && item.activeSlot.myTag != carriedItem.myItem.itemTag) return;
+            if (item.activeSlot.myTag != SlotTag.None && item.activeSlot.myTag != carriedItem.myItem.itemTag) return;
             item.activeSlot.SetItem(carriedItem);
         }
 
-        if(item.activeSlot.myTag != SlotTag.None)
+        if (item.activeSlot.myTag != SlotTag.None)
         { EquipEquipment(item.activeSlot.myTag, null); }
 
         carriedItem = item;
@@ -57,7 +58,7 @@ public class Inventory : MonoBehaviour
         switch (tag)
         {
             case SlotTag.Head:
-                if(item == null)
+                if (item == null)
                 {
                     // Destroy item.equipmentPrefab on the Player Object;
                     Debug.Log("Unequipped helmet on " + tag);
@@ -80,13 +81,13 @@ public class Inventory : MonoBehaviour
     public void SpawnInventoryItem(Item item = null)
     {
         Item _item = item;
-        if(_item == null)
+        if (_item == null)
         { _item = PickRandomItem(); }
 
         for (int i = 0; i < inventorySlots.Length; i++)
         {
             // Check if the slot is empty
-            if(inventorySlots[i].myItem == null)
+            if (inventorySlots[i].myItem == null)
             {
                 Instantiate(itemPrefab, inventorySlots[i].transform).Initialize(_item, inventorySlots[i]);
                 break;
@@ -99,4 +100,36 @@ public class Inventory : MonoBehaviour
         int random = Random.Range(0, items.Length);
         return items[random];
     }
+    void AddItemToEquipment(InventoryItem item)
+    {
+        foreach (var slot in equipmentSlots)
+        {
+            if (slot.myTag == item.myItem.itemTag && slot.myItem == null)
+            {
+                Instantiate(itemPrefab, slot.transform).Initialize(item.myItem, slot);
+                break;
+            }
+        }
+    }
+    public void SpawnInventoryItem2(Item item)
+    {
+        //Item item = pickedUpItem.GetComponent<Item>();
+
+        if (item == null)
+        {
+            Debug.LogError("Picked up item does not contain Item component!");
+            return;
+        }
+        //Debug.LogError("Picked up item ");
+        for (int i = 0; i < inventorySlots.Length; i++)
+        {
+            // Check if the slot is empty
+            if (inventorySlots[i].myItem == null)
+            {
+                Instantiate(itemPrefab, inventorySlots[i].transform).Initialize(item, inventorySlots[i]);
+                break;
+            }
+        }
+    }
+
 }
