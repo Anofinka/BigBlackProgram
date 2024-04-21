@@ -1,10 +1,6 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 using UnityEngine.EventSystems;
-using Unity.VisualScripting;
-using System.Linq.Expressions;
+using UnityEngine.UI;
 
 public class InventoryItem : MonoBehaviour, IPointerClickHandler
 {
@@ -22,17 +18,17 @@ public class InventoryItem : MonoBehaviour, IPointerClickHandler
 
     public void Initialize(Item item, InventorySlot parent)
     {
-        
+
         activeSlot = parent;
         activeSlot.myItem = this;
         myItem = item;
         itemIcon.sprite = item.sprite;
-           
+
     }
 
     public void OnPointerClick(PointerEventData eventData)
     {
-        if(eventData.button == PointerEventData.InputButton.Left)
+        if (eventData.button == PointerEventData.InputButton.Left)
         {
             Inventory.Singleton.SetCarriedItem(this);
         }

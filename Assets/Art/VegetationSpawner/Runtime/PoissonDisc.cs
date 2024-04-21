@@ -1,7 +1,6 @@
 ﻿// Vegetation Spawner by Staggart Creations http://staggart.xyz
 // Copyright protected under Unity Asset Store EULA
 
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 

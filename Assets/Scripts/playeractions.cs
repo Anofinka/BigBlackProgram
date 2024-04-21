@@ -12,7 +12,7 @@ public class playeractions : MonoBehaviour
     }
     void Update()
     {
-        attackmelee();        
+        attackmelee();
     }
     void attackmelee()
     {

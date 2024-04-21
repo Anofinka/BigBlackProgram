@@ -2,12 +2,10 @@
 // Copyright protected under Unity Asset Store EULA
 
 using System.Collections.Generic;
+using System.Diagnostics;
 using UnityEditor;
 using UnityEngine;
-
 using static sc.terrain.vegetationspawner.SpawnerBase;
-using Random = UnityEngine.Random;
-using System.Diagnostics;
 using static sc.terrain.vegetationspawner.VegetationSpawnerEditor;
 using Debug = UnityEngine.Debug;
 
@@ -17,7 +15,7 @@ namespace sc.terrain.vegetationspawner
     public class VegetationSpawnerInspector : Editor
     {
         VegetationSpawner spawner;
-        
+
         SerializedProperty seed;
         SerializedProperty terrains;
         SerializedProperty terrainSettings;
@@ -33,24 +31,24 @@ namespace sc.terrain.vegetationspawner
         SerializedProperty waterHeight;
         private SerializedProperty autoRespawnTrees;
         private SerializedProperty visibleTerrainsOnly;
-        
+
         private Stopwatch sw;
-        
-        private static string[] detailResolutions = new []{ "128px", "256px", "512px", "1024px", "2048px" };
-        private static string[] patchSizes = new []{ "8x8","16x16","32x32", "64x64", "128x128"};
-        
+
+        private static string[] detailResolutions = new[] { "128px", "256px", "512px", "1024px", "2048px" };
+        private static string[] patchSizes = new[] { "8x8", "16x16", "32x32", "64x64", "128x128" };
+
         private bool hasMissingTerrains;
         private Terrain grassDonorTerrain;
-           
+
         int newTreeprefabPickerWindowID = -1;
         int prefabPickerWindowID = -1;
-        
+
         private void OnEnable()
         {
             spawner = (VegetationSpawner)target;
 
-            if(spawner.terrains != null) hasMissingTerrains = SpawnerBase.HasMissingTerrain(spawner.terrains);
-            
+            if (spawner.terrains != null) hasMissingTerrains = SpawnerBase.HasMissingTerrain(spawner.terrains);
+
             seed = serializedObject.FindProperty("seed");
             terrains = serializedObject.FindProperty("terrains");
             detailResolutionIndex = serializedObject.FindProperty("detailResolutionIndex");
@@ -67,9 +65,9 @@ namespace sc.terrain.vegetationspawner
             waterHeight = serializedObject.FindProperty("waterHeight");
             autoRespawnTrees = serializedObject.FindProperty("autoRespawnTrees");
             visibleTerrainsOnly = serializedObject.FindProperty("visibleTerrainsOnly");
-            
+
             VegetationSpawner.VisualizeCells = VisualizeCellsPersistent;
-            
+
             //Clamp selection, in case a spawner is selected with less items than the last
             if (selectedTreeID > spawner.treeTypes.Count) selectedTreeID = 0;
             if (selectedGrassID > spawner.grassPrefabs.Count) selectedGrassID = 0;
@@ -80,11 +78,11 @@ namespace sc.terrain.vegetationspawner
         private void OnDisable()
         {
             Undo.undoRedoPerformed -= OnUndoRedo;
-            
+
             VegetationSpawner.VisualizeCells = false;
             VegetationSpawner.VisualizeWaterlevel = false;
         }
-        
+
         private int selectedLayerID;
         private Vector2 treeScrollPos;
         private Vector2 grassScrollPos;
@@ -123,7 +121,7 @@ namespace sc.terrain.vegetationspawner
             set { SessionState.SetBool("VegetationSpawnerInspector_ShowLog", value); }
         }
         private Vector2 logScrollPos;
-        
+
         public override void OnInspectorGUI()
         {
             EditorGUILayout.BeginHorizontal();
@@ -138,8 +136,8 @@ namespace sc.terrain.vegetationspawner
             EditorGUILayout.EndHorizontal();
 
             GUILayout.Space(5f);
-            
-            if(hasMissingTerrains) EditorGUILayout.HelpBox("One or more terrains are missing", MessageType.Error);
+
+            if (hasMissingTerrains) EditorGUILayout.HelpBox("One or more terrains are missing", MessageType.Error);
 
             if (spawner.terrains.Count > 0)
             {
@@ -151,11 +149,11 @@ namespace sc.terrain.vegetationspawner
                 }, GUILayout.MaxHeight(30f));
 
                 EditorGUILayout.Space();
-                
+
                 if (spawner.terrainSettings.drawTreesAndFoliage == false)
                 {
                     EditorGUILayout.HelpBox("Vegetation rendering is disabled in the Terrain tab!", MessageType.Error);
-                
+
                     GUILayout.Space(-32);
                     using (new EditorGUILayout.HorizontalScope())
                     {
@@ -178,7 +176,7 @@ namespace sc.terrain.vegetationspawner
 
                 serializedObject.Update();
                 EditorGUI.BeginChangeCheck();
-                
+
                 switch (TabID)
                 {
                     case 0:
@@ -197,14 +195,14 @@ namespace sc.terrain.vegetationspawner
 
                 VegetationSpawner.VisualizeCells = TabID == 3;
                 VegetationSpawner.VisualizeWaterlevel = TabID == 3;
-                
+
                 EditorGUILayout.Space();
             }
             else
             {
                 EditorGUILayout.HelpBox("Assign terrains to spawn on", MessageType.Info);
                 DrawTerrain();
-                
+
                 EditorGUILayout.Space();
                 EditorGUILayout.HelpBox("Vegetation already placed on the terrain will be cleared!", MessageType.Warning);
                 return;
@@ -232,7 +230,7 @@ namespace sc.terrain.vegetationspawner
                     EditorGUILayout.EndScrollView();
                 }
             }
-            
+
             EditorGUILayout.LabelField("- Staggart Creations -", EditorStyles.centeredGreyMiniLabel);
         }
 
@@ -259,7 +257,7 @@ namespace sc.terrain.vegetationspawner
 
                     //Remove all null items
                     spawner.terrains.RemoveAll(x => x == null);
-                    
+
                     for (int i = 0; i < activeTerrains.Length; i++)
                     {
                         if (spawner.terrains.Contains(activeTerrains[i]) == false) spawner.terrains.Add(activeTerrains[i]);
@@ -268,7 +266,7 @@ namespace sc.terrain.vegetationspawner
                     spawner.RecalculateTerrainMinMax();
 
                     hasMissingTerrains = false;
-                    
+
                     spawner.RebuildCollisionCache();
                     EditorUtility.SetDirty(target);
                 }
@@ -283,7 +281,7 @@ namespace sc.terrain.vegetationspawner
             }
 
             if (spawner.terrains.Count == 0) return;
-            
+
             EditorGUILayout.Space();
 
             using (new EditorGUILayout.HorizontalScope())
@@ -294,15 +292,15 @@ namespace sc.terrain.vegetationspawner
                     spawner.RecalculateTerrainMinMax();
                 }
             }
-            
+
             EditorGUILayout.Space();
 
             EditorGUILayout.LabelField("Settings", EditorStyles.boldLabel);
             terrainSettings.isExpanded = true;
 
             EditorGUILayout.PropertyField(terrainSettings, true);
-            
-            if(Application.isPlaying == false) EditorGUILayout.HelpBox("Grass wind only takes effect in Play mode", MessageType.None);
+
+            if (Application.isPlaying == false) EditorGUILayout.HelpBox("Grass wind only takes effect in Play mode", MessageType.None);
 
             if (EditorGUI.EndChangeCheck())
             {
@@ -316,20 +314,20 @@ namespace sc.terrain.vegetationspawner
         private TreeType GetTreeType(int index)
         {
             index = Mathf.Clamp(index, 0, spawner.treeTypes.Count);
-            
+
             if (spawner.treeTypes == null || spawner.treeTypes.Count == 0) return null;
-            
+
             return spawner.treeTypes[index];
         }
 
         private void DrawTrees()
         {
             EditorGUILayout.LabelField("Species", EditorStyles.boldLabel);
-            
+
             selectedTreeID = Mathf.Min(selectedTreeID, spawner.treeTypes.Count);
-            
+
             PrefabPickingActions();
-            
+
             //Tree item view
             treeScrollPos = EditorGUILayout.BeginScrollView(treeScrollPos, EditorStyles.helpBox, GUILayout.MaxHeight(thumbSize + 20f));
             using (new EditorGUILayout.HorizontalScope())
@@ -367,13 +365,13 @@ namespace sc.terrain.vegetationspawner
                 //Tree type view options
                 using (new EditorGUILayout.HorizontalScope())
                 {
-                    if(tree != null) EditorGUILayout.LabelField("Instances: " + spawner.treeTypes[selectedTreeID].instanceCount.ToString("##,#"), EditorStyles.miniLabel);
-                    
+                    if (tree != null) EditorGUILayout.LabelField("Instances: " + spawner.treeTypes[selectedTreeID].instanceCount.ToString("##,#"), EditorStyles.miniLabel);
+
                     GUILayout.FlexibleSpace();
 
                     if (GUILayout.Button(new GUIContent("Add", EditorGUIUtility.IconContent(iconPrefix + "Toolbar Plus").image, "Add new item"), EditorStyles.miniButtonLeft, GUILayout.Width(60f)))
                     {
-                        newTreeprefabPickerWindowID = EditorGUIUtility.GetControlID(FocusType.Passive) + 200; 
+                        newTreeprefabPickerWindowID = EditorGUIUtility.GetControlID(FocusType.Passive) + 200;
                         EditorGUIUtility.ShowObjectPicker<GameObject>(null, false, "", newTreeprefabPickerWindowID);
                     }
                     if (spawner.treeTypes.Count > 0)
@@ -399,13 +397,13 @@ namespace sc.terrain.vegetationspawner
                     {
                         spawner.SpawnTree(tree);
                     }
-                    
+
                     EditorGUI.BeginDisabledGroup(!tree.enabled);
-                    
+
                     tree.name = EditorGUILayout.TextField("Name", tree.name);
-                    
+
                     EditorGUILayout.Space();
-                    
+
                     EditorGUILayout.LabelField("Prefabs", EditorStyles.boldLabel);
                     if (tree.prefabs.Count == 0) EditorGUILayout.HelpBox("Add a tree prefab first", MessageType.Info);
 
@@ -424,14 +422,14 @@ namespace sc.terrain.vegetationspawner
                                 {
                                     //Update from 1.0.4 to 1.0.5
                                     if (tree.name == "VegetationItem") tree.name = item.prefab.name;
-                                        
+
                                     if (EditorUtility.IsPersistent(item.prefab) == false) EditorGUILayout.HelpBox("Prefab cannot be a scene instance", MessageType.Error);
                                 }
                                 item.probability = EditorGUILayout.Slider("Spawn chance %", item.probability, 0f, 100f);
                                 if (EditorGUI.EndChangeCheck())
                                 {
                                     spawner.UpdateTreeItem(tree);
-                                    if(autoRespawnTrees.boolValue) spawner.SpawnTree(tree);
+                                    if (autoRespawnTrees.boolValue) spawner.SpawnTree(tree);
                                     EditorUtility.SetDirty(target);
                                 }
                             }
@@ -446,8 +444,8 @@ namespace sc.terrain.vegetationspawner
                         if (item.prefab)
                         {
                             LODGroup lodGroup = item.prefab.GetComponent<LODGroup>();
-                            
-                            if(!lodGroup) EditorGUILayout.HelpBox("Prefab does not have a LOD Group component, random rotation/scale and sinking will not work", MessageType.Warning);
+
+                            if (!lodGroup) EditorGUILayout.HelpBox("Prefab does not have a LOD Group component, random rotation/scale and sinking will not work", MessageType.Warning);
                         }
                     }
 
@@ -457,7 +455,7 @@ namespace sc.terrain.vegetationspawner
 
                         if (GUILayout.Button(new GUIContent("Add", EditorGUIUtility.IconContent(iconPrefix + "Toolbar Plus").image, "Add new item"), EditorStyles.miniButton, GUILayout.Width(60f)))
                         {
-                            prefabPickerWindowID = EditorGUIUtility.GetControlID(FocusType.Passive) + 201; 
+                            prefabPickerWindowID = EditorGUIUtility.GetControlID(FocusType.Passive) + 201;
                             EditorGUIUtility.ShowObjectPicker<GameObject>(null, false, "", prefabPickerWindowID);
                         }
                     }
@@ -480,32 +478,32 @@ namespace sc.terrain.vegetationspawner
                             EditorGUILayout.Space();
                             tree.collisionCheck = EditorGUILayout.Toggle(new GUIContent("Collision check", "Avoid spawning inside colliders, see the settings tab for configuration details"), tree.collisionCheck);
                             tree.rejectUnderwater = EditorGUILayout.Toggle(new GUIContent("Remove underwater", "The water height level can be set in the settings tab"), tree.rejectUnderwater);
-                            
+
                             EditorGUILayout.Space();
 
                             VegetationSpawnerEditor.DrawRangeSlider(new GUIContent("Height range", "Min/max height this item can spawn at"), ref tree.heightRange, spawner.terrainMinMaxHeight.x, spawner.terrainMinMaxHeight.y);
                             VegetationSpawnerEditor.DrawRangeSlider(new GUIContent("Slope range", "Min/max slope (0-90 degrees) this item can spawn at"), ref tree.slopeRange, 0f, 90f);
                             VegetationSpawnerEditor.DrawRangeSlider(new GUIContent("Curvature range", "0=Concave (bowl), 0.5=flat, 1=convex (edge)"), ref tree.curvatureRange, 0f, 1f);
-                           
+
                             LayerMaskSettings(tree.layerMasks);
-                            
+
                             if (EditorGUI.EndChangeCheck())
                             {
                                 if (!autoRespawnTrees.boolValue) return;
-                                
+
                                 Stopwatch sw = new Stopwatch();
                                 sw.Restart();
-                                 spawner.SpawnTree(tree);
+                                spawner.SpawnTree(tree);
                                 sw.Stop();
 
                                 VegetationSpawnerEditor.Log.Add("Respawning tree: " + sw.Elapsed.Milliseconds + "ms...");
 
                                 EditorUtility.SetDirty(target);
                             }
-                            
+
                             if (autoRespawnTrees.boolValue == false)
                             {
-                                if(autoRespawnTrees.boolValue == false) EditorGUILayout.HelpBox("Auto respawning is disabled for trees in the settings tab", MessageType.None);
+                                if (autoRespawnTrees.boolValue == false) EditorGUILayout.HelpBox("Auto respawning is disabled for trees in the settings tab", MessageType.None);
 
                                 if (GUILayout.Button(
                                     new GUIContent(" Respawn", EditorGUIUtility.IconContent(iconPrefix + "Refresh").image),
@@ -522,7 +520,7 @@ namespace sc.terrain.vegetationspawner
 
                         }
                     }
-                    
+
                     EditorGUI.EndDisabledGroup();
                 }
                 else
@@ -554,12 +552,12 @@ namespace sc.terrain.vegetationspawner
                 spawner.treeTypes.Add(tree);
                 //Auto select new
                 selectedTreeID = spawner.treeTypes.Count - 1;
-                
-                if(spawner.autoRespawnTrees) spawner.SpawnTree(tree);
-                
+
+                if (spawner.autoRespawnTrees) spawner.SpawnTree(tree);
+
                 EditorUtility.SetDirty(target);
             }
-            
+
             //Specifies prefabs
             if (Event.current.commandName == "ObjectSelectorClosed" &&
                 EditorGUIUtility.GetObjectPickerControlID() == prefabPickerWindowID)
@@ -575,11 +573,11 @@ namespace sc.terrain.vegetationspawner
                 treePrefab.probability = 100;
                 treePrefab.prefab = pickedPrefab;
                 tree.prefabs.Add(treePrefab);
-                
+
                 spawner.RefreshTreePrefabs();
-                
-                if(spawner.autoRespawnTrees) spawner.SpawnTree(tree);
-                
+
+                if (spawner.autoRespawnTrees) spawner.SpawnTree(tree);
+
                 EditorUtility.SetDirty(target);
             }
         }
@@ -587,16 +585,16 @@ namespace sc.terrain.vegetationspawner
         private GrassPrefab GetGrassPrefab(int index)
         {
             index = Mathf.Clamp(index, 0, spawner.grassPrefabs.Count);
-            
+
             if (spawner.grassPrefabs == null || spawner.grassPrefabs.Count == 0) return null;
-            
+
             return spawner.grassPrefabs[index];
         }
 
         private void DrawGrass()
         {
             EditorGUILayout.LabelField("Items", EditorStyles.boldLabel);
-            
+
             if (spawner.grassPrefabs.Count == 0)
             {
                 using (new EditorGUILayout.VerticalScope(EditorStyles.textArea))
@@ -609,7 +607,7 @@ namespace sc.terrain.vegetationspawner
                     {
                         if (GUILayout.Button("Fetch and convert grass items"))
                         {
-                            if (EditorUtility.DisplayDialog("Vegetation Spawner", 
+                            if (EditorUtility.DisplayDialog("Vegetation Spawner",
                                 "This action will add grass items to the spawner, based on the grass that's already present on the terrain object." +
                                         "\n\nThe spawn rules for these newly created items will be using default values. This is merely a starting point"
                                 , "Continue", "Cancel"))
@@ -618,19 +616,19 @@ namespace sc.terrain.vegetationspawner
 
                                 if (EditorUtility.DisplayDialog("Vegetation Spawner", "Grass items successfully added from the assigned terrain.\n\nNote that you'll have to click the Respawn button on each grass item after changing its spawning rules, do so now.", "Ok"))
                                 {
-                                    
+
                                 }
                             }
                         }
                     }
                 }
-                
+
                 EditorGUILayout.Space();
             }
-            
+
             //Edge case: Clamp in case there's a switch to scene with less items
             selectedGrassID = Mathf.Min(selectedGrassID, spawner.grassPrefabs.Count - 1);
-            
+
             grassScrollPos = EditorGUILayout.BeginScrollView(grassScrollPos, EditorStyles.helpBox, GUILayout.MaxHeight(thumbSize + 10f), GUILayout.MinHeight(thumbSize + 10f));
             using (new EditorGUILayout.HorizontalScope())
             {
@@ -641,17 +639,17 @@ namespace sc.terrain.vegetationspawner
                     Texture2D thumb = spawner.grassPrefabs[i].billboard;
                     if (spawner.grassPrefabs[i].type == SpawnerBase.GrassType.Mesh) thumb = AssetPreview.GetAssetPreview(spawner.grassPrefabs[i].prefab);
                     if (thumb == null) thumb = EditorGUIUtility.IconContent("DefaultAsset Icon").image as Texture2D;
-                    
+
                     if (GUILayout.Button(new GUIContent(spawner.grassPrefabs[i].name, thumb), (selectedGrassID == i) ? VegetationSpawnerEditor.PreviewTexSelected : VegetationSpawnerEditor.PreviewTex, GUILayout.Height(thumbSize), GUILayout.Width(thumbSize)))
                     {
-                       selectedGrassID = i;
+                        selectedGrassID = i;
                     }
                 }
             }
             EditorGUILayout.EndScrollView();
 
             VegetationSpawner.GrassPrefab grass = GetGrassPrefab(selectedGrassID);
-                
+
             Undo.RecordObject(spawner, "Modified grass");
 
             serializedObject.Update();
@@ -661,11 +659,11 @@ namespace sc.terrain.vegetationspawner
                 {
                     if (grass != null) EditorGUILayout.LabelField("Instances: " + grass.instanceCount.ToString("##,#"), EditorStyles.miniLabel);
                     GUILayout.FlexibleSpace();
-                    
+
                     if (GUILayout.Button(new GUIContent("Add", EditorGUIUtility.IconContent(iconPrefix + "Toolbar Plus").image, "Add new item"), EditorStyles.miniButtonLeft, GUILayout.Width(60f)))
                     {
                         spawner.AddNewGrassItem();
-                        
+
                         selectedGrassID = spawner.grassPrefabs.Count - 1;
                     }
 
@@ -719,18 +717,18 @@ namespace sc.terrain.vegetationspawner
                                 if (lodGroup) EditorGUILayout.HelpBox("This prefab uses a LOD Group component. Unity's vegetation system does not support this for grass.\n\nReduce the prefab to a single Mesh Renderer object.", MessageType.Error);
                             }
 
-                            #if UNITY_2021_2_OR_NEWER
+#if UNITY_2021_2_OR_NEWER
                             grass.gpuInstancing = EditorGUILayout.Toggle(new GUIContent("Use GPU Instancing"), grass.gpuInstancing);
                             if (!grass.gpuInstancing)
                             {
                                 EditorGUILayout.HelpBox("Disabled: This object will be rendered using the legacy vertex-lit shader", MessageType.None);
                             }
-                            #endif
+#endif
 
                             //Update from 1.0.4 to 1.0.5
                             if (grass.name == "VegetationItem" && grass.prefab) grass.name = grass.prefab.name;
                         }
-                        
+
                         if (grass.type == SpawnerBase.GrassType.Texture)
                         {
                             using (new EditorGUILayout.HorizontalScope())
@@ -744,9 +742,9 @@ namespace sc.terrain.vegetationspawner
                             grass.renderAsBillboard = EditorGUILayout.Toggle(new GUIContent("Camera facing billboard", "When enabled, orients the grass geometry towards the camera"), grass.renderAsBillboard);
                         }
 
-                        #if UNITY_2022_2_OR_NEWER
+#if UNITY_2022_2_OR_NEWER
                         grass.useDensityScaling = EditorGUILayout.Toggle(new GUIContent("Affected by Density Scale"), grass.useDensityScaling);
-                        #endif
+#endif
 
                         EditorGUILayout.Space();
 
@@ -765,22 +763,22 @@ namespace sc.terrain.vegetationspawner
                         DrawRangeSlider(new GUIContent("Width", "Min/max width of the mesh"), ref grass.minMaxWidth, 0f, 3f);
                         DrawRangeSlider(new GUIContent("Length", "Min/max length of the mesh"), ref grass.minMaxHeight, 0f, 3f);
 
-                        #if UNITY_2021_2_OR_NEWER
+#if UNITY_2021_2_OR_NEWER
                         grass.holeEdgePadding = EditorGUILayout.Slider("Hole edge padding (%)", grass.holeEdgePadding, 0f, 100f);
-                        #endif
+#endif
 
                         EditorGUILayout.Space();
-                        
-                        #if UNITY_2022_2_OR_NEWER
+
+#if UNITY_2022_2_OR_NEWER
                         grass.alignToGround = EditorGUILayout.Slider("Align to ground (%)", grass.alignToGround, 0f, 100f);
                         grass.positionJitter = EditorGUILayout.Slider("Position jitter (%)", grass.positionJitter, 0f, 100f);
-                        
+
                         if (QualitySettings.useLegacyDetailDistribution)
                         {
                             EditorGUILayout.HelpBox("The \"Use Legacy Detail Distribution\" option is enabled under Quality Settings. This parameter will have no effect.", MessageType.None);
                         }
                         EditorGUILayout.Space();
-                        #endif
+#endif
 
                         EditorGUILayout.LabelField("Spawning rules", EditorStyles.boldLabel);
 
@@ -788,10 +786,10 @@ namespace sc.terrain.vegetationspawner
 
                         grass.probability = EditorGUILayout.Slider("Spawn chance %", grass.probability, 0f, 100f);
 
-                        #if UNITY_2022_2_OR_NEWER
+#if UNITY_2022_2_OR_NEWER
                         grass.density = EditorGUILayout.Slider("Density", grass.density, 0f, 5f);
-                        #endif
-                        
+#endif
+
                         EditorGUILayout.Space();
 
                         grass.collisionCheck = EditorGUILayout.Toggle(new GUIContent("Collision check", "Take into account the collision cache to avoid spawning inside colliders (see Settings tab)"), grass.collisionCheck);
@@ -814,10 +812,10 @@ namespace sc.terrain.vegetationspawner
                         }
                     }
                     EditorGUI.EndDisabledGroup();
-                    
+
                     EditorGUILayout.Space();
 
-  
+
                     if (GUILayout.Button(new GUIContent(" Respawn", EditorGUIUtility.IconContent(iconPrefix + "Refresh").image), GUILayout.MaxHeight(30f)))
                     {
                         Stopwatch sw = new Stopwatch();
@@ -826,10 +824,10 @@ namespace sc.terrain.vegetationspawner
                         spawner.SpawnGrass(grass);
 
                         sw.Stop();
-                        
+
                         VegetationSpawnerEditor.Log.Add("Respawned " + grass.name + " in " + sw.Elapsed.Seconds + " seconds...");
                     }
-                    
+
                 }
                 else
                 {
@@ -849,7 +847,7 @@ namespace sc.terrain.vegetationspawner
                         "Controls the resolution of the internal detail map. A 512px resolution on a 1024x1024 terrain means grass can be spawned a minimum of 0.5 units apart" +
                         "\n\nHigher resolutions will increase the spawning time, but also allows for denser grass"),
                     detailResolutionIndex.intValue, detailResolutions, GUILayout.Width(EditorGUIUtility.labelWidth + 80f));
-                
+
                 grassPatchSizeIndex.intValue = EditorGUILayout.Popup(new GUIContent("Grass patch size",
                         "Grass meshes are divided up into a grid, and meshes are combined (batching).\n\n" +
                         "A higher size means fewer draw calls, but the terrain will thrown an warning if a patch's vertex count exceeds 65K vertices, in which case the size should be lowered"),
@@ -859,7 +857,7 @@ namespace sc.terrain.vegetationspawner
                 {
                     detailResolution.intValue = int.Parse(detailResolutions[detailResolutionIndex.intValue].Substring(0, detailResolutions[detailResolutionIndex.intValue].IndexOf("px")));
                     grassPatchSize.intValue = int.Parse(patchSizes[grassPatchSizeIndex.intValue].Substring(0, patchSizes[grassPatchSizeIndex.intValue].IndexOf("x")));
-                    
+
                     serializedObject.ApplyModifiedProperties();
 
                     spawner.SetDetailResolution();
@@ -880,29 +878,29 @@ namespace sc.terrain.vegetationspawner
         private void DrawSettings()
         {
             EditorGUILayout.LabelField("Spawning", EditorStyles.boldLabel);
-            
+
             EditorGUI.BeginChangeCheck();
-            
+
             DrawSeedField(ref spawner.seed);
-            
+
             EditorGUILayout.PropertyField(autoRespawnTrees);
             EditorGUILayout.PropertyField(visibleTerrainsOnly);
-            
+
             EditorGUILayout.PropertyField(waterHeight);
-            
+
             if (EditorGUI.EndChangeCheck())
             {
                 EditorUtility.SetDirty(target);
 
                 serializedObject.ApplyModifiedProperties();
             }
-            
+
             EditorGUILayout.Space();
 
             using (new EditorGUILayout.HorizontalScope())
             {
                 //EditorGUILayout.PrefixLabel(" ");
-                
+
                 if (GUILayout.Button(new GUIContent(" Respawn everything",
                     EditorGUIUtility.IconContent(iconPrefix + "Refresh").image)))
                 {
@@ -919,7 +917,7 @@ namespace sc.terrain.vegetationspawner
                 {
                     Stopwatch sw = new Stopwatch();
                     sw.Restart();
-                    
+
                     spawner.Respawn(true, false);
 
                     sw.Stop();
@@ -931,7 +929,7 @@ namespace sc.terrain.vegetationspawner
                 {
                     Stopwatch sw = new Stopwatch();
                     sw.Restart();
-                    
+
                     spawner.Respawn(false, true);
 
                     sw.Stop();
@@ -939,21 +937,21 @@ namespace sc.terrain.vegetationspawner
                     VegetationSpawnerEditor.Log.Add("Complete tree respawn: " + sw.Elapsed.Seconds + " seconds...");
                 }
             }
-            
+
             EditorGUILayout.Space();
 
             serializedObject.Update();
             EditorGUI.BeginChangeCheck();
-            
+
             EditorGUILayout.LabelField("Quality/performance", EditorStyles.boldLabel);
             DrawDetailResolutionField();
 
             EditorGUILayout.Space();
-            
+
             EditorGUILayout.LabelField("Collision cache", EditorStyles.boldLabel);
 
             spawner.RebuildCollisionCacheIfNeeded();
-            
+
             VisualizeCellsPersistent = VegetationSpawner.VisualizeCells;
 
             EditorGUILayout.PropertyField(cellSize);
@@ -975,7 +973,7 @@ namespace sc.terrain.vegetationspawner
                     VegetationSpawnerEditor.Log.Add("Rebuilding collision cache: " + sw.Elapsed.Milliseconds + "ms...");
                 }
             }
-            
+
             if (EditorGUI.EndChangeCheck())
             {
                 EditorUtility.SetDirty(target);
@@ -986,8 +984,8 @@ namespace sc.terrain.vegetationspawner
 
         private Texture2D GetLayerMainTex(int index)
         {
-            if (spawner.terrains == null || spawner.terrains.Count == 0 || !spawner.terrains[0]) {return EditorGUIUtility.IconContent("DefaultAsset Icon").image as Texture2D;}
-            
+            if (spawner.terrains == null || spawner.terrains.Count == 0 || !spawner.terrains[0]) { return EditorGUIUtility.IconContent("DefaultAsset Icon").image as Texture2D; }
+
             TerrainLayer layer = null;
 
             if (index < spawner.terrains[0].terrainData.terrainLayers.Length) layer = spawner.terrains[0].terrainData.terrainLayers[index];
@@ -1002,9 +1000,9 @@ namespace sc.terrain.vegetationspawner
         {
             EditorGUILayout.Space();
             EditorGUILayout.LabelField(new GUIContent("Layer masks", "Masks can be used to only spawn items on specific terrain layers"), EditorStyles.boldLabel);
-            
+
             selectedLayerID = Mathf.Clamp(selectedLayerID, 0, masks.Count - 1);
-            
+
             terrainLayerScrollPos = EditorGUILayout.BeginScrollView(terrainLayerScrollPos, EditorStyles.textArea, GUILayout.MaxHeight(masks.Count > 0 ? texThumbSize + 17f : 17f));
             {
                 using (new EditorGUILayout.HorizontalScope())
@@ -1023,9 +1021,9 @@ namespace sc.terrain.vegetationspawner
                 }
             }
             EditorGUILayout.EndScrollView();
-            
+
             SpawnerBase.TerrainLayerMask selected = masks.Count > 0 && selectedLayerID >= 0 ? masks[selectedLayerID] : null;
-                
+
             using (new EditorGUILayout.HorizontalScope())
             {
                 GUILayout.FlexibleSpace();
@@ -1052,11 +1050,11 @@ namespace sc.terrain.vegetationspawner
 
                 selected.threshold = EditorGUILayout.Slider(new GUIContent("Minimum strength", "The minimum strength the material must have underneath the item, before it will spawn"), selected.threshold, 0f, 1f);
             }
-            
+
         }
 
         private List<SpawnerBase.TerrainLayerMask> contextMasks;
-        
+
         private void LayerDropDown(List<SpawnerBase.TerrainLayerMask> masks)
         {
             if (spawner.terrains.Count == 0)
@@ -1070,8 +1068,8 @@ namespace sc.terrain.vegetationspawner
             GenericMenu menu = new GenericMenu();
             for (int i = 0; i < spawner.terrains[0].terrainData.terrainLayers.Length; i++)
             {
-                if(spawner.terrains[0].terrainData.terrainLayers[i] == null) continue;
-                
+                if (spawner.terrains[0].terrainData.terrainLayers[i] == null) continue;
+
                 //Check if layer already added
                 if (masks.Find(x => x.layerID == i) == null)
                     menu.AddItem(new GUIContent(spawner.terrains[0].terrainData.terrainLayers[i].name), false, AddTerrainLayerMask, i);
@@ -1103,16 +1101,16 @@ namespace sc.terrain.vegetationspawner
                 {
                     //A tad slower, but a tree prefab was possibly removed, then undone
                     spawner.RefreshTreePrefabs();
-                    
+
                     spawner.UpdateTreeItem(spawner.treeTypes[selectedLayerID]);
-                    
-                    if(autoRespawnTrees.boolValue) spawner.SpawnTree(spawner.treeTypes[selectedTreeID]);
+
+                    if (autoRespawnTrees.boolValue) spawner.SpawnTree(spawner.treeTypes[selectedTreeID]);
                 }
             }
             //Grass
             if (TabID == 2)
             {
-                if(selectedGrassID < spawner.grassPrefabs.Count) spawner.UpdateProperties(spawner.grassPrefabs[selectedGrassID]);
+                if (selectedGrassID < spawner.grassPrefabs.Count) spawner.UpdateProperties(spawner.grassPrefabs[selectedGrassID]);
             }
         }
     }

@@ -14,7 +14,6 @@ public class PlayerController : MonoBehaviour
     public GameObject clickEffectObj; // Zmiana typu na GameObject
     [SerializeField] LayerMask clickableLayers;
     GameObject clickEffectInstance; // Zmienna do przechowywania instancji efektu kliknięcia
-    Object swap;
     float lookRotationSpeed = 8f;
     RaycastHit hit;
 
@@ -41,9 +40,7 @@ public class PlayerController : MonoBehaviour
     }
 
     void AssignInputs()
-    {
-        input.Main.Move.performed += ctx => ClickToMove();
-    }
+    { input.Main.Move.performed += ctx => ClickToMove(); }
 
     void ClickToMove()
     {
@@ -70,14 +67,10 @@ public class PlayerController : MonoBehaviour
     }
 
     void OnEnable()
-    {
-        input.Enable();
-    }
+    { input.Enable(); }
 
     void OnDisable()
-    {
-        input.Disable();
-    }
+    { input.Disable(); }
 
     void Update()
     {
@@ -92,27 +85,21 @@ public class PlayerController : MonoBehaviour
     {
         if (agent.destination == transform.position) return;
 
-    Vector3 direction = (agent.destination - transform.position).normalized;
-    Quaternion lookRotation = Quaternion.LookRotation(new Vector3(direction.x, 0, direction.z));
-    transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * lookRotationSpeed);
+        Vector3 direction = (agent.destination - transform.position).normalized;
+        Quaternion lookRotation = Quaternion.LookRotation(new Vector3(direction.x, 0, direction.z));
+        transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * lookRotationSpeed);
     }
 
     void SetAnimations()
     {
         if (agent.velocity != Vector3.zero)
-        {
             animator.SetBool("walk", true);
-        }
         else
-        {
             animator.SetBool("walk", false);
-        }
     }
 
     void enemyposition(RaycastHit hit)
-    {
-        agent.SetDestination(hit.point);
-    }
+    { agent.SetDestination(hit.point); }
 
     void AttackEnemy()
     {
@@ -128,11 +115,11 @@ public class PlayerController : MonoBehaviour
                     {
                         Debug.Log("Atakuję przeciwnika!");
                         // Tutaj możesz dodać kod ataku przeciwnika, np. odejmowanie punktów życia itp.
-                       EnemyMove enemyMove = lastHitOutline.gameObject.GetComponent<EnemyMove>();
-                   if (enemyMove != null) // Upewnij się, że komponent istnieje
-                  {
-                       enemyMove.enemyHealth -= damage;
-                  }
+                        EnemyMove enemyMove = lastHitOutline.gameObject.GetComponent<EnemyMove>();
+                        if (enemyMove != null) // Upewnij się, że komponent istnieje
+                        {
+                            enemyMove.enemyHealth -= damage;
+                        }
 
                         lastAttackTime = Time.time;
                     }

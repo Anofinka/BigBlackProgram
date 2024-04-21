@@ -9,7 +9,7 @@ namespace sc.terrain.vegetationspawner
     {
         [Tooltip("Tree item will automatically respawn after changing a parameter in the inspector")]
         public bool autoRespawnTrees = true;
-        
+
         private void SpawnAllTrees(Terrain terrain = null)
         {
             if (treeTypes == null) return;
@@ -76,16 +76,16 @@ namespace sc.terrain.vegetationspawner
             if (targetTerrain == null)
             {
                 List<Terrain> targetTerrains = GetTargetTerrains();
-                
+
                 showProgressBar = false;
                 var progress = true;
                 int counter = 0;
-                
+
                 foreach (Terrain terrain in targetTerrains)
                 {
                     counter++;
-                        
-                    #if UNITY_EDITOR
+
+#if UNITY_EDITOR
                     if (autoRespawnTrees == false)
                     {
                         if (UnityEditor.EditorUtility.DisplayCancelableProgressBar("Vegetation Spawner", $"Spawning \"{item.name}\" on {terrain.name} ({counter}/{targetTerrains.Count})", (float)counter / (float)targetTerrains.Count))
@@ -93,21 +93,21 @@ namespace sc.terrain.vegetationspawner
                             progress = false;
                         }
                     }
-                    #endif
-                    
-                    if(progress) SpawnTreeOnTerrain(terrain, item);
+#endif
+
+                    if (progress) SpawnTreeOnTerrain(terrain, item);
                 }
-                
-                #if UNITY_EDITOR
+
+#if UNITY_EDITOR
                 UnityEditor.EditorUtility.ClearProgressBar();
-                #endif
+#endif
             }
             else
             {
                 showProgressBar = true;
                 SpawnTreeOnTerrain(targetTerrain, item);
             }
-            
+
             for (int i = 0; i < item.prefabs.Count; i++)
             {
                 onTreeRespawn?.Invoke(item.prefabs[i]);
@@ -117,7 +117,7 @@ namespace sc.terrain.vegetationspawner
         private void SpawnTreeOnTerrain(Terrain terrain, TreeType item)
         {
             float height, worldHeight, normalizedHeight;
-            
+
             List<TreeInstance> treeInstanceCollection = new List<TreeInstance>(terrain.terrainData.treeInstances);
 
             //Clear all existing instances first, setting the tree instances is additive
@@ -132,7 +132,7 @@ namespace sc.terrain.vegetationspawner
             if (item.enabled)
             {
                 InitializeSeed(item.seed);
-                
+
                 item.spawnPoints = PoissonDisc.GetSpawnpoints(terrain, item.distance, item.seed + seed);
 
                 int counter = 0;
@@ -141,7 +141,7 @@ namespace sc.terrain.vegetationspawner
                 {
                     //InitializeSeed(item.seed + index);
                     counter++;
-                    
+
 #if UNITY_EDITOR
                     if (autoRespawnTrees == false && showProgressBar)
                     {
@@ -273,9 +273,9 @@ namespace sc.terrain.vegetationspawner
                     item.instanceCount++;
                 }
             }
-            
+
 #if UNITY_EDITOR
-            if(showProgressBar) UnityEditor.EditorUtility.ClearProgressBar();
+            if (showProgressBar) UnityEditor.EditorUtility.ClearProgressBar();
 #endif
 
 #if UNITY_2019_1_OR_NEWER

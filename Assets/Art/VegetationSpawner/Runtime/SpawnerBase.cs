@@ -25,7 +25,7 @@ namespace sc.terrain.vegetationspawner
         [Tooltip("[Editor only] Opt to only affect terrains that are visible in the scene-view. Use this to speed up the spawning process." +
                  "\n\nNote that the visibility check is not completely accurate, as it is based on bounding boxes.")]
         public bool visibleTerrainsOnly;
-        
+
         [Serializable]
         public class VegetationPrefab
         {
@@ -56,7 +56,7 @@ namespace sc.terrain.vegetationspawner
 
             [Range(1f, 25f)]
             public float distance = 5f;
-           
+
             public Vector2 scaleRange = new Vector2(0.8f, 1.2f);
             public float sinkAmount = 0f;
 
@@ -69,7 +69,7 @@ namespace sc.terrain.vegetationspawner
 
                 return t;
             }
-            
+
             public static TreeType New(GameObject initialPrefab)
             {
                 TreeType t = New();
@@ -80,7 +80,7 @@ namespace sc.terrain.vegetationspawner
                 p.prefab = initialPrefab;
                 t.prefabs.Add(p);
 
-                if(initialPrefab) t.name = initialPrefab.name;
+                if (initialPrefab) t.name = initialPrefab.name;
 
                 return t;
             }
@@ -113,22 +113,22 @@ namespace sc.terrain.vegetationspawner
             [Tooltip("When enabled, orients the grass towards the camera on the Y axis")]
             public bool renderAsBillboard;
             public GameObject prefab;
-            
-            #if UNITY_2021_2_OR_NEWER
+
+#if UNITY_2021_2_OR_NEWER
             public bool gpuInstancing = true;
             [Range(0f, 100f)]
             public float holeEdgePadding = 2f;
-            #endif
-            
-            #if UNITY_2022_2_OR_NEWER
+#endif
+
+#if UNITY_2022_2_OR_NEWER
             [Range(0f, 100f)]
             public float alignToGround = 100f;
-            [Range(0f,100f)]
+            [Range(0f, 100f)]
             public float positionJitter;
             public bool useDensityScaling = true;
             public float density;
-            #endif
-            
+#endif
+
             public Texture2D billboard;
 
             public Color mainColor = Color.white;
@@ -136,7 +136,7 @@ namespace sc.terrain.vegetationspawner
             [FormerlySerializedAs("secondairyColor")]
             public Color secondaryColor = Color.white;
             public bool linkColors = true;
-            
+
             public Vector2 minMaxHeight;
             public Vector2 minMaxWidth;
             [Range(0.01f, 0.5f)]
@@ -151,24 +151,24 @@ namespace sc.terrain.vegetationspawner
                 minMaxHeight = new Vector2(0.5f, 1f);
                 minMaxWidth = new Vector2(0.8f, 1.2f);
                 noiseSize = 0.1f;
-                #if UNITY_2022_2_OR_NEWER
+#if UNITY_2022_2_OR_NEWER
                 alignToGround = 100f;
-                #endif
+#endif
             }
-            
+
             public static GrassPrefab Duplicate(GrassPrefab source)
             {
                 GrassPrefab dest = new GrassPrefab();
 
                 dest.enabled = source.enabled;
                 dest.name = source.name;
-                
+
                 dest.type = source.type;
                 dest.prefab = source.prefab;
-                #if UNITY_2021_2_OR_NEWER
+#if UNITY_2021_2_OR_NEWER
                 dest.gpuInstancing = source.gpuInstancing;
                 dest.holeEdgePadding = source.holeEdgePadding;
-                #endif
+#endif
                 dest.billboard = source.billboard;
                 dest.renderAsBillboard = source.renderAsBillboard;
                 dest.noiseSize = source.noiseSize;
@@ -186,19 +186,19 @@ namespace sc.terrain.vegetationspawner
                 dest.heightRange = source.heightRange;
                 dest.slopeRange = source.slopeRange;
                 dest.curvatureRange = source.curvatureRange;
-                
-                #if UNITY_2022_2_OR_NEWER
+
+#if UNITY_2022_2_OR_NEWER
                 dest.useDensityScaling = source.useDensityScaling;
                 dest.alignToGround = source.alignToGround;
                 dest.positionJitter = source.positionJitter;
-                #endif
+#endif
 
                 dest.layerMasks = new List<TerrainLayerMask>(source.layerMasks);
                 for (int i = 0; i < dest.layerMasks.Count; i++)
                 {
                     dest.layerMasks[i] = new TerrainLayerMask(source.layerMasks[i].name, source.layerMasks[i].layerID, source.layerMasks[i].threshold);
                 }
-            
+
                 dest.collisionCheck = source.collisionCheck;
                 dest.rejectUnderwater = source.rejectUnderwater;
 
@@ -215,7 +215,7 @@ namespace sc.terrain.vegetationspawner
             [Range(0f, 1f)]
             public float threshold = 0f;
 
-            public TerrainLayerMask() {}
+            public TerrainLayerMask() { }
 
             //Cloning
             public TerrainLayerMask(string name, int layerID, float threshold)
@@ -243,13 +243,13 @@ namespace sc.terrain.vegetationspawner
             public int maxMeshTrees = 50;
 
             [Header("Grass")]
-            #if UNITY_2022_2_OR_NEWER
+#if UNITY_2022_2_OR_NEWER
             public DetailScatterMode detailScattermode = DetailScatterMode.CoverageMode;
-            #endif
+#endif
             public float grassDistance = 200f;
             [Range(0f, 1f)]
             public float grassDensity = 1f;
-            
+
             [Header("Grass wind")]
             [Range(0f, 1f)]
             public float windStrength = 0.15f;
@@ -311,7 +311,7 @@ namespace sc.terrain.vegetationspawner
             {
                 t.drawTreesAndFoliage = terrainSettings.drawTreesAndFoliage;
                 t.treeMaximumFullLODCount = terrainSettings.maxMeshTrees;
-                
+
                 t.preserveTreePrototypeLayers = terrainSettings.preservePrefabLayer;
 #if UNITY_EDITOR
                 t.bakeLightProbesForTrees = terrainSettings.treeLightProbes;
@@ -319,20 +319,20 @@ namespace sc.terrain.vegetationspawner
                 t.treeBillboardDistance = terrainSettings.billboardStart;
                 t.treeDistance = terrainSettings.treeDistance;
 
-                #if UNITY_2022_2_OR_NEWER
+#if UNITY_2022_2_OR_NEWER
                 t.terrainData.SetDetailScatterMode(terrainSettings.detailScattermode);
-                #endif
-                
+#endif
+
                 t.detailObjectDistance = terrainSettings.grassDistance;
                 t.detailObjectDensity = terrainSettings.grassDensity;
-                
+
                 t.terrainData.wavingGrassAmount = terrainSettings.windStrength;
                 t.terrainData.wavingGrassStrength = terrainSettings.windSpeed;
                 t.terrainData.wavingGrassSpeed = terrainSettings.windFrequency;
                 t.terrainData.wavingGrassTint = terrainSettings.wintTint;
             }
         }
-        
+
         public static bool HasMissingTerrain(List<Terrain> terrains)
         {
             bool isMissing = false;
@@ -344,25 +344,25 @@ namespace sc.terrain.vegetationspawner
 
             return isMissing;
         }
-        
+
         protected List<Terrain> GetTargetTerrains()
         {
             if (visibleTerrainsOnly == false) return terrains;
-            
+
             Plane[] frustumPlanes = new Plane[6];
             List<Terrain> targetTerrains = new List<Terrain>();
-            
-            #if UNITY_EDITOR
+
+#if UNITY_EDITOR
             if (UnityEditor.SceneView.lastActiveSceneView.camera) GeometryUtility.CalculateFrustumPlanes(UnityEditor.SceneView.lastActiveSceneView.camera, frustumPlanes);
             else return null;
-            #else
+#else
             if (Camera.main) GeometryUtility.CalculateFrustumPlanes(Camera.main, frustumPlanes);
             else return null;
-            #endif
-            
+#endif
+
             foreach (Terrain terrain in terrains)
             {
-                if(terrain == null) continue;
+                if (terrain == null) continue;
 
                 Bounds bounds = terrain.terrainData.bounds;
                 //Bounds is in local-space, shift it to virtually place it in world-space

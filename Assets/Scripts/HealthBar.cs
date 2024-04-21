@@ -10,7 +10,7 @@ public class HealthBarController : MonoBehaviour
     public void InitializeHealthBar(float maxHealth)
     {
         this.maxHealth = maxHealth;
-        this.currentHealth = maxHealth;
+        currentHealth = maxHealth;
         UpdateHealthBar(); // Aktualizacja paska zdrowia przy inicjalizacji
     }
 

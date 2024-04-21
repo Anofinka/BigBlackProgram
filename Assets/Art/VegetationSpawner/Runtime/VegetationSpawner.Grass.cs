@@ -30,11 +30,11 @@ namespace sc.terrain.vegetationspawner
         public void AddGrassItemsFromTerrain(Terrain terrain)
         {
             GrassPrefab[] grassItems = new GrassPrefab[terrain.terrainData.detailPrototypes.Length];
-            
+
             for (int i = 0; i < terrain.terrainData.detailPrototypes.Length; i++)
             {
                 grassItems[i] = new GrassPrefab();
-                
+
                 grassItems[i].type = terrain.terrainData.detailPrototypes[i].usePrototypeMesh ? GrassType.Mesh : GrassType.Texture;
                 grassItems[i].renderAsBillboard = terrain.terrainData.detailPrototypes[i].renderMode == DetailRenderMode.GrassBillboard;
                 grassItems[i].billboard = terrain.terrainData.detailPrototypes[i].prototypeTexture;
@@ -45,21 +45,21 @@ namespace sc.terrain.vegetationspawner
                 grassItems[i].secondaryColor = terrain.terrainData.detailPrototypes[i].dryColor;
                 grassItems[i].prefab = terrain.terrainData.detailPrototypes[i].prototype;
 
-                if(grassItems[i].billboard) grassItems[i].name = grassItems[i].billboard.name;
-                if(grassItems[i].prefab) grassItems[i].name = grassItems[i].prefab.name;
-                
-                #if UNITY_2021_2_OR_NEWER
+                if (grassItems[i].billboard) grassItems[i].name = grassItems[i].billboard.name;
+                if (grassItems[i].prefab) grassItems[i].name = grassItems[i].prefab.name;
+
+#if UNITY_2021_2_OR_NEWER
                 grassItems[i].seed = terrain.terrainData.detailPrototypes[i].noiseSeed;
                 grassItems[i].gpuInstancing = terrain.terrainData.detailPrototypes[i].useInstancing;
                 grassItems[i].holeEdgePadding = terrain.terrainData.detailPrototypes[i].holeEdgePadding;
-                #endif
-                
-                #if UNITY_2022_2_OR_NEWER
+#endif
+
+#if UNITY_2022_2_OR_NEWER
                 grassItems[i].useDensityScaling = terrain.terrainData.detailPrototypes[i].useDensityScaling;
                 grassItems[i].alignToGround = terrain.terrainData.detailPrototypes[i].alignToGround * 100f;
                 grassItems[i].positionJitter = terrain.terrainData.detailPrototypes[i].positionJitter * 100f;
                 grassItems[i].density = terrain.terrainData.detailPrototypes[i].density;
-                #endif
+#endif
             }
 
             this.grassPrefabs = new List<GrassPrefab>(grassItems);
@@ -74,15 +74,15 @@ namespace sc.terrain.vegetationspawner
             newGrass.index = grassPrefabs.Count;
 
             RefreshGrassPrototypes();
-            
+
             //Potentially mirror the operation to GPU Instancer, but functionality is too tightly woven into GPUI's editor code
         }
-        
+
         public void RemoveGrassItem(int index)
         {
             grassPrefabs.RemoveAt(index);
             RefreshGrassPrototypes();
-            
+
             //Potentially mirror the operation to GPU Instancer, but functionality is too tightly woven into GPUI's editor code
         }
 
@@ -91,7 +91,7 @@ namespace sc.terrain.vegetationspawner
             RefreshGrassPrototypes();
 
             InitializeSeed();
-            
+
             foreach (GrassPrefab item in grassPrefabs)
             {
                 SpawnGrass(item, targetTerrain);
@@ -107,8 +107,8 @@ namespace sc.terrain.vegetationspawner
                 DetailPrototype detailPrototype = GetGrassPrototype(item, terrain);
 
                 //Could have been removed
-                if(detailPrototype == null) continue;
-                
+                if (detailPrototype == null) continue;
+
                 UpdateGrassItem(item, detailPrototype);
 
                 detailPrototypes[item.index] = detailPrototype;
@@ -142,35 +142,35 @@ namespace sc.terrain.vegetationspawner
             if (targetTerrain == null)
             {
                 List<Terrain> targetTerrains = GetTargetTerrains();
-                    
+
                 showProgressBar = false;
                 var progress = true;
                 int counter = 0;
-                
+
                 foreach (Terrain terrain in targetTerrains)
                 {
                     counter++;
-                    
-                    #if UNITY_EDITOR
+
+#if UNITY_EDITOR
                     if (UnityEditor.EditorUtility.DisplayCancelableProgressBar("Vegetation Spawner", $"Spawning \"{item.name}\" on {terrain.name} ({counter}/{targetTerrains.Count})", (float)counter / (float)targetTerrains.Count))
                     {
                         progress = false;
                     }
-                    #endif
-                    
-                    if(progress) SpawnGrassOnTerrain(terrain, item);
+#endif
+
+                    if (progress) SpawnGrassOnTerrain(terrain, item);
                 }
-                
-                #if UNITY_EDITOR
+
+#if UNITY_EDITOR
                 UnityEditor.EditorUtility.ClearProgressBar();
-                #endif
+#endif
             }
             else
             {
                 showProgressBar = true;
                 SpawnGrassOnTerrain(targetTerrain, item);
             }
-            
+
             onGrassRespawn?.Invoke(item);
         }
 
@@ -181,7 +181,7 @@ namespace sc.terrain.vegetationspawner
 
             int counter = 0;
             int cellCount = terrain.terrainData.detailWidth * terrain.terrainData.detailHeight;
-            
+
             if (item.enabled)
             {
                 for (int x = 0; x < terrain.terrainData.detailWidth; x++)
@@ -189,7 +189,7 @@ namespace sc.terrain.vegetationspawner
                     for (int y = 0; y < terrain.terrainData.detailHeight; y++)
                     {
                         counter++;
-                        
+
 #if UNITY_EDITOR
                         if (showProgressBar)
                         {
@@ -300,28 +300,28 @@ namespace sc.terrain.vegetationspawner
 
                         //if (instanceCount == 1) DebugPoints.Instance.Add(wPos, true, 0f);
                         item.instanceCount += instanceCount;
-                        
-                        #if UNITY_2022_2_OR_NEWER
-                        if(terrain.terrainData.detailScatterMode == DetailScatterMode.CoverageMode) instanceCount *= 255;
-                        #endif
-                        
+
+#if UNITY_2022_2_OR_NEWER
+                        if (terrain.terrainData.detailScatterMode == DetailScatterMode.CoverageMode) instanceCount *= 255;
+#endif
+
                         //Passed all conditions, spawn one instance here
                         map[x, y] = instanceCount;
                     }
                 }
             }
-            
+
             terrain.terrainData.SetDetailLayer(0, 0, item.index, map);
 
 #if UNITY_EDITOR
-            if(showProgressBar) UnityEditor.EditorUtility.ClearProgressBar();
+            if (showProgressBar) UnityEditor.EditorUtility.ClearProgressBar();
 #endif
         }
 
         private DetailPrototype GetGrassPrototype(GrassPrefab item, Terrain terrain)
         {
             if (item.index >= terrain.terrainData.detailPrototypes.Length) return null;
-            
+
             return terrain.terrainData.detailPrototypes[item.index];
         }
 
@@ -336,36 +336,36 @@ namespace sc.terrain.vegetationspawner
             d.minWidth = item.minMaxWidth.x;
             d.maxWidth = item.minMaxWidth.y;
 
-            #if UNITY_2021_2_OR_NEWER
+#if UNITY_2021_2_OR_NEWER
             d.noiseSeed = item.seed;
             d.holeEdgePadding = item.holeEdgePadding;
-            #endif
+#endif
             d.noiseSpread = item.noiseSize;
-            
-            #if UNITY_2022_2_OR_NEWER
+
+#if UNITY_2022_2_OR_NEWER
             d.alignToGround = item.alignToGround * 0.01f;
             d.positionJitter = item.positionJitter * 0.01f;
             d.useDensityScaling = item.useDensityScaling;
             d.density = item.density;
-            #endif
-            
+#endif
+
             if (item.type == GrassType.Mesh)
             {
                 d.renderMode = DetailRenderMode.Grass; //Actually a mesh
                 d.usePrototypeMesh = true;
-                #if UNITY_2021_2_OR_NEWER
+#if UNITY_2021_2_OR_NEWER
                 d.useInstancing = item.gpuInstancing;
-                if(item.gpuInstancing) d.renderMode = DetailRenderMode.VertexLit;
-                #endif
+                if (item.gpuInstancing) d.renderMode = DetailRenderMode.VertexLit;
+#endif
                 d.prototype = item.prefab;
                 d.prototypeTexture = null;
 
             }
             if (item.type == GrassType.Texture && item.billboard)
             {
-                #if UNITY_2021_2_OR_NEWER
+#if UNITY_2021_2_OR_NEWER
                 d.useInstancing = false;
-                #endif
+#endif
                 d.renderMode = item.renderAsBillboard ? DetailRenderMode.GrassBillboard : DetailRenderMode.Grass;
                 d.usePrototypeMesh = false;
                 d.prototypeTexture = item.billboard;

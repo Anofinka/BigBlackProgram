@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 using Object = UnityEngine.Object;
@@ -12,12 +11,12 @@ namespace sc.terrain.vegetationspawner
         public static void ShowWindow()
         {
             VegetationUtilitiesWindow editorWindow = GetWindow<VegetationUtilitiesWindow>(true, " Vegetation Utilities", true);
-            
+
             //Open somewhat in the center of the screen
-            #if !UNITY_EDITOR_OSX //DPI Scaling prevents this from properly working
-            editorWindow.position = new Rect((Screen.currentResolution.width / 2f) - (550 * 0.5f), (Screen.currentResolution.height / 2f)  - (450 * 0.8f), 550, 450);
-            #endif
-            
+#if !UNITY_EDITOR_OSX //DPI Scaling prevents this from properly working
+            editorWindow.position = new Rect((Screen.currentResolution.width / 2f) - (550 * 0.5f), (Screen.currentResolution.height / 2f) - (450 * 0.8f), 550, 450);
+#endif
+
             editorWindow.Show();
         }
 
@@ -26,7 +25,7 @@ namespace sc.terrain.vegetationspawner
         public Object targetPrefab;
 
         private bool deleteTrees = true;
-        
+
         private void OnEnable()
         {
             RefreshTerrains();
@@ -65,7 +64,7 @@ namespace sc.terrain.vegetationspawner
             EditorGUILayout.EndScrollView();
 
             EditorGUILayout.Space();
-            
+
             EditorGUILayout.BeginVertical(EditorStyles.helpBox);
             {
                 EditorGUILayout.BeginHorizontal();
@@ -82,7 +81,7 @@ namespace sc.terrain.vegetationspawner
                             {
                                 progress = false;
                             }
-                            
+
                             if (progress)
                             {
                                 terrain.InstantiateTreePrefabs(targetPrefab);
@@ -117,13 +116,13 @@ namespace sc.terrain.vegetationspawner
                 }
                 EditorGUILayout.EndHorizontal();
 
-            
+
                 EditorGUILayout.HelpBox("Instantiates all tree prefabs at the same position as they appear on the terrain, and makes them child objects of a terrain", MessageType.Info);
             }
             EditorGUILayout.EndVertical();
-            
+
             EditorGUILayout.Space();
-            
+
             EditorGUILayout.BeginVertical(EditorStyles.helpBox);
             {
                 EditorGUILayout.BeginHorizontal();
@@ -141,7 +140,7 @@ namespace sc.terrain.vegetationspawner
                             {
                                 progress = false;
                             }
-                            
+
                             if (progress)
                             {
                                 terrain.InstantiateTreeColliders(targetPrefab);
@@ -164,26 +163,26 @@ namespace sc.terrain.vegetationspawner
             }
             EditorGUILayout.HelpBox("Instantiates a GameObject with an identical Capsule Collider, copied from the related tree prefab. Use this to include trees in navmesh data.", MessageType.Info);
             EditorGUILayout.EndVertical();
-            
+
         }
 
         private void DeleteChildObjects()
         {
             List<Object> children = new List<Object>();
-            
+
             foreach (Terrain terrain in terrains)
             {
                 foreach (Transform child in terrain.transform)
                 {
                     //Skip the first, since its the terrain itself
-                    if(child == terrain.transform) continue;
-                
+                    if (child == terrain.transform) continue;
+
                     children.Add(child.gameObject);
                 }
             }
- 
+
             Undo.RecordObjects(children.ToArray(), "Deleted terrain child objects");
-            
+
             foreach (GameObject child in children)
             {
                 //Remove all previously created objects first
@@ -200,7 +199,7 @@ namespace sc.terrain.vegetationspawner
                 DestroyImmediate(col.gameObject);
             }
         }
-        
+
         private void DrawTerrainInto(Terrain t)
         {
             if (!t) return;
