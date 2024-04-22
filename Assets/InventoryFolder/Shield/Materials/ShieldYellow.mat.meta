@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: 92e555e8e6c64cd4bbe404b8cf761998
+timeCreated: 1494005840
+licenseType: Store
+NativeFormatImporter:
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 89954
+  packageName: Shield
+  packageVersion: 1.0
+  assetPath: Assets/Shield/Materials/ShieldYellow.mat
+  uploadId: 178624

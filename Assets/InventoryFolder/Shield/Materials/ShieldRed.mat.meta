@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: 297eae7f208616e459589916ee277406
+timeCreated: 1494005840
+licenseType: Store
+NativeFormatImporter:
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 89954
+  packageName: Shield
+  packageVersion: 1.0
+  assetPath: Assets/Shield/Materials/ShieldRed.mat
+  uploadId: 178624
