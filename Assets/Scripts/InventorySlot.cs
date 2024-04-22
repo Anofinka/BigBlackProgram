@@ -1,3 +1,5 @@
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -11,10 +13,10 @@ public class InventorySlot : MonoBehaviour, IPointerClickHandler
 
     public void OnPointerClick(PointerEventData eventData)
     {
-        if (eventData.button == PointerEventData.InputButton.Left)
+        if(eventData.button == PointerEventData.InputButton.Left)
         {
-            if (Inventory.carriedItem == null) return;
-            if (myTag != SlotTag.None && Inventory.carriedItem.myItem.itemTag != myTag) return;
+            if(Inventory.carriedItem == null) return;
+            if(myTag != SlotTag.None && Inventory.carriedItem.myItem.itemTag != myTag) return;
             SetItem(Inventory.carriedItem);
         }
     }
@@ -32,7 +34,7 @@ public class InventorySlot : MonoBehaviour, IPointerClickHandler
         myItem.transform.SetParent(transform);
         myItem.canvasGroup.blocksRaycasts = true;
 
-        if (myTag != SlotTag.None)
+        if(myTag != SlotTag.None)
         { Inventory.Singleton.EquipEquipment(myTag, myItem); }
     }
 }

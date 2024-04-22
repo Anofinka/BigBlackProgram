@@ -1,3 +1,5 @@
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.UI;
@@ -20,16 +22,19 @@ public class EnemyMove : MonoBehaviour
     public float runRange = 12.0f;
     public AudioSource attackSound;
     public float enemyHealth;
-    private int maxHealth = 100; // Ustaw maksymalne zdrowie wroga
+    private int maxHealth = 100; 
     public Image healtBar;
     private float fillHealth;
     public GameObject mainCam;
-
+    private WaitForSeconds lookTime = new WaitForSeconds(2);
+    bool isAlive = true;
+    
     void Start()
     {
         thisEnemy.GetComponent<Outline>().enabled = false;
         nav = GetComponent<NavMeshAgent>();
         anim = GetComponent<Animator>();
+        nav.avoidancePriority = Random.Range(5,75);
     }
 
     void Update()
@@ -41,64 +46,92 @@ public class EnemyMove : MonoBehaviour
         // Ustawienie paska zdrowia w stronę kamery
         healtBar.transform.LookAt(mainCam.transform.position);
 
-        // Reszta kodu...
+        if(enemyHealth <= 0 && isAlive ==true)
+        {
+            isAlive = false;
+            nav.isStopped = true;
+            anim.SetTrigger("die");
+            nav.avoidancePriority = 1;
+        }
+        
 
-        if (outlineOn == false)
+        // Reszta kodu...
+        
+        if(outlineOn == false)
         {
             outlineOn = true;
-            if (SaveScript.theTarget == thisEnemy)
+            if(SaveScript.theTarget == thisEnemy)
             {
                 thisEnemy.GetComponent<Outline>().enabled = false;
                 outlineOn = false;
             }
         }
-        if (player == null)
+        if(player == null)
         {
             player = GameObject.FindGameObjectWithTag("Player");
         }
         x = nav.velocity.x;
         z = nav.velocity.z;
         velocitySpeed = x + z;
-        if (velocitySpeed == 0)
+        if(velocitySpeed == 0)
         {
             anim.SetBool("running", false);
         }
         else
         {
-            anim.SetBool("running", true);
-            isAttacking = false;
+           anim.SetBool("running", true); 
+           isAttacking = false;
         }
         enemyInfo = anim.GetCurrentAnimatorStateInfo(0);
-        distance = Vector3.Distance(transform.position, player.transform.position);
-        if (distance < attackRange || distance > runRange)
+        distance = Vector3.Distance(transform.position,player.transform.position);
+        
+        if(isAlive)
         {
-            nav.isStopped = true;
-            if (distance < attackRange && enemyInfo.IsTag("nonAttack"))
+            if(distance < attackRange || distance > runRange)
             {
-                if (isAttacking == false)
+                nav.isStopped = true;
+                if(distance < attackRange && enemyInfo.IsTag("nonAttack"))
                 {
-                    isAttacking = true;
-                    anim.SetTrigger("attack");
-                    Debug.Log("Straciles 10hp");
-
-                    if (attackSound != null)
+                    if(isAttacking == false)
                     {
-                        attackSound.Play();
+                        isAttacking = true;
+                        anim.SetTrigger("attack");
+                        transform.LookAt(player.transform);
+                        StartCoroutine(LookAtPlayer());
+                        Debug.Log("Straciles 10hp");
+
+                        if(attackSound != null) 
+                        {
+                            attackSound.Play(); 
+                        }
+                    }
+                }
+                if(distance < attackRange && enemyInfo.IsTag("attack"))
+                {
+                    if(isAttacking == true)
+                    {
+                        isAttacking = false;
                     }
                 }
             }
-            if (distance < attackRange && enemyInfo.IsTag("attack"))
+            else
             {
-                if (isAttacking == true)
-                {
-                    isAttacking = false;
-                }
+                nav.isStopped = false;
+                nav.destination = player.transform.position;
             }
         }
         else
         {
-            nav.isStopped = false;
-            nav.destination = player.transform.position;
+            nav.isStopped = true; // Zatrzymaj przeciwnika, gdy jest martwy
+        }
+    }
+
+    IEnumerator LookAtPlayer()
+    {
+        yield return lookTime;
+        if(isAlive == true)
+        {
+            transform.LookAt(player.transform);
         }
     }
 }

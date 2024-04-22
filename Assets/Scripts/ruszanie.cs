@@ -14,6 +14,7 @@ public class PlayerController : MonoBehaviour
     public GameObject clickEffectObj; // Zmiana typu na GameObject
     [SerializeField] LayerMask clickableLayers;
     GameObject clickEffectInstance; // Zmienna do przechowywania instancji efektu kliknięcia
+    Object swap;
     float lookRotationSpeed = 8f;
     RaycastHit hit;
 
@@ -40,7 +41,10 @@ public class PlayerController : MonoBehaviour
     }
 
     void AssignInputs()
-    { input.Main.Move.performed += ctx => ClickToMove(); }
+    {
+        input.Main.Move.performed += ctx => ClickToMove();
+        
+    }
 
     void ClickToMove()
     {
@@ -67,10 +71,14 @@ public class PlayerController : MonoBehaviour
     }
 
     void OnEnable()
-    { input.Enable(); }
+    {
+        input.Enable();
+    }
 
     void OnDisable()
-    { input.Disable(); }
+    {
+        input.Disable();
+    }
 
     void Update()
     {
@@ -78,7 +86,10 @@ public class PlayerController : MonoBehaviour
         SetAnimations();
         healthImage.fillAmount = SaveScript.playerHealth;
         mousepos();
-        AttackEnemy();
+        if (Input.GetMouseButtonDown(1)) // Sprawdzamy, czy został wciśnięty prawy przycisk myszy
+    {
+        Attack();
+    }
     }
 
     void FaceTarget()
@@ -93,52 +104,56 @@ public class PlayerController : MonoBehaviour
     void SetAnimations()
     {
         if (agent.velocity != Vector3.zero)
+        {
             animator.SetBool("walk", true);
+        }
         else
+        {
             animator.SetBool("walk", false);
+        }
     }
 
     void enemyposition(RaycastHit hit)
-    { agent.SetDestination(hit.point); }
-
-    void AttackEnemy()
     {
-        if (Input.GetKeyDown(KeyCode.R))
+        agent.SetDestination(hit.point);
+    }
+
+  void Attack()
+{
+    if (lastHitOutline != null && lastHitOutline.gameObject.CompareTag("enemy"))
+    {
+        float distanceToEnemy = Vector3.Distance(transform.position, lastHitOutline.gameObject.transform.position);
+
+        if (distanceToEnemy <= attackRange)
         {
-            if (lastHitOutline != null && lastHitOutline.gameObject.CompareTag("enemy"))
-            {
-                float distanceToEnemy = Vector3.Distance(transform.position, lastHitOutline.gameObject.transform.position);
-
-                if (distanceToEnemy <= attackRange)
+            if (Time.time >= lastAttackTime + attackCooldown)
+            {    
+                if (!animator.GetCurrentAnimatorStateInfo(0).IsName("Attack"))
                 {
-                    if (Time.time >= lastAttackTime + attackCooldown)
-                    {
-                        Debug.Log("Atakuję przeciwnika!");
-                        // Tutaj możesz dodać kod ataku przeciwnika, np. odejmowanie punktów życia itp.
-                        EnemyMove enemyMove = lastHitOutline.gameObject.GetComponent<EnemyMove>();
-                        if (enemyMove != null) // Upewnij się, że komponent istnieje
-                        {
-                            enemyMove.enemyHealth -= damage;
-                        }
-
-                        lastAttackTime = Time.time;
-                    }
-                    else
-                    {
-                        Debug.Log("Czekam na odnowienie ataku...");
-                    }
+                    animator.SetTrigger("attack");
+                    Debug.Log("Atakuję przeciwnika!");
+                    TakeDamage(lastHitOutline.gameObject);
                 }
-                else
-                {
-                    Debug.Log("Jesteś zbyt daleko, aby zaatakować!");
-                }
+               
+                // Tutaj możesz dodać kod ataku przeciwnika, np. odejmowanie punktów życia itp.
+                
+                lastAttackTime = Time.time;
             }
             else
             {
-                Debug.Log("Nie masz przeciwnika w zasięgu ataku!");
+                Debug.Log("Czekam na odnowienie ataku...");
             }
         }
+        else
+        {
+            Debug.Log("Jesteś zbyt daleko, aby zaatakować!");
+        }
     }
+    else
+    {
+        Debug.Log("Nie masz przeciwnika w zasięgu ataku!");
+    }
+}
 
     void mousepos()
     {
@@ -165,6 +180,15 @@ public class PlayerController : MonoBehaviour
                 lastHitOutline.enabled = false;
                 lastHitOutline = null;
             }
+        }
+    }
+
+    void TakeDamage(GameObject enemy)
+    {
+        EnemyMove enemyMove = enemy.GetComponent<EnemyMove>();
+        if (enemyMove != null)
+        {
+            enemyMove.enemyHealth -= damage;
         }
     }
 }

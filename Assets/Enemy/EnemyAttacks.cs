@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class EnemyAttacks : MonoBehaviour
@@ -10,11 +11,11 @@ public class EnemyAttacks : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         //if(other.CompareTag("Player"));
-        if (canAttack == true)
+        if(canAttack == true)
         {
-            canAttack = false;
-            SaveScript.playerHealth -= damageAmt;
-            StartCoroutine(ResetDamage());
+           canAttack = false;
+           SaveScript.playerHealth -= damageAmt;
+           StartCoroutine(ResetDamage());
         }
     }
 

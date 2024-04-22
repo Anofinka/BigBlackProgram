@@ -42,7 +42,7 @@ namespace sc.terrain.vegetationspawner
         public static void RemoveTreesAtPosition(this Terrain terrain, Vector3 position, float radius)
         {
             TreeInstance[] instances = terrain.GetTreeInstances();
-
+            
             List<TreeInstance> treeInstanceCollection = new List<TreeInstance>();
 
             float r = radius * radius;
@@ -54,16 +54,16 @@ namespace sc.terrain.vegetationspawner
                     treeInstanceCollection.Add(instances[i]);
                 }
             }
-
+            
             Debug.Log($"Removed {instances.Length - treeInstanceCollection.Count} trees");
-
+            
             terrain.terrainData.SetTreeInstances(treeInstanceCollection.ToArray(), false);
-
-#if UNITY_EDITOR
+            
+            #if UNITY_EDITOR
             EditorUtility.SetDirty(terrain.terrainData);
-#endif
+            #endif
         }
-
+        
         /// <summary>
         /// Removes all tree instances of a given prefab
         /// </summary>
@@ -72,19 +72,19 @@ namespace sc.terrain.vegetationspawner
         public static void RemoveTrees(this Terrain terrain, Object prefab)
         {
             int prototypeIndex = terrain.GetTreePrototypeIndex(prefab);
-
+            
             List<TreeInstance> treeInstanceCollection = new List<TreeInstance>(terrain.terrainData.treeInstances);
             //Clear all existing instances first, setting the tree instances is additive
             for (int i = 0; i < treeInstanceCollection.Count; i++)
             {
                 treeInstanceCollection.RemoveAll(x => x.prototypeIndex == prototypeIndex);
             }
-
+            
             terrain.terrainData.SetTreeInstances(treeInstanceCollection.ToArray(), false);
-
-#if UNITY_EDITOR
+            
+            #if UNITY_EDITOR
             EditorUtility.SetDirty(terrain.terrainData);
-#endif
+            #endif
         }
 
         /// <summary>
@@ -100,7 +100,7 @@ namespace sc.terrain.vegetationspawner
             if (targetPrefab)
             {
                 var prototypeIndex = -1;
-
+                
                 //Get the index of the given prefab
                 for (int i = 0; i < terrain.terrainData.treePrototypes.Length; i++)
                 {
@@ -171,7 +171,7 @@ namespace sc.terrain.vegetationspawner
 
             return transforms;
         }
-
+        
         /// <summary>
         /// Retrieves the current tree instances and converts them to world-space transforms. 
         /// </summary>
@@ -182,7 +182,7 @@ namespace sc.terrain.vegetationspawner
         public static TreeTransform[] GetTreeTransforms(this Terrain terrain, Object prefab = null)
         {
             TreeInstance[] instances = terrain.GetTreeInstances(prefab);
-
+            
             TreeTransform[] transforms = terrain.CreateTreeTransforms(instances);
 
             return transforms;
@@ -210,21 +210,21 @@ namespace sc.terrain.vegetationspawner
             }
 
             List<GameObject> objs = new List<GameObject>();
-
+            
             foreach (Object prefab in prefabs)
             {
                 TreeTransform[] transforms = terrain.GetTreeTransforms(prefab);
-
+                
                 for (int i = 0; i < transforms.Length; i++)
                 {
-#if UNITY_EDITOR
+                    #if UNITY_EDITOR
                     GameObject instance = PrefabUtility.InstantiatePrefab(prefab, terrain.transform) as GameObject;
-#else
+                    #else
                     GameObject instance = (GameObject)Object.Instantiate(prefab, terrain.transform);
-#endif
+                    #endif
 
                     objs.Add(instance);
-
+                    
                     instance.name = $"{prefab.name} ({i})";
 
                     instance.transform.SetPositionAndRotation(transforms[i].position, transforms[i].rotation);
@@ -234,7 +234,7 @@ namespace sc.terrain.vegetationspawner
 
             return objs.ToArray();
         }
-
+        
         public static TreePrototype GetTreePrototype(this Terrain terrain, Object prefab)
         {
             //Get the index of the given prefab
@@ -248,7 +248,7 @@ namespace sc.terrain.vegetationspawner
 
             throw new ArgumentException($"Prefab \"{prefab.name}\" could not be found on terrain \"{terrain.name}\"");
         }
-
+        
         public static int GetTreePrototypeIndex(this Terrain terrain, Object prefab)
         {
             //Get the index of the given prefab
@@ -275,7 +275,7 @@ namespace sc.terrain.vegetationspawner
             List<CapsuleCollider> colliders = new List<CapsuleCollider>();
 
             TreePrototype[] treeTypes;
-
+            
             if (targetPrefab)
             {
                 treeTypes = terrain.terrainData.treePrototypes.Where(x => x.prefab == targetPrefab).ToArray();
@@ -284,29 +284,29 @@ namespace sc.terrain.vegetationspawner
             {
                 treeTypes = terrain.terrainData.treePrototypes;
             }
-
+            
             //Debug.Log($"Extracting for {trees.Length} different trees");
-
+            
             for (int i = 0; i < treeTypes.Length; i++)
             {
                 if (treeTypes[i].prefab == null)
                 {
                     throw new Exception($"Tree item at index {i} is missing a prefab");
                 }
-
+                
                 CapsuleCollider prefabCollider = treeTypes[i].prefab.GetComponent<CapsuleCollider>();
-
-                if (!prefabCollider) continue;
-
+                
+                if(!prefabCollider) continue;
+                
                 //Get all instances matching the current prototype
                 TreeInstance[] instances = terrain.terrainData.treeInstances.Where(x => x.prototypeIndex == i).ToArray();
-
+                
                 //Debug.Log($"Extracting {instances.Length} instances");
                 for (int j = 0; j < instances.Length; j++)
                 {
                     GameObject obj = new GameObject(treeTypes[i].prefab.name + j);
                     obj.name = $"{treeTypes[i].prefab.name} Collider ({j})";
-
+                    
                     CapsuleCollider capsuleCollider = obj.AddComponent<CapsuleCollider>();
 
                     //Copy values
@@ -320,7 +320,7 @@ namespace sc.terrain.vegetationspawner
                     colliders.Add(capsuleCollider);
 
                     obj.layer = terrain.preserveTreePrototypeLayers ? treeTypes[i].prefab.layer : terrain.gameObject.layer;
-
+ 
                     obj.transform.localScale = Vector3.Scale(new Vector3(instances[j].widthScale, instances[j].heightScale, instances[j].widthScale), treeTypes[i].prefab.transform.localScale);
 
                     obj.transform.SetPositionAndRotation(instances[j].TransformTreePosition(terrain), instances[j].TransformTreeRotation());
@@ -328,10 +328,10 @@ namespace sc.terrain.vegetationspawner
                     obj.isStatic = true;
                 }
             }
-
+            
             return colliders.ToArray();
         }
-
+        
         #region Private methods
         /// <summary>
         /// Convert the local-space position of a tree instance into world-space
@@ -344,7 +344,7 @@ namespace sc.terrain.vegetationspawner
             //Terrains never have a rotation/scale, so scaling and offsetting suffices
             return Vector3.Scale(tree.position, terrain.terrainData.size) + terrain.GetPosition();
         }
-
+        
         /// <summary>
         /// Convert the Y-rotation of a tree instance into a usable Quaternion
         /// </summary>

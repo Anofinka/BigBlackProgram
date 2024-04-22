@@ -12,7 +12,7 @@ namespace sc.terrain.vegetationspawner
         [Tooltip("When enabled, raycasting is also performed on the corners of each cell. This is slower to calculate, but will yield higher precision around collider edges")]
         public bool highPrecisionCollision = true;
         public LayerMask collisionLayerMask = -1;
-
+        
         public void RebuildCollisionCacheIfNeeded()
         {
             if (terrainCells.Count == 0) RebuildCollisionCache();
@@ -35,10 +35,10 @@ namespace sc.terrain.vegetationspawner
 
             foreach (Terrain terrain in terrains)
             {
-                if (terrain == null) continue; ;
-
-                if (terrain.gameObject.activeInHierarchy == false) continue;
-
+                if(terrain == null) continue;;
+                
+                if(terrain.gameObject.activeInHierarchy == false) continue;
+                
                 int xCount = Mathf.CeilToInt(terrain.terrainData.size.x / cellSize);
                 int zCount = Mathf.CeilToInt(terrain.terrainData.size.z / cellSize);
 
@@ -56,17 +56,17 @@ namespace sc.terrain.vegetationspawner
 
                         Cell cell = Cell.New(wPos, cellSize);
                         cellDivisions = Mathf.Max(1, cellDivisions);
-
+                        
                         cell.Subdivide(cellDivisions);
 
                         cellGrid[x, z] = cell;
-
+                        
                         for (int sX = 0; sX < cellDivisions; sX++)
                         {
                             for (int sZ = 0; sZ < cellDivisions; sZ++)
                             {
                                 Bounds b = cell.subCells[sX, sZ].bounds;
-
+                                
                                 //Sample corners of cell
                                 if (highPrecisionCollision)
                                 {

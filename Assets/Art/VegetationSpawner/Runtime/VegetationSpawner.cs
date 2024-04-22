@@ -1,6 +1,7 @@
 ﻿// Vegetation Spawner by Staggart Creations http://staggart.xyz
 // Copyright protected under Unity Asset Store EULA
 
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -12,7 +13,7 @@ namespace sc.terrain.vegetationspawner
     {
         public const string Version = "1.1.0";
         public static VegetationSpawner Current;
-
+        
         //Cannot be serialized, but is rebuilt when required
         public Dictionary<Terrain, Cell[,]> terrainCells = new Dictionary<Terrain, Cell[,]>();
         //This is used for the height range slider
@@ -27,26 +28,26 @@ namespace sc.terrain.vegetationspawner
 
         [Tooltip("Determines the height of a virtual water level. If a vegetation item has \"Remove underwater\" enabled, it will not spawn under this height")]
         public float waterHeight;
-
+        
         public delegate void OnTreeRespawn(TreePrefab prefab);
         /// <summary>
         /// Triggers whenever a tree species is respawned. Passes the related SpawnerBase.TreePrefab as an argument.
         /// </summary>
         public static event OnTreeRespawn onTreeRespawn;
-
+        
         public delegate void OnGrassRespawn(GrassPrefab prefab);
         /// <summary>
         /// Triggers whenever a grass item is respawned. Passes the related SpawnerBase.GrassPrefab as an argument.
         /// </summary>
         public static event OnGrassRespawn onGrassRespawn;
-
+        
         private static Vector2Int splatmapTexelIndex;
         private static Color m_splatmapColor;
-
-#pragma warning disable CS0414 //Assigned, but never used
+        
+        #pragma warning disable CS0414 //Assigned, but never used
         private static bool showProgressBar;
-#pragma warning restore CS0414
-
+        #pragma warning restore CS0414
+        
         private void OnEnable()
         {
             Current = this;
@@ -56,7 +57,7 @@ namespace sc.terrain.vegetationspawner
         {
             Current = null;
         }
-
+        
         /// <summary>
         /// Respawns all vegetation on the assigned terrains
         /// </summary>
@@ -66,8 +67,8 @@ namespace sc.terrain.vegetationspawner
         {
             if (terrains == null) return;
 
-            if (grass) SpawnAllGrass();
-            if (trees) SpawnAllTrees();
+            if(grass) SpawnAllGrass();
+            if(trees) SpawnAllTrees();
 
             foreach (Terrain terrain in terrains)
             {
@@ -82,7 +83,7 @@ namespace sc.terrain.vegetationspawner
 #endif
             }
         }
-
+        
         /// <summary>
         /// Respawns all vegetation on a specific terrain
         /// </summary>
@@ -96,7 +97,7 @@ namespace sc.terrain.vegetationspawner
 
         public void RecalculateTerrainMinMax()
         {
-            //Calculate minimum/maximum height, used for the height range slider
+             //Calculate minimum/maximum height, used for the height range slider
             terrainMinMaxHeight = new Vector2(Mathf.NegativeInfinity, Mathf.Infinity);
             for (int i = 0; i < terrains.Count; i++)
             {
@@ -168,7 +169,7 @@ namespace sc.terrain.vegetationspawner
                 var scale = UnityEditor.SceneView.lastActiveSceneView.camera.farClipPlane;
                 Vector3 center = UnityEditor.SceneView.lastActiveSceneView.camera.transform.position;
                 center.y = waterHeight;
-                Gizmos.DrawCube(center, new Vector3(scale, 0f, scale));
+                Gizmos.DrawCube(center, new Vector3(scale, 0f, scale) );
             }
         }
 #endif

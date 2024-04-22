@@ -1,32 +1,45 @@
 using UnityEngine;
 
-public class playeractions : MonoBehaviour
+public class PlayerActions : MonoBehaviour
 {
     Animator anim;
-    [SerializeField] private CapsuleCollider meleerangecolid;
+    [SerializeField] private CapsuleCollider meleeRangeCollider;
+    public int damage = 10; // Damage dealt per melee attack
 
     private void Awake()
     {
-        meleerangecolid = GetComponent<CapsuleCollider>();
+        meleeRangeCollider = GetComponent<CapsuleCollider>();
         anim = GetComponent<Animator>();
     }
+
     void Update()
     {
-        attackmelee();
+        AttackMelee();        
     }
-    void attackmelee()
+
+    void AttackMelee()
     {
         if (Input.GetKeyDown(KeyCode.R) && !anim.GetBool("walk"))
-        { //attack animation
+        {
             anim.SetTrigger("attack");
         }
     }
+
     private void OnTriggerStay(Collider other)
     {
         if (Input.GetKeyDown(KeyCode.R) && !anim.GetBool("walk") && other.CompareTag("enemy"))
         {
-            Debug.Log(other.name + " dosta³a bu³e");
-            // Tu zaimplementuj funkcje do ataku melee (odejmowanie hp przeciwnikom)
+            Debug.Log(other.name + " dostaÅ‚a buchÄ™");
+            TakeDamage(other.gameObject);
+        }
+    }
+
+    void TakeDamage(GameObject enemy)
+    {
+        EnemyHealth enemyHealth = enemy.GetComponent<EnemyHealth>();
+        if (enemyHealth != null)
+        {
+            enemyHealth.TakeDamage(damage);
         }
     }
 }

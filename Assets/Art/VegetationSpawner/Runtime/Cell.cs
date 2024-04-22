@@ -2,6 +2,8 @@
 // Copyright protected under Unity Asset Store EULA
 
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace sc.terrain.vegetationspawner

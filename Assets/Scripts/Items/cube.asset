@@ -12,6 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4f01cccb2c080ea45b4d365239347695, type: 3}
   m_Name: cube
   m_EditorClassIdentifier: 
-  sprite: {fileID: 21300000, guid: a4960328dfd82ba429f9334c7a0c0979, type: 3}
+  sprite: {fileID: 1483958539, guid: 383aef37898fa624db3efdbee6c0df52, type: 3}
   itemTag: 2
   equipmentPrefab: {fileID: 4085670780276536313, guid: d4f68963237cffe48975eb3697fb5478, type: 3}

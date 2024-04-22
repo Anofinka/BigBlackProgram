@@ -4,12 +4,15 @@ public class PicItem_Rn : MonoBehaviour
 {
     public Item item;
     public Inventory inv;
+
     public float pickUpRadius = 5f; // Promieñ, w jakim postaæ mo¿e podnosiæ przedmioty
 
     private void OnMouseDown()
     {
         if (IsInRange())
+        {
             PickUp();
+        }
     }
 
     private bool IsInRange()

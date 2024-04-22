@@ -6,14 +6,14 @@ public class InventoryOpener : MonoBehaviour
 
     private void Awake()
     {
-        nazero();
+        nazero();   
     }
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.E))
+        if (Input.GetKeyDown(KeyCode.E)) // SprawdŸ, czy klawisz "E" zosta³ naciœniêty
         {
-            ToggleInventory();
+            ToggleInventory(); // Wywo³aj funkcjê do otwierania/ zamykania ekwipunku
         }
     }
 
@@ -25,9 +25,10 @@ public class InventoryOpener : MonoBehaviour
             inventoryUI.transform.localScale = new Vector3(1, 1, 1);
         else
             nazero();
+        
     }
 
-    void nazero()
+    void nazero() 
     {
         inventoryUI.transform.localScale = new Vector3(0, 0, 0);
     }

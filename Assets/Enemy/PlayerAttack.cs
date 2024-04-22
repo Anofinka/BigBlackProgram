@@ -10,11 +10,11 @@ public class PlayerAttack : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         //if(other.CompareTag("enemy"));
-        if (canAttack == true)
+        if(canAttack == true)
         {
-            canAttack = false;
-            SaveScript.enemyHealth -= damage;
-            StartCoroutine(ResetDamage());
+           canAttack = false;
+           SaveScript.enemyHealth -= damage;
+           StartCoroutine(ResetDamage());
         }
     }
 
