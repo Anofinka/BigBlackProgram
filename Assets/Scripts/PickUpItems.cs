@@ -34,7 +34,7 @@ public class UsunObiektPoKliknieciu : MonoBehaviour
                         GameObject pickedUpItem = hit.collider.gameObject;
 
                         // Zniszcz trafiony obiekt
-                        Destroy(pickedUpItem);
+                        //Destroy(pickedUpItem);
 
                         // Wywo³aj metodê SpawnInventoryItem2 z instancji inv
                         //inv.SpawnInventoryItem2(pickedUpItem);

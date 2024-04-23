@@ -28,9 +28,11 @@ public class PlayerController : MonoBehaviour
     float lastAttackTime = 0f;
     float attackCooldown = 1f;
     public int damage = 10;
+   
 
     void Awake()
     {
+       
         agent = GetComponent<NavMeshAgent>();
         animator = GetComponent<Animator>();
         // Pobierz komponent Transform bezpośrednio z clickEffectObj
