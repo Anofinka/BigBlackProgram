@@ -1,49 +1,37 @@
 using UnityEngine;
 
-public class EquipmentManager : MonoBehaviour
+public class MeshSwitcher : MonoBehaviour
 {
-    public GameObject newItem;
-    public GameObject targetObject; // Obiekt, którego mesh bêdzie zmieniany
-    public SkinnedMeshRenderer targetMesh; // SkinnedMeshRenderer obiektu, którego mesh bêdzie zmieniany
+    public SkinnedMeshRenderer targetMesh; 
+    public SkinnedMeshRenderer alternateMeshes; 
+
+  
+
+    void Start()
+    {
+        // Domyœlnie ustawiamy pierwszy mesh z alternatywnej listy
+        
+            
+        
+    }
 
     void Update()
     {
-        // Sprawdzamy, czy zosta³ naciœniêty klawisz K
+        // Jeœli wciœniêto klawisz "K"...
         if (Input.GetKeyDown(KeyCode.K))
         {
-            ChangeEquipment();
+            // Zmieniamy na kolejny mesh z listy alternatywnych mesheów
+            
+            SwitchMesh();
         }
     }
 
-    void ChangeEquipment()
+    // Funkcja zmieniaj¹ca aktualny mesh
+    void SwitchMesh()
     {
-        if (newItem != null)
-        {
-            SkinnedMeshRenderer newItemMesh = newItem.GetComponent<SkinnedMeshRenderer>();
-            if (newItemMesh != null)
-            {
-                if (targetMesh != null)
-                {
-                    // Assign the new mesh and bones to the SkinnedMeshRenderer of the target mesh
-                    targetMesh.sharedMesh = newItemMesh.sharedMesh;
-                    targetMesh.bones = newItemMesh.bones;
-                    targetMesh.rootBone = newItemMesh.rootBone;
-                }
-                else
-                {
-                    Debug.LogError("Target mesh is not assigned.");
-                }
-            }
-            else
-            {
-                Debug.LogError("New item does not have a SkinnedMeshRenderer component.");
-            }
-        }
-        else
-        {
-            Debug.LogError("New item is not assigned.");
-        }
+       
+        targetMesh.bones = alternateMeshes.bones; // Zmieniamy koœci
+        targetMesh.rootBone = alternateMeshes.rootBone; // Zmieniamy koœæ g³ówn¹
+      
     }
-
-
 }
