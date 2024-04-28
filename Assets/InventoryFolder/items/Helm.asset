@@ -14,4 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   sprite: {fileID: -502058637, guid: d2cb67868571041489610c2a3f08da8a, type: 3}
   itemTag: 1
+  meshItem: {fileID: -2854808510063695659, guid: a2faa7a3198f3a841bc79b1a81d681b1, type: 3}
+  Kame: Helm of protection
   equipmentPrefab: {fileID: 0}

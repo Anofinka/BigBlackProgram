@@ -12,5 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4f01cccb2c080ea45b4d365239347695, type: 3}
   m_Name: Chestplate
   m_EditorClassIdentifier: 
-  sprite: {fileID: -2026375829, guid: 383aef37898fa624db3efdbee6c0df52, type: 3}
+  sprite: {fileID: 1792679226, guid: a64c17cc2d4c4c54aa962fe5a5c8088c, type: 3}
   itemTag: 2
+  meshItem: {fileID: -5919009186684979959, guid: a2faa7a3198f3a841bc79b1a81d681b1, type: 3}
+  Kame: Armor of protection
+  equipmentPrefab: {fileID: 0}

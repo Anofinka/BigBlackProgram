@@ -8,7 +8,8 @@ public class Inventory : MonoBehaviour
 {
     public static Inventory Singleton;
     public static InventoryItem carriedItem;
-
+    [SerializeField] SkinnedMeshRenderer[] eqItems;
+    public Mesh originalMesh = null;
     [SerializeField] InventorySlot[] inventorySlots;
     [SerializeField] InventorySlot[] hotbarSlots;
 
@@ -55,25 +56,67 @@ public class Inventory : MonoBehaviour
 
     public void EquipEquipment(SlotTag tag, InventoryItem item = null)
     {
+        //SkinnedMeshRenderer originalMesh;
+       
+                 
         switch (tag)
         {
             case SlotTag.Head:
                 if (item == null)
                 {
-                    // Destroy item.equipmentPrefab on the Player Object;
+                    // Zdejmowanie elementu z g³owy, przywrócenie oryginalnej siatki
                     Debug.Log("Unequipped helmet on " + tag);
+                    UpdateMesh(eqItems[0], originalMesh);
                 }
                 else
                 {
-                    // Instantiate item.equipmentPrefab on the Player Object;
-                    Debug.Log("Equipped " + item.myItem.name + " on " + tag);
+                    // Za³o¿enie nowego elementu na g³owê
+                    Debug.Log("Equipped helmet: " + item.myItem.name + " on " + tag);
+                    UpdateMesh(eqItems[0], item.Mesh2);
                 }
                 break;
             case SlotTag.Chest:
+
+                if (item == null)
+                {
+                    // Zdejmowanie elementu z g³owy, przywrócenie oryginalnej siatki
+                    Debug.Log("Unequipped helmet on " + tag);
+                    UpdateMesh(eqItems[1], originalMesh);
+                }
+                else
+                {
+                    // Za³o¿enie nowego elementu na g³owê
+                    Debug.Log("Equipped helmet: " + item.myItem.name + " on " + tag);
+                    UpdateMesh(eqItems[1], item.Mesh2);
+                }
                 break;
             case SlotTag.Legs:
+                if (item == null)
+                {
+                    // Zdejmowanie elementu z g³owy, przywrócenie oryginalnej siatki
+                    Debug.Log("Unequipped helmet on " + tag);
+                    UpdateMesh(eqItems[2], originalMesh);
+                }
+                else
+                {
+                    // Za³o¿enie nowego elementu na g³owê
+                    Debug.Log("Equipped helmet: " + item.myItem.name + " on " + tag);
+                    UpdateMesh(eqItems[2], item.Mesh2);
+                }
                 break;
             case SlotTag.Feet:
+                if (item == null)
+                {
+                    // Zdejmowanie elementu z g³owy, przywrócenie oryginalnej siatki
+                    Debug.Log("Unequipped helmet on " + tag);
+                    UpdateMesh(eqItems[3], originalMesh);
+                }
+                else
+                {
+                    // Za³o¿enie nowego elementu na g³owê
+                    Debug.Log("Equipped helmet: " + item.myItem.name + " on " + tag);
+                    UpdateMesh(eqItems[3], item.Mesh2);
+                }
                 break;
         }
     }
@@ -131,5 +174,10 @@ public class Inventory : MonoBehaviour
             }
         }
     }
+    public void UpdateMesh(SkinnedMeshRenderer renderer, Mesh newMesh)
+    {
+        renderer.sharedMesh = newMesh;
+    }
+
 
 }

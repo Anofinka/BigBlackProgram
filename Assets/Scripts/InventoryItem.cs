@@ -13,7 +13,7 @@ public class InventoryItem : MonoBehaviour, IPointerClickHandler
 
     public Item myItem { get; set; }
     public InventorySlot activeSlot { get; set; }
-
+    public Mesh Mesh2;
     void Awake()
     {
         canvasGroup = GetComponent<CanvasGroup>();
@@ -27,6 +27,8 @@ public class InventoryItem : MonoBehaviour, IPointerClickHandler
         activeSlot.myItem = this;
         myItem = item;
         itemIcon.sprite = item.sprite;
+        Mesh2 = item.meshItem;
+        name = item.Kame;
            
     }
 

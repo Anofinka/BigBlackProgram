@@ -7,7 +7,8 @@ public class Item : ScriptableObject
 {
     public Sprite sprite;
     public SlotTag itemTag;
-
+    public Mesh meshItem;
+    public string Kame;
     [Header("If the item can be equipped")]
     public GameObject equipmentPrefab;
 }
