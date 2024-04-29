@@ -11,6 +11,8 @@ public class EnemyMove : MonoBehaviour
     private NavMeshAgent nav;
     private Animator anim;
     private AnimatorStateInfo enemyInfo;
+    public float attackCooldown = 2f; // Opóźnienie między kolejnymi atakami
+    private float lastAttackTime = 0f;
 
     private float x;
     private float z;
@@ -22,19 +24,25 @@ public class EnemyMove : MonoBehaviour
     public float runRange = 12.0f;
     public AudioSource attackSound;
     public float enemyHealth;
-    private int maxHealth = 100; 
+    private int maxHealth = 100;
     public Image healtBar;
     private float fillHealth;
     public GameObject mainCam;
     private WaitForSeconds lookTime = new WaitForSeconds(2);
     bool isAlive = true;
-    
+
+
+    Animator playerAnimator;
+    public AudioClip[] deathClips;
+
+
     void Start()
     {
         thisEnemy.GetComponent<Outline>().enabled = false;
         nav = GetComponent<NavMeshAgent>();
         anim = GetComponent<Animator>();
-        nav.avoidancePriority = Random.Range(5,75);
+        nav.avoidancePriority = Random.Range(5, 75);
+        playerAnimator = GameObject.FindGameObjectWithTag("Player").GetComponent<Animator>();
     }
 
     void Update()
@@ -46,71 +54,72 @@ public class EnemyMove : MonoBehaviour
         // Ustawienie paska zdrowia w stronę kamery
         healtBar.transform.LookAt(mainCam.transform.position);
 
-        if(enemyHealth <= 0 && isAlive ==true)
+        if (enemyHealth <= 0 && isAlive == true)
         {
             isAlive = false;
             nav.isStopped = true;
             anim.SetTrigger("die");
             nav.avoidancePriority = 1;
         }
-        
+
 
         // Reszta kodu...
-        
-        if(outlineOn == false)
+
+        if (outlineOn == false)
         {
             outlineOn = true;
-            if(SaveScript.theTarget == thisEnemy)
+            if (SaveScript.theTarget == thisEnemy)
             {
                 thisEnemy.GetComponent<Outline>().enabled = false;
                 outlineOn = false;
             }
         }
-        if(player == null)
+        if (player == null)
         {
             player = GameObject.FindGameObjectWithTag("Player");
         }
         x = nav.velocity.x;
         z = nav.velocity.z;
         velocitySpeed = x + z;
-        if(velocitySpeed == 0)
+        if (velocitySpeed == 0)
         {
             anim.SetBool("running", false);
         }
         else
         {
-           anim.SetBool("running", true); 
-           isAttacking = false;
+            anim.SetBool("running", true);
+            isAttacking = false;
         }
         enemyInfo = anim.GetCurrentAnimatorStateInfo(0);
-        distance = Vector3.Distance(transform.position,player.transform.position);
-        
-        if(isAlive)
+        distance = Vector3.Distance(transform.position, player.transform.position);
+        if (isAlive && player.GetComponent<PlayerController>().Life)
         {
-            if(distance < attackRange || distance > runRange)
+            if (distance < attackRange || distance > runRange)
             {
                 nav.isStopped = true;
-                if(distance < attackRange && enemyInfo.IsTag("nonAttack"))
+                if (distance < attackRange && enemyInfo.IsTag("nonAttack"))
                 {
-                    if(isAttacking == false)
+                    if (!isAttacking && Time.time >= lastAttackTime + attackCooldown)
                     {
                         isAttacking = true;
+                        lastAttackTime = Time.time; // Ustaw czas ostatniego ataku
                         anim.SetTrigger("attack");
                         transform.LookAt(player.transform);
                         StartCoroutine(LookAtPlayer());
                         Debug.Log("Straciles 10hp");
+                        playerAnimator.SetTrigger("hit");
 
-                        if(attackSound != null) 
+                        if (attackSound != null)
                         {
-                            attackSound.Play(); 
+                            attackSound.Play();
                         }
                     }
                 }
-                if(distance < attackRange && enemyInfo.IsTag("attack"))
+                if (distance < attackRange && enemyInfo.IsTag("attack"))
                 {
-                    if(isAttacking == true)
+                    if (isAttacking)
                     {
-                        isAttacking = false;
+                        isAttacking = false; // Zakończ atak, ustawiając flagę na false
                     }
                 }
             }
@@ -129,9 +138,47 @@ public class EnemyMove : MonoBehaviour
     IEnumerator LookAtPlayer()
     {
         yield return lookTime;
-        if(isAlive == true)
+        if (isAlive == true)
         {
             transform.LookAt(player.transform);
+        }
+    }
+
+    public void TakeDamageFromPlayer(int damage)
+    {
+        if (enemyHealth > 0)
+        {
+            enemyHealth -= damage;
+            if (enemyHealth <= 0 && isAlive)
+            {
+
+                isAlive = false;
+                nav.isStopped = true;
+                anim.SetTrigger("die");
+                nav.avoidancePriority = 1;
+                if (deathClips != null && deathClips.Length > 0)
+                {
+                    int randomIndex = Random.Range(0, deathClips.Length);
+                    AudioSource.PlayClipAtPoint(deathClips[randomIndex], transform.position);
+                }
+            }
+            else
+            {
+                anim.SetTrigger("hit"); // Uruchom animację obrażeń wroga
+            }
+        }
+    }
+    public void TakeDamageFromTrap(float damage)
+    {
+        if (isAlive)
+        {
+            enemyHealth -= damage;
+            if (enemyHealth <= 0)
+            {
+                isAlive = false;
+                // Tutaj możesz dodać dodatkowe działania w przypadku śmierci przeciwnika, np. odtwarzanie animacji śmierci
+                Destroy(gameObject); // Możesz również usunąć obiekt przeciwnika, jeśli chcesz, żeby zniknął po śmierci
+            }
         }
     }
 }
