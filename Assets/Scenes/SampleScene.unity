@@ -3718,6 +3718,20 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &600029323
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 600029308}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 76325c8d2d39d084088d7d5902374930, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  CrushEffect: {fileID: 1791193318238212355, guid: cda2dae80c6fd1f45b19ce5590d2cc09, type: 3}
+  CrushAudio: {fileID: 8300000, guid: dc49311d023cb604e9744b94e202acab, type: 3}
 --- !u!4 &606064807 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1126159276864768229, guid: 5ea6f144ff19a1749a20afd04bb05dbc, type: 3}
@@ -9249,6 +9263,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 627393451398593500, guid: 5ea6f144ff19a1749a20afd04bb05dbc, type: 3}
       insertIndex: -1
       addedObject: {fileID: 600029321}
+    - targetCorrespondingSourceObject: {fileID: 627393451398593500, guid: 5ea6f144ff19a1749a20afd04bb05dbc, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 600029323}
     - targetCorrespondingSourceObject: {fileID: 2127170165622105891, guid: 5ea6f144ff19a1749a20afd04bb05dbc, type: 3}
       insertIndex: -1
       addedObject: {fileID: 594134361}

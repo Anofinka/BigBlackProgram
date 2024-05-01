@@ -47,6 +47,7 @@ public class PlayerController : MonoBehaviour
     public ParticleSystem healEffect;
     public ParticleSystem buffEffect;
     public ParticleSystem DushEffect;
+    
 
     [Header("Dush")]
     public float dushaRange = 10f; // maksymalny zasięg umiejętności "Dusha"
