@@ -11,9 +11,9 @@ public class Enemy : MonoBehaviour
     [SerializeField] GameObject ragdoll;
 
     [Header("Combat")]
-    [SerializeField] float attackCD = 3f;
-    [SerializeField] float attackRange = 1f;
-    [SerializeField] float aggroRange = 4f;
+    [SerializeField] float attackCD;
+    [SerializeField] float attackRange;
+    [SerializeField] float aggroRange;
 
     GameObject player;
     NavMeshAgent agent;
@@ -21,18 +21,22 @@ public class Enemy : MonoBehaviour
     float timePassed;
     float newDestinationCD = 0.5f;
 
+    bool isAttacking = false; // Flaga okreœlaj¹ca, czy wrogowie wykonuj¹ atak
+    float originalAgentSpeed; // Zmienna przechowuj¹ca oryginaln¹ prêdkoœæ agenta
+
     void Start()
     {
         agent = GetComponent<NavMeshAgent>();
         animator = GetComponent<Animator>();
         player = GameObject.FindGameObjectWithTag("Player");
+
+        // Zapisz oryginaln¹ prêdkoœæ agenta
+        originalAgentSpeed = agent.speed;
     }
 
-    // Update is called once per frame
     void Update()
     {
-       // animator.SetFloat("speed", agent.velocity.magnitude / agent.speed);
-
+        agent.speed = originalAgentSpeed;
         if (player == null)
         {
             return;
@@ -43,7 +47,8 @@ public class Enemy : MonoBehaviour
             if (Vector3.Distance(player.transform.position, transform.position) <= attackRange)
             {
                 animator.SetTrigger("attack");
-                timePassed = 0;
+                isAttacking = true; // Ustaw flagê ataku na true
+                agent.speed = 0; // Zatrzymaj agenta podczas ataku
             }
         }
         timePassed += Time.deltaTime;
@@ -55,6 +60,8 @@ public class Enemy : MonoBehaviour
         }
         newDestinationCD -= Time.deltaTime;
         transform.LookAt(player.transform);
+
+        SetAnimations();
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -76,22 +83,20 @@ public class Enemy : MonoBehaviour
     {
         health -= damageAmount;
         animator.SetTrigger("damage");
-        //CameraShake.Instance.ShakeCamera(2f, 0.2f);
 
         if (health <= 0)
         {
             Die();
         }
     }
-/*    public void StartDealDamage()
+
+    public void AttackAnimationEnd()
     {
-        GetComponentInChildren<EnemyDamageDealer>().StartDealDamage();
-    }*/
-  /*  public void EndDealDamage()
-    {
-        GetComponentInChildren<EnemyDamageDealer>().EndDealDamage();
+        isAttacking = false; // Po zakoñczeniu animacji ataku ustaw flagê ataku na false
+        agent.speed = originalAgentSpeed; // Przywróæ normaln¹ prêdkoœæ agenta
+        agent.velocity = Vector3.zero; // Zatrzymaj agenta po zakoñczeniu animacji ataku
     }
-*/
+
     public void HitVFX(Vector3 hitPosition)
     {
         GameObject hit = Instantiate(hitVFX, hitPosition, Quaternion.identity);
@@ -104,5 +109,17 @@ public class Enemy : MonoBehaviour
         Gizmos.DrawWireSphere(transform.position, attackRange);
         Gizmos.color = Color.yellow;
         Gizmos.DrawWireSphere(transform.position, aggroRange);
+    }
+
+    void SetAnimations()
+    {
+        if (agent.velocity != Vector3.zero)
+        {
+            animator.SetBool("walk", true);
+        }
+        else
+        {
+            animator.SetBool("walk", false);
+        }
     }
 }
