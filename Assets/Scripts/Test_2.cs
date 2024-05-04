@@ -55,6 +55,7 @@ public class RotateTowardsMouse : MonoBehaviour
         characterRotation = character.transform.rotation;
         isCrushAttackActive = true;
         cooldownDuration = CrushEffect.main.duration; // Ustaw czas odnowienia
+
         StartCoroutine(CrushAttack());
     }
 
@@ -77,8 +78,9 @@ public class RotateTowardsMouse : MonoBehaviour
 
     IEnumerator CrushAttack()
     {
+        
         ParticleSystem effectInstance = Instantiate(CrushEffect, characterPosition, characterRotation);
-        AudioSource.PlayClipAtPoint(CrushAudio, transform.position);
+        AudioSource.PlayClipAtPoint(CrushAudio, character.transform.position);
         effectInstance.Play();
         effectInstance.gameObject.SetActive(true);
 

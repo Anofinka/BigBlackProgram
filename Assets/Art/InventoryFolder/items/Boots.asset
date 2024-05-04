@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4f01cccb2c080ea45b4d365239347695, type: 3}
   m_Name: Boots
   m_EditorClassIdentifier: 
-  sprite: {fileID: 511937791, guid: 66cc4cd73e697c643ae48b1b17411998, type: 3}
+  sprite: {fileID: 21300000, guid: 33ecf9ec13a42524cbaed293f19d67c2, type: 3}
   itemTag: 4
   meshItem: {fileID: 2040378792612525785, guid: a2faa7a3198f3a841bc79b1a81d681b1, type: 3}
   Kame: Boots_Of_Protection

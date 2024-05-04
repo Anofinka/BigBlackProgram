@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4f01cccb2c080ea45b4d365239347695, type: 3}
   m_Name: Pants
   m_EditorClassIdentifier: 
-  sprite: {fileID: 1631377759, guid: 17a3db8da953aac489ae101c3eec480b, type: 3}
+  sprite: {fileID: 21300000, guid: b3bfd41681cd89c478d505292331c787, type: 3}
   itemTag: 3
   meshItem: {fileID: 2635657950084992684, guid: a2faa7a3198f3a841bc79b1a81d681b1, type: 3}
   Kame: Leggins_Of_Protection
