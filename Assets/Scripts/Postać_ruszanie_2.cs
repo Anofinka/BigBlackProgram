@@ -49,6 +49,12 @@ public class Postać_ruszanie_2 : MonoBehaviour
     public ParticleSystem DushEffect;
 
 
+
+    public float gravityMultiplier = 2;
+    [HideInInspector]
+    public float gravityValue = -9.81f;
+
+
     [Header("Dush")]
     public float dushaRange = 10f; // maksymalny zasięg umiejętności "Dusha"
     public LineRenderer dushaRangeIndicator; // obiekt wizualizacji zasięgu umiejętności "Dusha"
@@ -72,7 +78,7 @@ public class Postać_ruszanie_2 : MonoBehaviour
             DushEffect.Stop();
 
         }
-
+        gravityValue *= gravityMultiplier;
         // Inicjalizacja wizualizacji zasięgu umiejętności "Dusha"
         dushaRangeIndicator.positionCount = 2;
         dushaRangeIndicator.startWidth = 0.1f;
