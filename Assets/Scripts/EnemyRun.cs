@@ -21,13 +21,14 @@ public class Enemy : MonoBehaviour
     float timePassed;
     float newDestinationCD = 0.5f;
 
+
     bool isAttacking = false; // Flaga okreœlaj¹ca, czy wrogowie wykonuj¹ atak
     float originalAgentSpeed; // Zmienna przechowuj¹ca oryginaln¹ prêdkoœæ agenta
 
     void Start()
     {
         agent = GetComponent<NavMeshAgent>();
-        animator = GetComponent<Animator>();
+        
         player = GameObject.FindGameObjectWithTag("Player");
 
         // Zapisz oryginaln¹ prêdkoœæ agenta
