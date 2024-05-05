@@ -1,6 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEditor.Rendering.LookDev;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -22,7 +19,7 @@ public class Enemy : MonoBehaviour
     float newDestinationCD = 0.5f;
 
 
-    bool isAttacking = false; // Flaga okreœlaj¹ca, czy wrogowie wykonuj¹ atak
+    //bool isAttacking = false; // Flaga okreœlaj¹ca, czy wrogowie wykonuj¹ atak
     float originalAgentSpeed; // Zmienna przechowuj¹ca oryginaln¹ prêdkoœæ agenta
 
     void Start()
@@ -48,7 +45,7 @@ public class Enemy : MonoBehaviour
             if (Vector3.Distance(player.transform.position, transform.position) <= attackRange)
             {
                 animator.SetTrigger("attack");
-                isAttacking = true; // Ustaw flagê ataku na true
+                //isAttacking = true; // Ustaw flagê ataku na true
                 agent.speed = 0; // Zatrzymaj agenta podczas ataku
             }
         }
@@ -93,7 +90,7 @@ public class Enemy : MonoBehaviour
 
     public void AttackAnimationEnd()
     {
-        isAttacking = false; // Po zakoñczeniu animacji ataku ustaw flagê ataku na false
+        //isAttacking = false; // Po zakoñczeniu animacji ataku ustaw flagê ataku na false
         agent.speed = originalAgentSpeed; // Przywróæ normaln¹ prêdkoœæ agenta
         agent.velocity = Vector3.zero; // Zatrzymaj agenta po zakoñczeniu animacji ataku
     }

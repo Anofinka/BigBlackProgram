@@ -2,6 +2,8 @@ using UnityEngine;
 using System.Collections;
 using TMPro;
 using UnityEngine.UI;
+using UnityEngine.AI;
+using System.Collections.Generic;
 
 public class RotateTowardsMouse : MonoBehaviour
 {
@@ -13,10 +15,12 @@ public class RotateTowardsMouse : MonoBehaviour
     public bool isCrushAttackActive = false;
     private Vector3 characterPosition;
     private Quaternion characterRotation;
-    private float cooldownDuration = 0.0f; // Dodaj zmienn¹ do przechowywania czasu odnowienia
+    private float cooldownDuration = 0.0f;
     private Animator characterAnimator;
-    // Dodaj zmienn¹ boolowsk¹ do okreœlenia, czy postaæ jest w trakcie animacji ataku
     private bool isAttacking = false;
+    private bool ismoving = false;
+    private NavMeshAgent agent;
+    Dictionary<string, Coroutine> activeCoroutines = new Dictionary<string, Coroutine>();
 
     void Start()
     {
@@ -27,44 +31,53 @@ public class RotateTowardsMouse : MonoBehaviour
             CrushEffect.Stop();
             CrushEffect.gameObject.SetActive(false);
             characterAnimator = character.GetComponent<Animator>();
+            agent = character.GetComponent<NavMeshAgent>();
         }
     }
 
     void Update()
     {
-        if (!isAttacking) // Dodaj warunek sprawdzaj¹cy, czy postaæ nie jest w trakcie animacji ataku
+        if (!isAttacking)
         {
-            if (Input.GetKeyDown(KeyCode.R) || Input.GetKeyDown(KeyCode.T))
+            if (agent.velocity == Vector3.zero)
             {
-                Vector3 direction = Input.mousePosition - new Vector3(Screen.width / 2, Screen.height / 2, 0);
-                character.transform.LookAt(character.transform.position + new Vector3(direction.x, 0, direction.y));
-            }
+                if (ismoving) ismoving = false;
 
-            if (Input.GetKeyDown(KeyCode.T) && !isCrushAttackActive)
-            {
-                // Rozpocznij animacjê ataku i zatrzymaj postaæ
-                StartCrushAttack();
-            }
-            if (Input.GetKeyDown(KeyCode.Alpha1))
+                if (Input.GetKeyDown(KeyCode.T) && !isCrushAttackActive)
                 {
-                characterAnimator.SetTrigger("attack");
-            }
-            if (Input.GetKeyDown(KeyCode.Alpha2))
-            {
-                characterAnimator.SetTrigger("atack_2");
-            }  
-            if (Input.GetKeyDown(KeyCode.Alpha3))
-            {
-                characterAnimator.SetTrigger("atack_3");
-            }
-            if (Input.GetKeyDown(KeyCode.Alpha4))
-            {
-                characterAnimator.SetTrigger("atack_4");
-            }
+                    odwrocsie();
+                    StartCrushAttack();
+                }
+                if (Input.GetKeyDown(KeyCode.Alpha1))
+                {
+                    
+                    StartOrRestartCoroutine("attack", 0.3f);
+                }
 
+                if (Input.GetKeyDown(KeyCode.Alpha2))
+                {
+
+                    StartOrRestartCoroutine("attack_2", 0.3f);
+                }
+                if (Input.GetKeyDown(KeyCode.Alpha3))
+                {
+                    StartOrRestartCoroutine("attack_3", 0.3f);
+                }
+                if (Input.GetKeyDown(KeyCode.Alpha4))
+                {
+                    StartOrRestartCoroutine("attack_4", 0.3f);
+                }
+            }
+            else if (!ismoving)
+            {
+                ismoving = true;
+                foreach (var parameter in characterAnimator.parameters)
+                {
+                    characterAnimator.ResetTrigger(parameter.name);
+                }
+            }
         }
 
-        // Aktualizacja tekstu i wype³nienia obrazka cooldownu w czasie rzeczywistym
         if (isCrushAttackActive)
         {
             UpdateCooldown();
@@ -76,9 +89,8 @@ public class RotateTowardsMouse : MonoBehaviour
         characterPosition = character.transform.position;
         characterRotation = character.transform.rotation;
         isCrushAttackActive = true;
-        cooldownDuration = CrushEffect.main.duration; // Ustaw czas odnowienia
+        cooldownDuration = CrushEffect.main.duration;
 
-        // Rozpocznij animacjê ataku
         StartCoroutine(CrushAttack());
     }
 
@@ -89,30 +101,22 @@ public class RotateTowardsMouse : MonoBehaviour
         {
             TextCD.gameObject.SetActive(false);
             cooldown.fillAmount = 0.0f;
-            isCrushAttackActive = false; // Zakoñcz atak, gdy czas odnowienia siê skoñczy
+            isCrushAttackActive = false;
         }
         else
         {
             TextCD.gameObject.SetActive(true);
             TextCD.text = Mathf.Round(cooldownDuration).ToString();
-            cooldown.fillAmount = 1.0f - (cooldownDuration / CrushEffect.main.duration); // Aktualizuj wype³nienie obrazka cooldownu
+            cooldown.fillAmount = 1.0f - (cooldownDuration / CrushEffect.main.duration);
         }
     }
 
     IEnumerator AttackRoutine()
     {
-        // Odtwórz animacjê ataku
-        
-
-        // Oczekuj na zakoñczenie animacji ataku
         yield return new WaitForSeconds(2f);
-
-        // Po zakoñczeniu animacji ataku, przejdŸ do animacji idle
-       // characterAnimator.SetTrigger("Idle");
     }
     IEnumerator CrushAttack()
     {
-        // Ustaw flagê na true, aby wstrzymaæ ruch postaci podczas animacji ataku
         isAttacking = true;
 
         ParticleSystem effectInstance = Instantiate(CrushEffect, characterPosition, characterRotation);
@@ -120,14 +124,62 @@ public class RotateTowardsMouse : MonoBehaviour
         effectInstance.Play();
         effectInstance.gameObject.SetActive(true);
 
-        // Oczekuj na zakoñczenie animacji ataku
         yield return new WaitForSeconds(effectInstance.main.duration);
 
         effectInstance.Stop();
         effectInstance.gameObject.SetActive(false);
         Destroy(effectInstance.gameObject);
 
-        // Po zakoñczeniu animacji ataku ustaw flagê na false, aby umo¿liwiæ ruch postaci
         isAttacking = false;
     }
+
+    IEnumerator OnShotRoutine(string nameZ, float timeZ)
+    {
+        characterAnimator.SetBool(nameZ, true);
+        odwrocsie();
+        yield return new WaitForSeconds(timeZ);
+        characterAnimator.SetBool(nameZ, false);
+
+        // Po zakoñczeniu coroutine usuñ j¹ z listy
+        if (activeCoroutines.ContainsKey(nameZ))
+        {
+            activeCoroutines.Remove(nameZ);
+        }
+    }
+
+
+    void odwrocsie()
+    {
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        RaycastHit hit;
+
+        // SprawdŸ, czy promieñ z myszy trafia w NavMesh
+        if (Physics.Raycast(ray, out hit))
+        {
+            // Pobierz pozycjê na NavMeshu najbli¿sz¹ punktowi trafienia
+            NavMeshHit navHit;
+            if (NavMesh.SamplePosition(hit.point, out navHit, 100f, NavMesh.AllAreas))
+            {
+                // Obróæ postaæ w kierunku punktu na NavMeshu
+                Vector3 lookDirection = navHit.position - character.transform.position;
+                if (lookDirection != Vector3.zero)
+                {
+                    character.transform.rotation = Quaternion.LookRotation(lookDirection);
+                }
+            }
+        }
+    }
+
+    void StartOrRestartCoroutine(string paramName, float duration)
+    {
+        if (activeCoroutines.ContainsKey(paramName))
+        {
+            StopCoroutine(activeCoroutines[paramName]);
+            activeCoroutines.Remove(paramName);
+        }
+
+        Coroutine newCoroutine = StartCoroutine(OnShotRoutine(paramName, duration));
+        activeCoroutines.Add(paramName, newCoroutine);
+    }
+
 }
