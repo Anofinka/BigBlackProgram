@@ -30,7 +30,7 @@ public class Enemy : MonoBehaviour
         agent = GetComponent<NavMeshAgent>();
         
         player = GameObject.FindGameObjectWithTag("Player");
-
+        animator = GetComponent<Animator>();
         // Zapisz oryginaln¹ prêdkoœæ agenta
         originalAgentSpeed = agent.speed;
     }
