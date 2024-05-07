@@ -86,3 +86,10 @@ TextureImporter:
   userData: 
   assetBundleName: 
   assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 160253
+  packageName: Classic RPG GUI
+  packageVersion: 1.1
+  assetPath: Assets/Kradzione/Classic_RPG_GUI/frame_backgrounds/wand_background.png
+  uploadId: 445012
