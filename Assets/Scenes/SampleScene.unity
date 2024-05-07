@@ -909,6 +909,10 @@ PrefabInstance:
       propertyPath: attackRange
       value: 2
       objectReference: {fileID: 0}
+    - target: {fileID: 1887939837140302508, guid: b602b8577bef64b4ab749affbbc723a5, type: 3}
+      propertyPath: enemyName
+      value: huj
+      objectReference: {fileID: 0}
     - target: {fileID: 6327992506199420836, guid: b602b8577bef64b4ab749affbbc723a5, type: 3}
       propertyPath: m_Carve
       value: 0
@@ -949,15 +953,16 @@ PrefabInstance:
       propertyPath: m_TimeToStationary
       value: 0.28
       objectReference: {fileID: 0}
+    - target: {fileID: 7868157312032339286, guid: b602b8577bef64b4ab749affbbc723a5, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 5589224845288691963, guid: b602b8577bef64b4ab749affbbc723a5, type: 3}
     - {fileID: 446902978707477793, guid: b602b8577bef64b4ab749affbbc723a5, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 732653097958307394, guid: b602b8577bef64b4ab749affbbc723a5, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 808002956}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b602b8577bef64b4ab749affbbc723a5, type: 3}
 --- !u!1001 &176180288
 PrefabInstance:
@@ -2113,6 +2118,10 @@ PrefabInstance:
     - target: {fileID: 864206567335563478, guid: b602b8577bef64b4ab749affbbc723a5, type: 3}
       propertyPath: attackRange
       value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1887939837140302508, guid: b602b8577bef64b4ab749affbbc723a5, type: 3}
+      propertyPath: healthPoints
+      value: 62
       objectReference: {fileID: 0}
     - target: {fileID: 6327992506199420836, guid: b602b8577bef64b4ab749affbbc723a5, type: 3}
       propertyPath: m_Carve
@@ -5721,7 +5730,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   EnemyStatsGUI: {fileID: 87974381}
-  HPtext: {fileID: 0}
+  HpTextObjekt: {fileID: 719242897}
+  HpText: {fileID: 719242899}
 --- !u!1 &601373141
 GameObject:
   m_ObjectHideFlags: 0
@@ -6741,25 +6751,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 4683374867630889554, guid: 5ea6f144ff19a1749a20afd04bb05dbc, type: 3}
   m_PrefabInstance: {fileID: 3138500682513971791}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &746994914 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 732653097958307394, guid: b602b8577bef64b4ab749affbbc723a5, type: 3}
-  m_PrefabInstance: {fileID: 3204607248881570426}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &746994924
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 746994914}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 28f88138ccccb5a4895d0e823e324b99, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  enemyName: SassySzkielet_xXx69
-  healthPoints: 100
 --- !u!1001 &759507344
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -6918,33 +6909,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 767367891}
   m_CullTransparentMesh: 1
---- !u!1 &808002948 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 732653097958307394, guid: b602b8577bef64b4ab749affbbc723a5, type: 3}
-  m_PrefabInstance: {fileID: 175994002}
-  m_PrefabAsset: {fileID: 0}
---- !u!64 &808002956
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 808002948}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 5
-  m_Convex: 0
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 0}
 --- !u!1 &810838218
 GameObject:
   m_ObjectHideFlags: 0
@@ -14454,6 +14418,14 @@ PrefabInstance:
       propertyPath: attackRange
       value: 2
       objectReference: {fileID: 0}
+    - target: {fileID: 1887939837140302508, guid: b602b8577bef64b4ab749affbbc723a5, type: 3}
+      propertyPath: enemyName
+      value: stinky
+      objectReference: {fileID: 0}
+    - target: {fileID: 1887939837140302508, guid: b602b8577bef64b4ab749affbbc723a5, type: 3}
+      propertyPath: healthPoints
+      value: 29
+      objectReference: {fileID: 0}
     - target: {fileID: 6327992506199420836, guid: b602b8577bef64b4ab749affbbc723a5, type: 3}
       propertyPath: m_Carve
       value: 0
@@ -17122,13 +17094,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: DungeonSkeleton_demo
       objectReference: {fileID: 0}
+    - target: {fileID: 1887939837140302508, guid: b602b8577bef64b4ab749affbbc723a5, type: 3}
+      propertyPath: healthPoints
+      value: 100
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 732653097958307394, guid: b602b8577bef64b4ab749affbbc723a5, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 746994924}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b602b8577bef64b4ab749affbbc723a5, type: 3}
 --- !u!1 &3216508844006216193
 GameObject:

@@ -11,34 +11,19 @@ public class outliner : MonoBehaviour
 
     //private EnemyAttributes enemyAttributes;
     public GameObject EnemyStatsGUI;
-    public GameObject HpTextObjekt;
-    //private TextMeshPro HpText;
+    public TextMeshProUGUI HpText;
 
     void Awake()
     {
         EnemyStatsGUI.SetActive(false);
         lastHitOutline = null;
-        //HpText = HpTextObjekt.GetComponent<TextMeshPro>();
     }
 
     private void Update()
     {
         mousepos();
-
-/*            if (enemyAttributes != null)
-            {
-                // Odczytaj wartość hp z EnemyAttributes
-                float hp = enemyAttributes.GetHP();
-
-                // Możesz teraz wykorzystać wartość hp w tym skrypcie
-                Debug.Log("Enemy HP: " + hp);
-            }
-            else
-            {
-                Debug.LogWarning("EnemyAttributes reference is null!");
-            }*/
     }
-
+        
 
     void mousepos()
     {
@@ -57,11 +42,8 @@ public class outliner : MonoBehaviour
                 // Odczytaj wartość hp z komponentu EnemyAttributes
                 float hp = enemyAttributes.GetHP();
                 Debug.Log("Enemy HP: " + hp);
-                //HpText.text = enemyAttributes.GetName() + "\nHP: " + enemyAttributes.GetHP();
-                TextMeshPro hptext = HpTextObjekt.GetComponent<TextMeshPro>();
-                hptext.text = ("huj");
+                HpText.text = enemyAttributes.GetName() + "\nHP: " + enemyAttributes.GetHP();
 
-                
             }
 
             if (enemyoutline != null) //jesli enemy ma outline
