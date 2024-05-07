@@ -5614,20 +5614,6 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
---- !u!114 &600029331
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 600029308}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d7e4c7115a002734292c94248eb22ea1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  EnemyStatsGUI: {fileID: 0}
-  HpText: {fileID: 0}
 --- !u!1 &601373141
 GameObject:
   m_ObjectHideFlags: 0
@@ -16602,9 +16588,6 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 627393451398593500, guid: 5ea6f144ff19a1749a20afd04bb05dbc, type: 3}
       insertIndex: -1
       addedObject: {fileID: 600029321}
-    - targetCorrespondingSourceObject: {fileID: 627393451398593500, guid: 5ea6f144ff19a1749a20afd04bb05dbc, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 600029331}
     - targetCorrespondingSourceObject: {fileID: 2127170165622105891, guid: 5ea6f144ff19a1749a20afd04bb05dbc, type: 3}
       insertIndex: -1
       addedObject: {fileID: 594134361}
