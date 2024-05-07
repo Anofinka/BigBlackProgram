@@ -10,6 +10,7 @@ public class outliner : MonoBehaviour
     Outline lastHitOutline;
 
     //private EnemyAttributes enemyAttributes;
+    [Header("(Outline enemy + stat enemy GUI)")]
     public GameObject EnemyStatsGUI;
     public TextMeshProUGUI HpText;
 
@@ -44,6 +45,10 @@ public class outliner : MonoBehaviour
                 Debug.Log("Enemy HP: " + hp);
                 HpText.text = enemyAttributes.GetName() + "\nHP: " + enemyAttributes.GetHP();
 
+            }
+            else
+            {
+                Debug.Log("nie dales atrybutow");
             }
 
             if (enemyoutline != null) //jesli enemy ma outline
