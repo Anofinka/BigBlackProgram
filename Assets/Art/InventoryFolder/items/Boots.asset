@@ -16,4 +16,6 @@ MonoBehaviour:
   itemTag: 4
   meshItem: {fileID: 2040378792612525785, guid: a2faa7a3198f3a841bc79b1a81d681b1, type: 3}
   Kame: Boots_Of_Protection
+  "si\u0142a": 10
+  hp: 100
   equipmentPrefab: {fileID: 0}
