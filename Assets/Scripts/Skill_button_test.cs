@@ -3,7 +3,7 @@ using UnityEngine.UI;
 
 public class YourButtonScript : MonoBehaviour
 {
-    public RotateTowardsMouse rotationScript;
+   /* public RotateTowardsMouse rotationScript;
     private Button button;
 
     void Start()
@@ -28,5 +28,5 @@ public class YourButtonScript : MonoBehaviour
         {
             rotationScript.StartCrushAttack();
         }
-    }
+    }*/
 }

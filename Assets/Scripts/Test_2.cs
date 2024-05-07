@@ -7,15 +7,15 @@ using System.Collections.Generic;
 
 public class RotateTowardsMouse : MonoBehaviour
 {
-    public Image cooldown;
-    public TMP_Text TextCD;
-    public ParticleSystem CrushEffect;
-    public AudioClip CrushAudio;
+   // public Image cooldown;
+   // public TMP_Text TextCD;
+   // public ParticleSystem CrushEffect;
+   // public AudioClip CrushAudio;
     public GameObject character;
-    public bool isCrushAttackActive = false;
+  //  public bool isCrushAttackActive = false;
     private Vector3 characterPosition;
     private Quaternion characterRotation;
-    private float cooldownDuration = 0.0f;
+   // private float cooldownDuration = 0.0f;
     private Animator characterAnimator;
     private bool isAttacking = false;
     private bool ismoving = false;
@@ -24,15 +24,15 @@ public class RotateTowardsMouse : MonoBehaviour
 
     void Start()
     {
-        if (CrushEffect != null)
-        {
-            TextCD.gameObject.SetActive(false);
-            cooldown.fillAmount = 0.0f;
-            CrushEffect.Stop();
-            CrushEffect.gameObject.SetActive(false);
+       
+        
+           // TextCD.gameObject.SetActive(false);
+          //  cooldown.fillAmount = 0.0f;
+          //  CrushEffect.Stop();
+          //  CrushEffect.gameObject.SetActive(false);
             characterAnimator = character.GetComponent<Animator>();
             agent = character.GetComponent<NavMeshAgent>();
-        }
+        
     }
 
     void Update()
@@ -43,10 +43,10 @@ public class RotateTowardsMouse : MonoBehaviour
             {
                 if (ismoving) ismoving = false;
 
-                if (Input.GetKeyDown(KeyCode.T) && !isCrushAttackActive)
+                if (Input.GetKeyDown(KeyCode.T))
                 {
                     odwrocsie();
-                    StartCrushAttack();
+                  //  StartCrushAttack();
                 }
                 if (Input.GetKeyDown(KeyCode.Alpha1))
                 {
@@ -56,7 +56,7 @@ public class RotateTowardsMouse : MonoBehaviour
 
                 if (Input.GetKeyDown(KeyCode.Alpha2))
                 {
-
+                    Debug.Log("pussy");
                     StartOrRestartCoroutine("attack_2", 0.3f);
                 }
                 if (Input.GetKeyDown(KeyCode.Alpha3))
@@ -77,45 +77,45 @@ public class RotateTowardsMouse : MonoBehaviour
                 }
             }
         }
-
+/*
         if (isCrushAttackActive)
         {
             UpdateCooldown();
-        }
+        }*/
     }
 
-    public void StartCrushAttack()
+   /* public void StartCrushAttack()
     {
         characterPosition = character.transform.position;
         characterRotation = character.transform.rotation;
-        isCrushAttackActive = true;
-        cooldownDuration = CrushEffect.main.duration;
+        // isCrushAttackActive = true;
+        // cooldownDuration = CrushEffect.main.duration;
 
         StartCoroutine(CrushAttack());
-    }
+    }*/
 
-    void UpdateCooldown()
-    {
-        cooldownDuration -= Time.deltaTime;
-        if (cooldownDuration < 0.0f)
-        {
-            TextCD.gameObject.SetActive(false);
-            cooldown.fillAmount = 0.0f;
-            isCrushAttackActive = false;
-        }
-        else
-        {
-            TextCD.gameObject.SetActive(true);
-            TextCD.text = Mathf.Round(cooldownDuration).ToString();
-            cooldown.fillAmount = 1.0f - (cooldownDuration / CrushEffect.main.duration);
-        }
-    }
+    /* void UpdateCooldown()
+     {
+         cooldownDuration -= Time.deltaTime;
+         if (cooldownDuration < 0.0f)
+         {
+             TextCD.gameObject.SetActive(false);
+             cooldown.fillAmount = 0.0f;
+             isCrushAttackActive = false;
+         }
+         else
+         {
+             TextCD.gameObject.SetActive(true);
+             TextCD.text = Mathf.Round(cooldownDuration).ToString();
+             cooldown.fillAmount = 1.0f - (cooldownDuration / CrushEffect.main.duration);
+         }
+     }*/
 
     IEnumerator AttackRoutine()
     {
         yield return new WaitForSeconds(2f);
     }
-    IEnumerator CrushAttack()
+   /* IEnumerator CrushAttack()
     {
         isAttacking = true;
 
@@ -131,7 +131,7 @@ public class RotateTowardsMouse : MonoBehaviour
         Destroy(effectInstance.gameObject);
 
         isAttacking = false;
-    }
+    }*/
 
     IEnumerator OnShotRoutine(string nameZ, float timeZ)
     {
