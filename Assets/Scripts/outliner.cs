@@ -1,46 +1,42 @@
-﻿using Unity.VisualScripting;
+﻿using TMPro;
 using UnityEngine;
-using UnityEngine.AI;
-using UnityEngine.EventSystems;
 
 public class outliner : MonoBehaviour
 {
-
-    //const string IDLE = "Idle";
-    //const string WALK = "Walk";
-
- /*   CustomActions input;
-    UnityEngine.Object pint;*/
-   // NavMeshAgent agent;
-    //Animator animator;
-    //Transform particletransform;
-    //ParticleSystem particlesystem;
-
-    [Header("Movement")]
-    //[SerializeField] ParticleSystem clickEffect;
-    //[SerializeField] Transform transpart;
-/*    public Object clickEffectObj;
-    [SerializeField] LayerMask clickableLayers;*/
-    //Object swap;
     RaycastHit hit;
 
     GameObject enemyobject;
     Outline enemyoutline;
-
     Outline lastHitOutline;
 
-    //private Vector3 lastMousePosition;
+    //private EnemyAttributes enemyAttributes;
+    public GameObject EnemyStatsGUI;
+    public GameObject HpTextObjekt;
+    //private TextMeshPro HpText;
 
     void Awake()
     {
-       // agent = GetComponent<NavMeshAgent>();
+        EnemyStatsGUI.SetActive(false);
         lastHitOutline = null;
-
+        //HpText = HpTextObjekt.GetComponent<TextMeshPro>();
     }
 
-    void Update()
+    private void Update()
     {
         mousepos();
+
+/*            if (enemyAttributes != null)
+            {
+                // Odczytaj wartość hp z EnemyAttributes
+                float hp = enemyAttributes.GetHP();
+
+                // Możesz teraz wykorzystać wartość hp w tym skrypcie
+                Debug.Log("Enemy HP: " + hp);
+            }
+            else
+            {
+                Debug.LogWarning("EnemyAttributes reference is null!");
+            }*/
     }
 
 
@@ -48,10 +44,25 @@ public class outliner : MonoBehaviour
     {
         if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit, 100) && hit.collider.CompareTag("enemy"))
         {
-            Debug.Log(hit.point);
             //outline awake
             enemyobject = hit.collider.gameObject;
+            EnemyAttributes enemyAttributes = enemyobject.GetComponent<EnemyAttributes>();
+
             enemyoutline = enemyobject.GetComponent<Outline>();
+            EnemyStatsGUI.SetActive(true);
+
+            //jesli posiada atrybuty
+            if (enemyAttributes != null)
+            {
+                // Odczytaj wartość hp z komponentu EnemyAttributes
+                float hp = enemyAttributes.GetHP();
+                Debug.Log("Enemy HP: " + hp);
+                //HpText.text = enemyAttributes.GetName() + "\nHP: " + enemyAttributes.GetHP();
+                TextMeshPro hptext = HpTextObjekt.GetComponent<TextMeshPro>();
+                hptext.text = ("huj");
+
+                
+            }
 
             if (enemyoutline != null) //jesli enemy ma outline
             {
@@ -68,6 +79,7 @@ public class outliner : MonoBehaviour
         }
         else
         {
+            EnemyStatsGUI.SetActive(false);
             // Wy��cz kontur, je�li kursor nie jest nad obiektem
             if (lastHitOutline != null)
             {
