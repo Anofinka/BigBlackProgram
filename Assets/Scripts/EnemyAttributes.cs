@@ -38,4 +38,9 @@ public class EnemyAttributes : MonoBehaviour
         Debug.Log("Enemy " + enemyName + " died.");
         Destroy(gameObject);
     }
+    public float GetBarValue()
+    {
+        return (currentHealth / maxHealth);
+    }
+    
 }

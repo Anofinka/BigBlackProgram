@@ -1,5 +1,6 @@
 ﻿using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class outliner : MonoBehaviour
 {
@@ -14,6 +15,7 @@ public class outliner : MonoBehaviour
     public GameObject EnemyStatsGUI;
     public TextMeshProUGUI NameText;
     public TextMeshProUGUI LvlText;
+    public Slider HPslider;
 
 
     void Awake()
@@ -47,9 +49,9 @@ public class outliner : MonoBehaviour
                 //Debug.Log("Enemy HP: " + hp);
                 //NameText.text = enemyAttributes.GetName() + "\nHP: " + enemyAttributes.GetHPByLvl() + "\nLvL: " + enemyAttributes.GetLevel();
                 //NameText.text = enemyAttributes.GetName();
-                NameText.text = "" + enemyAttributes.GetHP();
+                NameText.text = "" + enemyAttributes.GetName();
                 LvlText.text = "" + enemyAttributes.GetLevel();
-
+                HPslider.value = enemyAttributes.GetBarValue();
             }
             else
             {
