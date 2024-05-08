@@ -1,7 +1,5 @@
 using UnityEngine;
 using System.Collections;
-using TMPro;
-using UnityEngine.UI;
 using UnityEngine.AI;
 using System.Collections.Generic;
 
@@ -21,10 +19,11 @@ public class RotateTowardsMouse : MonoBehaviour
     private bool ismoving = false;
     private NavMeshAgent agent;
     Dictionary<string, Coroutine> activeCoroutines = new Dictionary<string, Coroutine>();
+    public CapsuleCollider Mieczorcolid;
 
     void Start()
     {
-       
+       Mieczorcolid.enabled = false;
         
            // TextCD.gameObject.SetActive(false);
           //  cooldown.fillAmount = 0.0f;
@@ -135,10 +134,12 @@ public class RotateTowardsMouse : MonoBehaviour
 
     IEnumerator OnShotRoutine(string nameZ, float timeZ)
     {
+        Mieczorcolid.enabled = true;
         characterAnimator.SetBool(nameZ, true);
         odwrocsie();
         yield return new WaitForSeconds(timeZ);
         characterAnimator.SetBool(nameZ, false);
+        Mieczorcolid.enabled = false;
 
         // Po zakoñczeniu coroutine usuñ j¹ z listy
         if (activeCoroutines.ContainsKey(nameZ))
