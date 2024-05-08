@@ -14,3 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   sprite: {fileID: -99336052, guid: 383aef37898fa624db3efdbee6c0df52, type: 3}
   itemTag: 1
+  meshItem: {fileID: 0}
+  Kame: 
+  "si\u0142a": 5
+  hp: 4
+  equipmentPrefab: {fileID: 0}

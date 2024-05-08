@@ -14,6 +14,7 @@ public class outliner : MonoBehaviour
     public GameObject EnemyStatsGUI;
     public TextMeshProUGUI HpText;
 
+
     void Awake()
     {
         EnemyStatsGUI.SetActive(false);
@@ -43,12 +44,12 @@ public class outliner : MonoBehaviour
                 // Odczytaj wartość hp z komponentu EnemyAttributes
                 float hp = enemyAttributes.GetHP();
                 Debug.Log("Enemy HP: " + hp);
-                HpText.text = enemyAttributes.GetName() + "\nHP: " + enemyAttributes.GetHP();
+                HpText.text = enemyAttributes.GetName() + "\nHP: " + enemyAttributes.GetHPByLvl() + "\nLvL: " + enemyAttributes.GetLevel();
 
             }
             else
             {
-                Debug.Log("nie dales atrybutow");
+                HpText.text = ("nie dales atrybutow");
             }
 
             if (enemyoutline != null) //jesli enemy ma outline

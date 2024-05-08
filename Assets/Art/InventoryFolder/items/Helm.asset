@@ -16,4 +16,6 @@ MonoBehaviour:
   itemTag: 1
   meshItem: {fileID: -2854808510063695659, guid: a2faa7a3198f3a841bc79b1a81d681b1, type: 3}
   Kame: Helm of protection
+  "si\u0142a": 56
+  hp: 5
   equipmentPrefab: {fileID: 0}
