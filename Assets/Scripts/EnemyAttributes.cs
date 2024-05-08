@@ -3,14 +3,14 @@ using UnityEngine;
 public class EnemyAttributes : MonoBehaviour
 {
     public string enemyName;
-    public float maxHealth = 100f;
-    public float currentHealth;
-    public float EnemyLevel = 1;
+    public float maxHealth;
+    private float currentHealth;
+    public int EnemyLevel = 1;
     private float Strength;
 
     public float GetHP() { return currentHealth; }
     public string GetName() { return enemyName; }
-    public float GetLevel()
+    public int GetLevel()
     {
         if (EnemyLevel < 1) EnemyLevel = 1;
         return EnemyLevel;
@@ -19,13 +19,13 @@ public class EnemyAttributes : MonoBehaviour
 
     void Start()
     {
-        currentHealth = (maxHealth * (1 + EnemyLevel / 8));
+        currentHealth = maxHealth = (maxHealth * (1 + EnemyLevel / 8));
     }
 
     public void TakeDamage(float damage)
     {
         currentHealth -= damage;
-
+        
         if (currentHealth <= 0)
         {
             Die();

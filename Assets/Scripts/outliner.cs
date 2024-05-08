@@ -13,6 +13,7 @@ public class outliner : MonoBehaviour
     //private EnemyAttributes enemyAttributes;
     [Header("(Outline enemy + stat enemy GUI)")]
     public GameObject EnemyStatsGUI;
+    private CharacterStats characterStats;
     public TextMeshProUGUI NameText;
     public TextMeshProUGUI LvlText;
     public Slider HPslider;
@@ -22,6 +23,7 @@ public class outliner : MonoBehaviour
     {
         EnemyStatsGUI.SetActive(false);
         lastHitOutline = null;
+        characterStats = GetComponent<CharacterStats>();
     }
 
     private void Update()
@@ -44,11 +46,12 @@ public class outliner : MonoBehaviour
             //jesli posiada atrybuty
             if (enemyAttributes != null)
             {
-                // Odczytaj wartość hp z komponentu EnemyAttributes
-                //float hp = enemyAttributes.GetHP();
-                //Debug.Log("Enemy HP: " + hp);
-                //NameText.text = enemyAttributes.GetName() + "\nHP: " + enemyAttributes.GetHPByLvl() + "\nLvL: " + enemyAttributes.GetLevel();
-                //NameText.text = enemyAttributes.GetName();
+/*                if (characterStats.GetPlayerLevel() > enemyAttributes.GetLevel())
+                    NameText.color = Color.green;
+                else if (characterStats.GetPlayerLevel() == enemyAttributes.GetLevel())
+                    NameText.color = Color.white;
+                else NameText.color = Color.red;*/ //nieczytelne whuj
+
                 NameText.text = "" + enemyAttributes.GetName();
                 LvlText.text = "" + enemyAttributes.GetLevel();
                 HPslider.value = enemyAttributes.GetBarValue();
