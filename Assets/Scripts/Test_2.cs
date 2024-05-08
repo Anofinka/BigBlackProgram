@@ -56,7 +56,7 @@ public class RotateTowardsMouse : MonoBehaviour
 
                 if (Input.GetKeyDown(KeyCode.Alpha2))
                 {
-                    Debug.Log("pussy");
+                    //Debug.Log("pussy");
                     StartOrRestartCoroutine("attack_2", 0.3f);
                 }
                 if (Input.GetKeyDown(KeyCode.Alpha3))

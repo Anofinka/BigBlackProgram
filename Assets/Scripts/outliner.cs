@@ -1,5 +1,6 @@
 ﻿using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class outliner : MonoBehaviour
 {
@@ -12,7 +13,9 @@ public class outliner : MonoBehaviour
     //private EnemyAttributes enemyAttributes;
     [Header("(Outline enemy + stat enemy GUI)")]
     public GameObject EnemyStatsGUI;
-    public TextMeshProUGUI HpText;
+    public TextMeshProUGUI NameText;
+    public TextMeshProUGUI LvlText;
+    public Slider HPslider;
 
 
     void Awake()
@@ -42,14 +45,17 @@ public class outliner : MonoBehaviour
             if (enemyAttributes != null)
             {
                 // Odczytaj wartość hp z komponentu EnemyAttributes
-                float hp = enemyAttributes.GetHP();
-                Debug.Log("Enemy HP: " + hp);
-                HpText.text = enemyAttributes.GetName() + "\nHP: " + enemyAttributes.GetHPByLvl() + "\nLvL: " + enemyAttributes.GetLevel();
-
+                //float hp = enemyAttributes.GetHP();
+                //Debug.Log("Enemy HP: " + hp);
+                //NameText.text = enemyAttributes.GetName() + "\nHP: " + enemyAttributes.GetHPByLvl() + "\nLvL: " + enemyAttributes.GetLevel();
+                //NameText.text = enemyAttributes.GetName();
+                NameText.text = "" + enemyAttributes.GetName();
+                LvlText.text = "" + enemyAttributes.GetLevel();
+                HPslider.value = enemyAttributes.GetBarValue();
             }
             else
             {
-                HpText.text = ("nie dales atrybutow");
+                NameText.text = ("nie dales atrybutow");
             }
 
             if (enemyoutline != null) //jesli enemy ma outline
