@@ -3,7 +3,7 @@ using UnityEngine;
 public class CharacterStats : MonoBehaviour
 {
     public float maxHealth = 100f;
-    public float currentHealth;
+    private float currentHealth;
     public int PlayerLevel;
 
     public int GetPlayerLevel()
