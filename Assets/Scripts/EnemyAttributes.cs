@@ -35,7 +35,7 @@ public class EnemyAttributes : MonoBehaviour
     void Die()
     {
         // Dodaj kod obs³uguj¹cy dodatkowe dzia³ania po œmierci przeciwnika
-        Debug.Log("Enemy " + enemyName + " died.");
+        //Debug.Log("Enemy " + enemyName + " died.");
         Destroy(gameObject);
     }
     public float GetBarValue()
