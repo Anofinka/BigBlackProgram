@@ -15,7 +15,7 @@ MonoBehaviour:
   sprite: {fileID: 21300000, guid: cf96a9d698956ea46aa4c6f1f6344157, type: 3}
   itemTag: 1
   meshItem: {fileID: -2854808510063695659, guid: a2faa7a3198f3a841bc79b1a81d681b1, type: 3}
-  Kame: Helm of protection
+  Kame: Helm Of Alarii
   "si\u0142a": 56
   hp: 5
   equipmentPrefab: {fileID: 0}

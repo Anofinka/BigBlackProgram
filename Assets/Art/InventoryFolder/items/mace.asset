@@ -14,4 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   sprite: {fileID: 21300000, guid: a4960328dfd82ba429f9334c7a0c0979, type: 3}
   itemTag: 0
+  meshItem: {fileID: 0}
+  Kame: Mace of Allice
+  "si\u0142a": 5
+  hp: 150
   equipmentPrefab: {fileID: 0}
