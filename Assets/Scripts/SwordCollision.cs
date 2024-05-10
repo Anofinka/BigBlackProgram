@@ -13,7 +13,7 @@ public class SwordCollision : MonoBehaviour
             if (enemyAttributes != null)
             {
                 enemyAttributes.TakeDamage(damage);
-                Debug.Log("Enemy " + enemyAttributes.enemyName + " took " + damage + " damage.");
+                //Debug.Log("Enemy " + enemyAttributes.enemyName + " took " + damage + " damage.");
             }
             else
             {

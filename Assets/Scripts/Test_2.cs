@@ -2,6 +2,10 @@ using UnityEngine;
 using System.Collections;
 using UnityEngine.AI;
 using System.Collections.Generic;
+using System.Xml.Linq;
+using Unity.VisualScripting;
+using System.Linq;
+using System;
 
 public class RotateTowardsMouse : MonoBehaviour
 {
@@ -20,6 +24,8 @@ public class RotateTowardsMouse : MonoBehaviour
     private NavMeshAgent agent;
     Dictionary<string, Coroutine> activeCoroutines = new Dictionary<string, Coroutine>();
     public CapsuleCollider Mieczorcolid;
+    public float clickduration = 0.3f;
+    private bool isatac = false;
 
     void Start()
     {
@@ -45,26 +51,29 @@ public class RotateTowardsMouse : MonoBehaviour
                 if (Input.GetKeyDown(KeyCode.T))
                 {
                     odwrocsie();
+                    
                   //  StartCrushAttack();
                 }
                 if (Input.GetKeyDown(KeyCode.Alpha1))
                 {
+                    //Debug.Log(characterAnimator.GetCurrentAnimatorStateInfo(0).length);
                     
-                    StartOrRestartCoroutine("attack", 0.3f);
+                    //nie chce mi sie na combo
+                    StartOrRestartCoroutine("attack", "Glory_01_Atk_01");
                 }
 
                 if (Input.GetKeyDown(KeyCode.Alpha2))
                 {
                     //Debug.Log("pussy");
-                    StartOrRestartCoroutine("attack_2", 0.3f);
+                    StartOrRestartCoroutine("attack_2", "Glory_01_Skl_SpinAtk_01");
                 }
                 if (Input.GetKeyDown(KeyCode.Alpha3))
                 {
-                    StartOrRestartCoroutine("attack_3", 0.3f);
+                   StartOrRestartCoroutine("attack_3", "Glory_01_Leap_01");
                 }
                 if (Input.GetKeyDown(KeyCode.Alpha4))
                 {
-                    StartOrRestartCoroutine("attack_4", 0.3f);
+                    StartOrRestartCoroutine("attack_4", "Glory_01_Berserker_01");
                 }
             }
             else if (!ismoving)
@@ -76,76 +85,41 @@ public class RotateTowardsMouse : MonoBehaviour
                 }
             }
         }
-/*
-        if (isCrushAttackActive)
-        {
-            UpdateCooldown();
-        }*/
     }
-
-   /* public void StartCrushAttack()
-    {
-        characterPosition = character.transform.position;
-        characterRotation = character.transform.rotation;
-        // isCrushAttackActive = true;
-        // cooldownDuration = CrushEffect.main.duration;
-
-        StartCoroutine(CrushAttack());
-    }*/
-
-    /* void UpdateCooldown()
-     {
-         cooldownDuration -= Time.deltaTime;
-         if (cooldownDuration < 0.0f)
-         {
-             TextCD.gameObject.SetActive(false);
-             cooldown.fillAmount = 0.0f;
-             isCrushAttackActive = false;
-         }
-         else
-         {
-             TextCD.gameObject.SetActive(true);
-             TextCD.text = Mathf.Round(cooldownDuration).ToString();
-             cooldown.fillAmount = 1.0f - (cooldownDuration / CrushEffect.main.duration);
-         }
-     }*/
 
     IEnumerator AttackRoutine()
     {
         yield return new WaitForSeconds(2f);
     }
-   /* IEnumerator CrushAttack()
-    {
-        isAttacking = true;
-
-        ParticleSystem effectInstance = Instantiate(CrushEffect, characterPosition, characterRotation);
-        AudioSource.PlayClipAtPoint(CrushAudio, character.transform.position);
-        effectInstance.Play();
-        effectInstance.gameObject.SetActive(true);
-
-        yield return new WaitForSeconds(effectInstance.main.duration);
-
-        effectInstance.Stop();
-        effectInstance.gameObject.SetActive(false);
-        Destroy(effectInstance.gameObject);
-
-        isAttacking = false;
-    }*/
-
     IEnumerator OnShotRoutine(string nameZ, float timeZ)
     {
-        Mieczorcolid.enabled = true;
+
         characterAnimator.SetBool(nameZ, true);
-        odwrocsie();
         yield return new WaitForSeconds(timeZ);
         characterAnimator.SetBool(nameZ, false);
-        Mieczorcolid.enabled = false;
-
         // Po zakoñczeniu coroutine usuñ j¹ z listy
         if (activeCoroutines.ContainsKey(nameZ))
         {
             activeCoroutines.Remove(nameZ);
         }
+    }
+    IEnumerator AttackTimer(string nameZ, string clipname)
+    {
+            
+            float timeZ = characterAnimator.runtimeAnimatorController.animationClips.FirstOrDefault(clip => clip.name == clipname).length;
+            Debug.Log(timeZ);
+
+            Mieczorcolid.enabled = true;
+            odwrocsie();
+            yield return new WaitForSeconds(timeZ);
+            Mieczorcolid.enabled = false;
+            isatac = false;
+        
+            // Po zakoñczeniu coroutine usuñ j¹ z listy
+            if (activeCoroutines.ContainsKey(nameZ))
+            {
+                activeCoroutines.Remove(nameZ);
+            }
     }
 
 
@@ -171,16 +145,45 @@ public class RotateTowardsMouse : MonoBehaviour
         }
     }
 
-    void StartOrRestartCoroutine(string paramName, float duration)
+    void StartOrRestartCoroutine(string paramName, string clipname)
     {
-        if (activeCoroutines.ContainsKey(paramName))
+        // Dodaj sufiks do kluczy dla ró¿nych coroutine
+        string onShotCoroutineKey = paramName + "_OnShot";
+        string attackTimerCoroutineKey = paramName + "_AttackTimer";
+
+
+        // Jeœli coroutine dla danego klucza ju¿ istnieje, zatrzymaj j¹ i usuñ z listy
+
+
+
+            if (activeCoroutines.ContainsKey(onShotCoroutineKey))
         {
-            StopCoroutine(activeCoroutines[paramName]);
-            activeCoroutines.Remove(paramName);
+            StopCoroutine(activeCoroutines[onShotCoroutineKey]);
+            activeCoroutines.Remove(onShotCoroutineKey);
         }
 
-        Coroutine newCoroutine = StartCoroutine(OnShotRoutine(paramName, duration));
-        activeCoroutines.Add(paramName, newCoroutine);
+        // Dodaj coroutine z odpowiednimi kluczami
+        Coroutine onShotCoroutine = StartCoroutine(OnShotRoutine(paramName, clickduration));
+        activeCoroutines.Add(onShotCoroutineKey, onShotCoroutine);
+
+        if (!isatac)
+        {
+            isatac = true;
+
+            if (activeCoroutines.ContainsKey(attackTimerCoroutineKey))
+            {
+                StopCoroutine(activeCoroutines[attackTimerCoroutineKey]);
+                activeCoroutines.Remove(attackTimerCoroutineKey);
+            }
+
+
+            Coroutine attackTimerCoroutine = StartCoroutine(AttackTimer(paramName, clipname));
+            activeCoroutines.Add(attackTimerCoroutineKey, attackTimerCoroutine);
+        }
+
+
+
+        
     }
 
 }
