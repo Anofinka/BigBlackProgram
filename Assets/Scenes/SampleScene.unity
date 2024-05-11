@@ -4355,6 +4355,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2470944621935358306, guid: 9829ccc26fb711f48a949902786051fe, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2470944621935358306, guid: 9829ccc26fb711f48a949902786051fe, type: 3}
       propertyPath: m_PixelPerfect
       value: 1
       objectReference: {fileID: 0}
@@ -4490,6 +4494,10 @@ PrefabInstance:
       propertyPath: m_Enabled
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 2908818604391211454, guid: 9829ccc26fb711f48a949902786051fe, type: 3}
+      propertyPath: inventoryCanvas
+      value: 
+      objectReference: {fileID: 2044333139}
     - target: {fileID: 2908818604391211454, guid: 9829ccc26fb711f48a949902786051fe, type: 3}
       propertyPath: items.Array.size
       value: 6
@@ -4650,6 +4658,10 @@ PrefabInstance:
       propertyPath: 'inventorySlots.Array.data[35]'
       value: 
       objectReference: {fileID: 1269835582}
+    - target: {fileID: 2908818604391211454, guid: 9829ccc26fb711f48a949902786051fe, type: 3}
+      propertyPath: 'inventorySlots.Array.data[36]'
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 2945654418178145688, guid: 9829ccc26fb711f48a949902786051fe, type: 3}
       propertyPath: m_IsActive
       value: 1
@@ -9773,6 +9785,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 9b5bf9bd7ce1ff547a00b276e27cb938, type: 2}
   - {fileID: 11400000, guid: 9531362353670304494a59c1ccff8990, type: 2}
   giveItemBtn: {fileID: 20471655}
+  inventoryCanvas: {fileID: 0}
 --- !u!1 &774900930
 GameObject:
   m_ObjectHideFlags: 0
@@ -23946,6 +23959,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   tipText: {fileID: 350664364}
   tipWindow: {fileID: 636447984}
+--- !u!223 &2044333139 stripped
+Canvas:
+  m_CorrespondingSourceObject: {fileID: 2470944621935358306, guid: 9829ccc26fb711f48a949902786051fe, type: 3}
+  m_PrefabInstance: {fileID: 393578429}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &2046602136
 PrefabInstance:
   m_ObjectHideFlags: 0

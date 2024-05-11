@@ -22,6 +22,8 @@ public class Inventory : MonoBehaviour
     [Header("Debug")]
     [SerializeField] Button giveItemBtn;
 
+
+    public Canvas inventoryCanvas;
     void Awake()
     {
         Singleton = this;
@@ -37,6 +39,8 @@ public class Inventory : MonoBehaviour
 
     public void SetCarriedItem(InventoryItem item)
     {
+      
+
         if (carriedItem != null)
         {
             if (item.activeSlot.myTag != SlotTag.None && item.activeSlot.myTag != carriedItem.myItem.itemTag) return;
@@ -50,6 +54,9 @@ public class Inventory : MonoBehaviour
         carriedItem.canvasGroup.blocksRaycasts = false;
         item.transform.SetParent(draggablesTransform);
     }
+   
+
+
 
     public void EquipEquipment(SlotTag tag, InventoryItem item = null)
     {
