@@ -53,5 +53,12 @@ public class InventoryItem : MonoBehaviour, IPointerClickHandler
         {
             Inventory.Singleton.SetCarriedItem(this);
         }
+        else if (eventData.button == PointerEventData.InputButton.Right)
+        {
+
+            // Tutaj dodaj kod usuwaj¹cy obiekt
+            Destroy(gameObject);
+            TipMenager.OnMouseLoseFocus();
+        }
     }
 }
