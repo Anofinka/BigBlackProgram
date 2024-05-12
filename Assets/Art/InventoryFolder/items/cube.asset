@@ -13,5 +13,9 @@ MonoBehaviour:
   m_Name: cube
   m_EditorClassIdentifier: 
   sprite: {fileID: 1483958539, guid: 383aef37898fa624db3efdbee6c0df52, type: 3}
-  itemTag: 2
+  itemTag: 9
+  meshItem: {fileID: 0}
+  Kame: 
+  "si\u0142a": 
+  hp: 
   equipmentPrefab: {fileID: 4085670780276536313, guid: d4f68963237cffe48975eb3697fb5478, type: 3}

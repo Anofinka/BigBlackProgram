@@ -108,7 +108,7 @@ public class Inventory : MonoBehaviour
                     UpdateMesh(eqItems[2], item.Mesh2);
                 }
                 break;
-            case SlotTag.Feet:
+            case SlotTag.Boots:
                 if (item == null)
                 {
                     // Zdejmowanie elementu z g³owy, przywrócenie oryginalnej siatki
