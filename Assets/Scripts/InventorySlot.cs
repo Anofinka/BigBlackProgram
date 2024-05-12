@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public enum SlotTag { None, Head, Chest, Legs, Feet }
+public enum SlotTag { None, Head, Chest, Legs, Boots, Necklace, Shoulders, Gloves, Ring, Cape, Weapon}
 
 public class InventorySlot : MonoBehaviour, IPointerClickHandler
 {
-    public InventoryItem myItem { get; set; }
+    public InventoryItem myItem { get; set; }   
 
     public SlotTag myTag;
 
