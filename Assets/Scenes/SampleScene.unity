@@ -7649,7 +7649,10 @@ PrefabInstance:
       objectReference: {fileID: 9100000, guid: 92f87ac4fc28c7e43b49d61e5b30d796, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
-    m_AddedGameObjects: []
+    m_AddedGameObjects:
+    - targetCorrespondingSourceObject: {fileID: 402856, guid: cf1f48d2327ff8640a3ed8e9673685ac, type: 3}
+      insertIndex: 0
+      addedObject: {fileID: 893353252}
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 108450, guid: cf1f48d2327ff8640a3ed8e9673685ac, type: 3}
       insertIndex: -1
@@ -7675,6 +7678,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 108450, guid: cf1f48d2327ff8640a3ed8e9673685ac, type: 3}
       insertIndex: -1
       addedObject: {fileID: 830193110}
+    - targetCorrespondingSourceObject: {fileID: 108450, guid: cf1f48d2327ff8640a3ed8e9673685ac, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 830193112}
   m_SourcePrefab: {fileID: 100100000, guid: cf1f48d2327ff8640a3ed8e9673685ac, type: 3}
 --- !u!4 &630047412 stripped
 Transform:
@@ -9535,7 +9541,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 830193100}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3e2723e41ef02b94d8c6a91ea8852060, type: 3}
   m_Name: 
@@ -9584,6 +9590,28 @@ NavMeshObstacle:
   m_CarveOnlyStationary: 1
   m_Center: {x: 0, y: 0.09, z: 0}
   m_TimeToStationary: 0.28
+--- !u!114 &830193112
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 830193100}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2b701e0891d7cd640bec09bb9aa54e22, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  health: 3
+  hitVFX: {fileID: 0}
+  ragdoll: {fileID: 0}
+  arrowPrefab: {fileID: 2829812871303892374, guid: ecd5fbc668d868b4d861d5d5280872d1, type: 3}
+  shootPoint: {fileID: 893353252}
+  attackCD: 2
+  attackRange: 10
+  aggroRange: 20
+  hitMessage: "Gracz zosta\u0142 trafiony!"
+  arrowSpeed: 20
 --- !u!4 &832010244 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4937983767699673297, guid: 5ea6f144ff19a1749a20afd04bb05dbc, type: 3}
@@ -9967,6 +9995,37 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 159544, guid: 77ad0facb2a27504ab8edf68c35a1346, type: 3}
   m_PrefabInstance: {fileID: 1639389666}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &893353251
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 893353252}
+  m_Layer: 0
+  m_Name: ArrowPointB
+  m_TagString: Untagged
+  m_Icon: {fileID: 5132851093641282708, guid: 0000000000000000d000000000000000, type: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &893353252
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 893353251}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0.12, y: 1.18, z: 0.953}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 630047412}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &907992376
 PrefabInstance:
   m_ObjectHideFlags: 0

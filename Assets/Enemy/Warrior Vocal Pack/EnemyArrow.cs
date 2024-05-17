@@ -12,7 +12,7 @@ public class EnemyArcher : MonoBehaviour
     [SerializeField] float attackRange = 10f;
     [SerializeField] float aggroRange = 20f;
     [SerializeField] string hitMessage = "Gracz został trafiony!";
-    [SerializeField] float arrowSpeed = 20f; // Nowa zmienna - prędkość strzały
+    [SerializeField] float arrowSpeed = 20f;
 
     GameObject player;
     NavMeshAgent agent;
@@ -38,15 +38,16 @@ public class EnemyArcher : MonoBehaviour
             return;
         }
 
+        timePassed += Time.deltaTime;
+
         if (timePassed >= attackCD)
         {
             if (Vector3.Distance(player.transform.position, transform.position) <= attackRange)
             {
                 animator.SetTrigger("attack");
-                timePassed = 0; // Reset cooldown
+                timePassed = 0; // Reset cooldown when starting the attack
             }
         }
-        timePassed += Time.deltaTime;
 
         if (newDestinationCD <= 0 && Vector3.Distance(player.transform.position, transform.position) <= aggroRange)
         {
@@ -110,19 +111,19 @@ public class EnemyArcher : MonoBehaviour
         animator.SetBool("walk", agent.velocity != Vector3.zero);
     }
 
-    public void ShootArrow() // Zmieniono na publiczną
+    public void ShootArrow()
     {
         if (arrowPrefab != null && player != null)
         {
-            // Instancjonowanie strzały
             GameObject arrow = Instantiate(arrowPrefab, shootPoint.position, shootPoint.rotation);
-
-            // Pobranie komponentu Rigidbody strzały
             Rigidbody arrowRigidbody = arrow.GetComponent<Rigidbody>();
-            arrow.transform.Rotate(0f, 90f, 0f); // Ustawienie kąta 90 stopni w osi X
-
-            // Ustawienie prędkości strzały
+            arrow.transform.Rotate(0f, 90f, 0f);
             arrowRigidbody.velocity = shootPoint.forward * arrowSpeed;
         }
+    }
+
+    public void AttackEnd() // Metoda wywoływana po zakończeniu animacji ataku
+    {
+        timePassed = 0; // Resetowanie timePassed po zakończeniu animacji
     }
 }
