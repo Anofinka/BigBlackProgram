@@ -7,7 +7,7 @@ public class CharacterStats : MonoBehaviour
 
    
 
-    [Header("Doœwiadczenie")]
+    [Header("Doï¿½wiadczenie")]
     public int PlayerLevel = 1;
     public TextMeshProUGUI LvlText;
     public int currentExperience = 0;
@@ -39,7 +39,7 @@ public class CharacterStats : MonoBehaviour
 
     void Update()
     {
-        // Do testów
+        // Do testï¿½w
         if (Input.GetKeyDown(KeyCode.Space))
         {
             AddExperience(20);
@@ -63,7 +63,7 @@ public class CharacterStats : MonoBehaviour
             TakeMana(5);
         }
     }
-    //Do testów
+    //Do testï¿½w
     public void Heal(int amount)
     {
         currentHealth += amount;
@@ -94,7 +94,7 @@ public class CharacterStats : MonoBehaviour
     }
 
 
-    // Dodaj doœwiadczenie
+    // Dodaj doï¿½wiadczenie
     public void AddExperience(int amount)
     {
         currentExperience += amount;
@@ -104,7 +104,7 @@ public class CharacterStats : MonoBehaviour
         }
     }
 
-    // Awansowanie na wy¿szy poziom
+    // Awansowanie na wyï¿½szy poziom
     private void LevelUp()
     {
         PlayerLevel++;
@@ -115,7 +115,7 @@ public class CharacterStats : MonoBehaviour
         maxHealth = 100 + (PlayerLevel * 10);
         maxMana = 50 + (PlayerLevel * 5);
 
-        // Skalowanie si³y i zrêcznoœci
+        // Skalowanie siï¿½y i zrï¿½cznoï¿½ci
         strength = 10 + (PlayerLevel * 2);
         dexterity = 10 + (PlayerLevel * 2);
 
@@ -125,8 +125,8 @@ public class CharacterStats : MonoBehaviour
         UpdateSlider();
     }
 
-    // Aktualizacja wyœwietlania statystyk
-    private void UpdateStats()
+    // Aktualizacja wyï¿½wietlania statystyk
+    public void UpdateStats()
     {
         LvlText.text = "" + PlayerLevel;
 
@@ -138,7 +138,7 @@ public class CharacterStats : MonoBehaviour
         UpdateSlider();
     }
 
-    // Aktualizacja suwaków
+    // Aktualizacja suwakï¿½w
     private void UpdateSlider()
     {
         HealthSlider.maxValue = maxHealth;

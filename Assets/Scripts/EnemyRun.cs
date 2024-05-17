@@ -19,8 +19,8 @@ public class Enemy : MonoBehaviour
     float newDestinationCD = 0.5f;
 
 
-    //bool isAttacking = false; // Flaga okreœlaj¹ca, czy wrogowie wykonuj¹ atak
-    float originalAgentSpeed; // Zmienna przechowuj¹ca oryginaln¹ prêdkoœæ agenta
+    //bool isAttacking = false; // Flaga okreï¿½lajï¿½ca, czy wrogowie wykonujï¿½ atak
+    float originalAgentSpeed; // Zmienna przechowujï¿½ca oryginalnï¿½ prï¿½dkoï¿½ï¿½ agenta
 
     void Start()
     {
@@ -28,7 +28,7 @@ public class Enemy : MonoBehaviour
         
         player = GameObject.FindGameObjectWithTag("Player");
         animator = GetComponent<Animator>();
-        // Zapisz oryginaln¹ prêdkoœæ agenta
+        // Zapisz oryginalnï¿½ prï¿½dkoï¿½ï¿½ agenta
         originalAgentSpeed = agent.speed;
     }
 
@@ -45,7 +45,7 @@ public class Enemy : MonoBehaviour
             if (Vector3.Distance(player.transform.position, transform.position) <= attackRange)
             {
                 animator.SetTrigger("attack");
-                //isAttacking = true; // Ustaw flagê ataku na true
+                //isAttacking = true; // Ustaw flagï¿½ ataku na true
                 agent.speed = 0; // Zatrzymaj agenta podczas ataku
             }
         }
@@ -92,9 +92,9 @@ public class Enemy : MonoBehaviour
 
     public void AttackAnimationEnd()
     {
-        //isAttacking = false; // Po zakoñczeniu animacji ataku ustaw flagê ataku na false
-        agent.speed = originalAgentSpeed; // Przywróæ normaln¹ prêdkoœæ agenta
-        agent.velocity = Vector3.zero; // Zatrzymaj agenta po zakoñczeniu animacji ataku
+        //isAttacking = false; // Po zakoï¿½czeniu animacji ataku ustaw flagï¿½ ataku na false
+        agent.speed = originalAgentSpeed; // Przywrï¿½ï¿½ normalnï¿½ prï¿½dkoï¿½ï¿½ agenta
+        agent.velocity = Vector3.zero; // Zatrzymaj agenta po zakoï¿½czeniu animacji ataku
     }
 
     public void HitVFX(Vector3 hitPosition)

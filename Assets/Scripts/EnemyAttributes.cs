@@ -1,6 +1,5 @@
 using UnityEngine;
 using System.Collections.Generic;
-using static UnityEditor.Progress;
 
 public class EnemyAttributes : MonoBehaviour
 {
@@ -16,8 +15,12 @@ public class EnemyAttributes : MonoBehaviour
     private float currentHealth;
     public int EnemyLevel = 1;
     private float Strength;
-    public List<DropItem> dropItems; // Lista przedmiotów, które mog¹ byæ upuszcane wraz z ich szans¹ na upuszczenie
-    public float dropRadius = 2f; // Promieñ, w jakim mog¹ byæ rozmieszczone upuszczone przedmioty
+    public List<DropItem> dropItems; // Lista przedmiotÃ³w, ktÃ³re mogÄ… byÄ‡ upuszczane wraz z ich szansÄ… na upuszczenie
+    public float dropRadius = 2f; // PromieÅ„, w jakim mogÄ… byÄ‡ rozmieszczone upuszczone przedmioty
+
+    public int expReward = 100; // Nagroda za doÅ›wiadczenie, ktÃ³rÄ… gracz otrzyma po zabiciu wroga
+
+    private CharacterStats playerStats; // Referencja do skryptu CharacterStats gracza
 
     public float GetHP() { return currentHealth; }
     public string GetName() { return enemyName; }
@@ -30,6 +33,7 @@ public class EnemyAttributes : MonoBehaviour
     void Start()
     {
         currentHealth = maxHealth = (maxHealth * (1 + EnemyLevel / 8));
+        playerStats = FindObjectOfType<CharacterStats>(); // Znajdujemy CharacterStats na obiekcie gracza za pomocÄ… FindObjectOfType
     }
 
     public void TakeDamage(float damage)
@@ -44,37 +48,55 @@ public class EnemyAttributes : MonoBehaviour
 
     void Die()
     {
-        // Usuñ przeciwnika
+        // UsuÅ„ przeciwnika
         Destroy(gameObject);
 
-        // Lista przechowuj¹ca ju¿ wygenerowane pozycje przedmiotów
+        // Lista przechowujÄ…ca juÅ¼ wygenerowane pozycje przedmiotÃ³w
         List<Vector3> occupiedPositions = new List<Vector3>();
 
-        // SprawdŸ czy upuœciæ przedmiot
+        // SprawdÅº czy upuÅ›ciÅ‚ przedmiot
         foreach (DropItem dropItem in dropItems)
         {
             if (Random.Range(0f, 100f) <= dropItem.dropChance)
             {
-                // Generuj prefabrykat przedmiotu z losow¹ pozycj¹ w promieniu dropRadius
+                // Generuj prefabrykat przedmiotu z losowÄ… pozycjÄ… w promieniu dropRadius
                 Vector3 randomPosition = GetRandomPosition(transform.position, occupiedPositions);
                 Instantiate(dropItem.itemPrefab, randomPosition, Quaternion.identity);
             }
         }
+
+        // Dodaj doÅ›wiadczenie graczowi
+        if (playerStats != null)
+        {
+            playerStats.AddExperience(expReward); // Dodaj doÅ›wiadczenie do skryptu CharacterStats gracza
+            playerStats.UpdateStats(); // Zaktualizuj statystyki gracza
+        }
+        else
+        {
+            Debug.LogWarning("PlayerStats component not found!");
+        }
+    }
+
+    int CalculateExpReward()
+    {
+        // Tutaj moÅ¼esz zaimplementowaÄ‡ wÅ‚asnÄ… logikÄ™ obliczania nagrody za doÅ›wiadczenie
+        // Na przykÅ‚ad, moÅ¼esz zwrÃ³ciÄ‡ staÅ‚Ä… wartoÅ›Ä‡, lub obliczyÄ‡ jÄ… na podstawie poziomu wroga, etc.
+        return expReward; // Zwracamy zmiennÄ… expReward jako nagrodÄ™ za doÅ›wiadczenie
     }
 
     Vector3 GetRandomPosition(Vector3 center, List<Vector3> occupiedPositions)
     {
         Vector3 randomPosition = center + Random.insideUnitSphere * dropRadius;
-        randomPosition.y = 0f; // Upewnij siê, ¿e przedmiot jest rozmieszczony na p³askiej powierzchni
+        randomPosition.y = 0f; // Upewnij siÄ™, Å¼e przedmiot jest rozmieszczony na pÅ‚askiej powierzchni
 
-        // SprawdŸ czy wygenerowana pozycja nie nachodzi na inn¹ ju¿ zajêt¹ pozycjê
+        // SprawdÅº czy wygenerowana pozycja nie nachodzi na innÄ… juÅ¼ zajÄ™tÄ… pozycjÄ™
         while (occupiedPositions.Exists(pos => Vector3.Distance(pos, randomPosition) < 1f))
         {
             randomPosition = center + Random.insideUnitSphere * dropRadius;
             randomPosition.y = 0f;
         }
 
-        // Dodaj wygenerowan¹ pozycjê do listy zajêtych pozycji
+        // Dodaj wygenerowanÄ… pozycjÄ™ do listy zajÄ™tych pozycji
         occupiedPositions.Add(randomPosition);
 
         return randomPosition;
