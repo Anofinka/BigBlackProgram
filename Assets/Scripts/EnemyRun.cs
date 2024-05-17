@@ -53,8 +53,10 @@ public class Enemy : MonoBehaviour
 
         if (newDestinationCD <= 0 && Vector3.Distance(player.transform.position, transform.position) <= aggroRange)
         {
+            
             newDestinationCD = 0.5f;
-            agent.SetDestination(player.transform.position);
+            if (agent.isActiveAndEnabled)
+                agent.SetDestination(player.transform.position);
         }
         newDestinationCD -= Time.deltaTime;
         transform.LookAt(player.transform);

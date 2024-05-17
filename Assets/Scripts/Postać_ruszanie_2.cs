@@ -3,13 +3,14 @@ using UnityEngine.AI;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using System.Collections;
+using System.Runtime.CompilerServices;
 
 public class Postać_ruszanie_2 : MonoBehaviour
 {
     NavMeshAgent agent;
     Animator animator;
     Transform particletransform;
-
+    public Test_2 test;
     [Header("Movement")]
     public GameObject clickEffectObj;
     [SerializeField] LayerMask clickableLayers;
@@ -51,7 +52,7 @@ public class Postać_ruszanie_2 : MonoBehaviour
     {
        
 
-        if (Input.GetMouseButtonDown(0) && !EventSystem.current.IsPointerOverGameObject())
+        if (Input.GetMouseButtonDown(0) && !EventSystem.current.IsPointerOverGameObject()&& test.IsSpellOver)
         {
             ClickToMove();
         }

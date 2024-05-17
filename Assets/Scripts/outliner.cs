@@ -6,6 +6,7 @@ public class outliner : MonoBehaviour
 {
     RaycastHit hit;
 
+
     GameObject enemyobject;
     Outline enemyoutline;
     Outline lastHitOutline;
@@ -30,60 +31,62 @@ public class outliner : MonoBehaviour
     {
         mousepos();
     }
-        
+
 
     void mousepos()
     {
-        if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit, 100) && hit.collider.CompareTag("enemy"))
+        RaycastHit[] hits = Physics.RaycastAll(Camera.main.ScreenPointToRay(Input.mousePosition), 100f);
+        bool hitEnemy = false;
+
+        foreach (RaycastHit hit in hits)
         {
-            //outline awake
-            enemyobject = hit.collider.gameObject;
-            EnemyAttributes enemyAttributes = enemyobject.GetComponent<EnemyAttributes>();
-
-            enemyoutline = enemyobject.GetComponent<Outline>();
-            EnemyStatsGUI.SetActive(true);
-
-            //jesli posiada atrybuty
-            if (enemyAttributes != null)
+            if (hit.collider.CompareTag("enemy"))
             {
-/*                if (characterStats.GetPlayerLevel() > enemyAttributes.GetLevel())
-                    NameText.color = Color.green;
-                else if (characterStats.GetPlayerLevel() == enemyAttributes.GetLevel())
-                    NameText.color = Color.white;
-                else NameText.color = Color.red;*/ //nieczytelne whuj
+                hitEnemy = true;
+                enemyobject = hit.collider.gameObject;
+                EnemyAttributes enemyAttributes = enemyobject.GetComponent<EnemyAttributes>();
 
-                NameText.text = "" + enemyAttributes.GetName();
-                LvlText.text = "" + enemyAttributes.GetLevel();
-                HPslider.value = enemyAttributes.GetBarValue();
-            }
-            else
-            {
-                NameText.text = ("nie dales atrybutow");
-            }
+                enemyoutline = enemyobject.GetComponent<Outline>();
+                EnemyStatsGUI.SetActive(true);
 
-            if (enemyoutline != null) //jesli enemy ma outline
-            {
-                // Wy��cz poprzedni kontur, je�li istnieje
-                if (lastHitOutline != null && lastHitOutline != enemyoutline)
+                //jeśli posiada atrybuty
+                if (enemyAttributes != null)
                 {
-                    lastHitOutline.enabled = false;
+                    NameText.text = "" + enemyAttributes.GetName();
+                    LvlText.text = "" + enemyAttributes.GetLevel();
+                    HPslider.value = enemyAttributes.GetBarValue();
+                }
+                else
+                {
+                    NameText.text = ("nie dales atrybutow");
                 }
 
-                // W��cz kontur dla bie��cego obiektu
-                enemyoutline.enabled = true;
-                lastHitOutline = enemyoutline;
+                if (enemyoutline != null) //jeśli enemy ma outline
+                {
+                    // Wyłącz poprzedni kontur, jeśli istnieje
+                    if (lastHitOutline != null && lastHitOutline != enemyoutline)
+                    {
+                        lastHitOutline.enabled = false;
+                    }
+
+                    // Włącz kontur dla bieżącego obiektu
+                    enemyoutline.enabled = true;
+                    lastHitOutline = enemyoutline;
+                }
             }
         }
-        else
+
+        if (!hitEnemy)
         {
             EnemyStatsGUI.SetActive(false);
-            // Wy��cz kontur, je�li kursor nie jest nad obiektem
+            // Wyłącz kontur, jeśli kursor nie jest nad obiektem
             if (lastHitOutline != null)
             {
                 lastHitOutline.enabled = false;
                 lastHitOutline = null;
             }
         }
+
 
 
     }
