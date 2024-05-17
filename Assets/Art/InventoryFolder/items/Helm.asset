@@ -15,7 +15,13 @@ MonoBehaviour:
   sprite: {fileID: 21300000, guid: cf96a9d698956ea46aa4c6f1f6344157, type: 3}
   itemTag: 1
   meshItem: {fileID: -2854808510063695659, guid: a2faa7a3198f3a841bc79b1a81d681b1, type: 3}
-  Kame: Helm Of Alarii
-  "si\u0142a": 56
-  hp: 5
+  armorMin: 5
+  armor: 0
+  armorMax: 25
+  damageMin: 0
+  damage: 0
+  damageMax: 0
+  requiredStrength: 0
+  requiredDexterity: 0
+  requiredLevel: 0
   equipmentPrefab: {fileID: 0}

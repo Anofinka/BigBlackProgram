@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class SwordCollision : MonoBehaviour
 {
-    public float damage = 10f;
+    public int damage = 10;
 
     private void OnTriggerEnter(Collider other)
     {

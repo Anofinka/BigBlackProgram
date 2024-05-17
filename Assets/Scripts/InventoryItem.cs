@@ -15,8 +15,8 @@ public class InventoryItem : MonoBehaviour, IPointerClickHandler
     public InventorySlot activeSlot { get; set; }
     public Mesh Mesh2;
     public string tipToShow;
-    public string stats;
-    public string hp;
+    public int damage;
+    public int armor;
 
     void Awake()
     {
@@ -31,19 +31,22 @@ public class InventoryItem : MonoBehaviour, IPointerClickHandler
         myItem = item;
         itemIcon.sprite = item.sprite;
         Mesh2 = item.meshItem;
-        name = item.Kame;
-        stats = item.si³a;
-        hp = item.hp;
+
+        name = item.name;
+        damage = item.damage;
+        armor = item.armor;
 
         // Dodaj skrypt HoverTip do obiektu
         HoverTip hoverTip = gameObject.AddComponent<HoverTip>();
 
         // Ustaw wartoœæ tipToShow w HoverTip na nazwê obiektu
-        hoverTip.tipToShow =
-    "<size=20>" + name + "</size>" + "\n" +
-    "Si³a: " + stats + "\n" +
-    "¯ycie: " + hp;
+        hoverTip.tipToShow = name + "\n";
 
+        if (damage > 0)
+            hoverTip.tipToShow += "Damage: " + damage.ToString() + "\n";
+
+        if (armor > 0)
+            hoverTip.tipToShow += "Armor: " + armor.ToString() + "\n";
 
     }
 
@@ -52,13 +55,6 @@ public class InventoryItem : MonoBehaviour, IPointerClickHandler
         if (eventData.button == PointerEventData.InputButton.Left)
         {
             Inventory.Singleton.SetCarriedItem(this);
-        }
-        else if (eventData.button == PointerEventData.InputButton.Right)
-        {
-
-            // Tutaj dodaj kod usuwaj¹cy obiekt
-            Destroy(gameObject);
-            TipMenager.OnMouseLoseFocus();
         }
     }
 }

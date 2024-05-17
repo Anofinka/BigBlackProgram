@@ -22,8 +22,6 @@ public class Inventory : MonoBehaviour
     [Header("Debug")]
     [SerializeField] Button giveItemBtn;
 
-
-    public Canvas inventoryCanvas;
     void Awake()
     {
         Singleton = this;
@@ -35,12 +33,11 @@ public class Inventory : MonoBehaviour
         if (carriedItem == null) return;
 
         carriedItem.transform.position = Input.mousePosition;
+
     }
 
     public void SetCarriedItem(InventoryItem item)
     {
-      
-
         if (carriedItem != null)
         {
             if (item.activeSlot.myTag != SlotTag.None && item.activeSlot.myTag != carriedItem.myItem.itemTag) return;
@@ -54,8 +51,9 @@ public class Inventory : MonoBehaviour
         carriedItem.canvasGroup.blocksRaycasts = false;
         item.transform.SetParent(draggablesTransform);
     }
-   
 
+    int damage;
+    int armor, armor0, armor1, armor2, armor3;
 
 
     public void EquipEquipment(SlotTag tag, InventoryItem item = null)
@@ -68,12 +66,15 @@ public class Inventory : MonoBehaviour
             case SlotTag.Head:
                 if (item == null)
                 {
+                    armor0 = 0;
                     // Zdejmowanie elementu z g³owy, przywrócenie oryginalnej siatki
                     Debug.Log("Unequipped helmet on " + tag);
                     UpdateMesh(eqItems[0], originalMesh);
+
                 }
                 else
                 {
+                    armor0 = item.armor;
                     // Za³o¿enie nowego elementu na g³owê
                     Debug.Log("Equipped helmet: " + item.myItem.name + " on " + tag);
                     UpdateMesh(eqItems[0], item.Mesh2);
@@ -83,12 +84,14 @@ public class Inventory : MonoBehaviour
 
                 if (item == null)
                 {
+                    armor1 = 0;
                     // Zdejmowanie elementu z g³owy, przywrócenie oryginalnej siatki
                     Debug.Log("Unequipped helmet on " + tag);
                     UpdateMesh(eqItems[1], originalMesh);
                 }
                 else
                 {
+                    armor1 = item.armor;
                     // Za³o¿enie nowego elementu na g³owê
                     Debug.Log("Equipped helmet: " + item.myItem.name + " on " + tag);
                     UpdateMesh(eqItems[1], item.Mesh2);
@@ -97,12 +100,14 @@ public class Inventory : MonoBehaviour
             case SlotTag.Legs:
                 if (item == null)
                 {
+                    armor2 = 0;
                     // Zdejmowanie elementu z g³owy, przywrócenie oryginalnej siatki
                     Debug.Log("Unequipped helmet on " + tag);
                     UpdateMesh(eqItems[2], originalMesh);
                 }
                 else
                 {
+                    armor2 = item.armor;
                     // Za³o¿enie nowego elementu na g³owê
                     Debug.Log("Equipped helmet: " + item.myItem.name + " on " + tag);
                     UpdateMesh(eqItems[2], item.Mesh2);
@@ -111,18 +116,41 @@ public class Inventory : MonoBehaviour
             case SlotTag.Boots:
                 if (item == null)
                 {
+                    armor3 = 0;
                     // Zdejmowanie elementu z g³owy, przywrócenie oryginalnej siatki
                     Debug.Log("Unequipped helmet on " + tag);
                     UpdateMesh(eqItems[3], originalMesh);
                 }
                 else
                 {
+                    armor3 = item.armor;
                     // Za³o¿enie nowego elementu na g³owê
                     Debug.Log("Equipped helmet: " + item.myItem.name + " on " + tag);
                     UpdateMesh(eqItems[3], item.Mesh2);
                 }
                 break;
+            case SlotTag.Weapon:
+                if (item == null)
+                {
+                    damage = 0;
+                    // Zdejmowanie elementu z g³owy, przywrócenie oryginalnej siatki
+                    Debug.Log("Unequipped" + tag + " " + damage.ToString());
+                    UpdateMesh(eqItems[3], originalMesh);
+
+                }
+                else
+                {
+                    damage = item.damage;
+                    // Za³o¿enie nowego elementu na g³owê
+                    Debug.Log("Equipped: " + item.myItem.name + " on " + tag);
+                    UpdateMesh(eqItems[3], item.Mesh2);
+
+                }
+                break;
         }
+
+        armor = armor0 + armor1 + armor2 + armor3;
+        Debug.Log("Armor" + armor.ToString());
     }
 
     public void SpawnInventoryItem(Item item = null)
@@ -182,6 +210,5 @@ public class Inventory : MonoBehaviour
     {
         renderer.sharedMesh = newMesh;
     }
-
 
 }

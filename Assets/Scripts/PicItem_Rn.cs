@@ -3,7 +3,7 @@ using UnityEngine;
 public class PicItem_Rn : MonoBehaviour
 {
     public Item item;
-    
+    public CharacterStats characterStats;
 
     public float pickUpRadius = 5f; // Promieñ, w jakim postaæ mo¿e podnosiæ przedmioty
 
@@ -31,6 +31,7 @@ public class PicItem_Rn : MonoBehaviour
     {
         Inventory inventory = FindObjectOfType<Inventory>();
         inventory.SpawnInventoryItem2(item);
+        item.GenerateRandomStats();
         Destroy(gameObject);
     }
 }

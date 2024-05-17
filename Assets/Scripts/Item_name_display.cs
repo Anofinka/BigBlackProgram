@@ -21,7 +21,7 @@ public class ShowBimData : MonoBehaviour
 
             // Sprawdzamy, czy obiekt posiada komponent PicItem_Rn
             PicItem_Rn itemScript = _selectedObject.GetComponent<PicItem_Rn>();
-            if (itemScript != null && itemScript.item != null)
+            if (itemScript != null)
             {
                 // Pobieramy pozycjê obiektu
                 Vector3 objectPosition = _selectedObject.transform.position;
@@ -31,8 +31,7 @@ public class ShowBimData : MonoBehaviour
 
                 // Tworzymy tekst zawieraj¹cy nazwê przedmiotu z ró¿nymi rozmiarami czcionki
                 string itemInfo = "<size=35>" + itemScript.item.name + "</size>" + "\n";
-                itemInfo += "<size=20>HP: " + itemScript.item.hp + "</size>" + "\n";
-                itemInfo += "<size=20>Si³a: " + itemScript.item.si³a + "</size>" + "\n";
+                itemInfo += "Typ : " + itemScript.item.itemTag + "\n";
 
                 onGuiText = itemInfo;
             }
@@ -43,7 +42,7 @@ public class ShowBimData : MonoBehaviour
         }
         else
         {
-            _selectedObject = null;
+            _selectedObject = null; // Ustaw _selectedObject na null, gdy nie trafimy na ¿aden obiekt
             onGuiText = "";
         }
     }
