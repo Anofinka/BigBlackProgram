@@ -8,6 +8,7 @@ public class SwordCollision : MonoBehaviour
     {
         if (other.CompareTag("enemy"))
         {
+
             //Debug.Log("Collision detected with: " + other.name);
             EnemyAttributes enemyAttributes = other.GetComponent<EnemyAttributes>();
             if (enemyAttributes != null)
