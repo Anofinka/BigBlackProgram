@@ -143,7 +143,7 @@ public class CharacterStats : MonoBehaviour
     }
 
     // Aktualizacja suwak�w
-    private void UpdateSlider()
+    public void UpdateSlider()
     {
         HealthSlider.maxValue = maxHealth;
         HealthSlider.value = currentHealth;
