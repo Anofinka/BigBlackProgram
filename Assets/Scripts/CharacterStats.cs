@@ -27,6 +27,9 @@ public class CharacterStats : MonoBehaviour
     public Text Stats;
     public int strength = 10;
     public int dexterity = 10;
+    public int armor;
+  //  public int dexterity = 10;
+
 
     
 
@@ -62,6 +65,12 @@ public class CharacterStats : MonoBehaviour
         {
             TakeMana(5);
         }
+        LvlText.text = "" + PlayerLevel;
+
+        Stats.text = "HP: " + currentHealth + " / " + maxHealth + "\n"
+            + " MP: " + currentMana + " / " + maxMana + "\n"
+            + "STR: " + strength + " DEX: " + dexterity + " AR: " + armor + "\n"
+            + "Level: " + PlayerLevel + " || " + currentExperience + " / " + experienceToNextLevel;
     }
     //Do test�w
     public void Heal(int amount)
@@ -128,12 +137,7 @@ public class CharacterStats : MonoBehaviour
     // Aktualizacja wy�wietlania statystyk
     public void UpdateStats()
     {
-        LvlText.text = "" + PlayerLevel;
-
-        Stats.text = "HP: " + currentHealth + " / " + maxHealth + "\n"
-            + " MP: " + currentMana + " / " + maxMana + "\n"
-            + "STR: " + strength + " DEX: " + dexterity +"\n"
-            + "Level:" + PlayerLevel + " || " + currentExperience + " / " + experienceToNextLevel;
+      
 
         UpdateSlider();
     }

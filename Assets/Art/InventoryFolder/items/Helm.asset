@@ -16,7 +16,7 @@ MonoBehaviour:
   itemTag: 1
   meshItem: {fileID: -2854808510063695659, guid: a2faa7a3198f3a841bc79b1a81d681b1, type: 3}
   armorMin: 5
-  armor: 0
+  armor: 11
   armorMax: 25
   damageMin: 0
   damage: 0

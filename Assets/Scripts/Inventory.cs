@@ -6,13 +6,13 @@ public class Inventory : MonoBehaviour
     public static Inventory Singleton;
     public static InventoryItem carriedItem;
     [SerializeField] SkinnedMeshRenderer[] eqItems;
-    public Mesh originalMesh = null;
+    // public Mesh originalMesh = null;
     [SerializeField] InventorySlot[] inventorySlots;
     [SerializeField] InventorySlot[] hotbarSlots;
-
+    public CharacterStats characterStats;
     // 0=Head, 1=Chest, 2=Legs, 3=Feet
     [SerializeField] InventorySlot[] equipmentSlots;
-
+    private InventoryItem currentEquippedItem;
     [SerializeField] Transform draggablesTransform;
     [SerializeField] InventoryItem itemPrefab;
 
@@ -52,8 +52,8 @@ public class Inventory : MonoBehaviour
         item.transform.SetParent(draggablesTransform);
     }
 
-    int damage;
-    int armor, armor0, armor1, armor2, armor3;
+   // int damage;
+   // int armor, armor0, armor1, armor2, armor3;
 
 
     public void EquipEquipment(SlotTag tag, InventoryItem item = null)
@@ -66,91 +66,86 @@ public class Inventory : MonoBehaviour
             case SlotTag.Head:
                 if (item == null)
                 {
-                    armor0 = 0;
-                    // Zdejmowanie elementu z g³owy, przywrócenie oryginalnej siatki
-                    Debug.Log("Unequipped helmet on " + tag);
-                    UpdateMesh(eqItems[0], originalMesh);
-
+                    if (currentEquippedItem != null && currentEquippedItem.myItem != null)
+                    {
+                        characterStats.armor -= currentEquippedItem.armor;
+                        Debug.Log("Unequipped helmet on " + tag);
+                        // UpdateMesh(eqItems[0], originalMesh);
+                        currentEquippedItem = null; // Aktualizacja obecnie za³o¿onego przedmiotu na null
+                    }
+                    else
+                    {
+                        Debug.LogWarning("No item equipped in the head slot to unequip.");
+                    }
                 }
                 else
                 {
-                    armor0 = item.armor;
-                    // Za³o¿enie nowego elementu na g³owê
-                    Debug.Log("Equipped helmet: " + item.myItem.name + " on " + tag);
-                    UpdateMesh(eqItems[0], item.Mesh2);
-                }
-                break;
-            case SlotTag.Chest:
-
-                if (item == null)
-                {
-                    armor1 = 0;
-                    // Zdejmowanie elementu z g³owy, przywrócenie oryginalnej siatki
-                    Debug.Log("Unequipped helmet on " + tag);
-                    UpdateMesh(eqItems[1], originalMesh);
-                }
-                else
-                {
-                    armor1 = item.armor;
-                    // Za³o¿enie nowego elementu na g³owê
-                    Debug.Log("Equipped helmet: " + item.myItem.name + " on " + tag);
-                    UpdateMesh(eqItems[1], item.Mesh2);
+                    if (item.myItem != null)
+                    {
+                        characterStats.armor += item.armor;
+                        Debug.Log("Equipped helmet: " + item.myItem.name + " on " + item.armor + " " +tag);
+                        // UpdateMesh(eqItems[0], item.Mesh2);
+                        currentEquippedItem = item; // Aktualizacja obecnie za³o¿onego przedmiotu na nowy
+                    }
+                    else
+                    {
+                        Debug.LogWarning("The item to equip has no valid 'myItem' property.");
+                    }
                 }
                 break;
             case SlotTag.Legs:
                 if (item == null)
                 {
-                    armor2 = 0;
+                    
                     // Zdejmowanie elementu z g³owy, przywrócenie oryginalnej siatki
                     Debug.Log("Unequipped helmet on " + tag);
-                    UpdateMesh(eqItems[2], originalMesh);
+                   // UpdateMesh(eqItems[2], originalMesh);
                 }
                 else
                 {
-                    armor2 = item.armor;
+                    
                     // Za³o¿enie nowego elementu na g³owê
                     Debug.Log("Equipped helmet: " + item.myItem.name + " on " + tag);
-                    UpdateMesh(eqItems[2], item.Mesh2);
+                   // UpdateMesh(eqItems[2], item.Mesh2);
                 }
                 break;
             case SlotTag.Boots:
                 if (item == null)
                 {
-                    armor3 = 0;
+                   
                     // Zdejmowanie elementu z g³owy, przywrócenie oryginalnej siatki
                     Debug.Log("Unequipped helmet on " + tag);
-                    UpdateMesh(eqItems[3], originalMesh);
+                   // UpdateMesh(eqItems[3], originalMesh);
                 }
                 else
                 {
-                    armor3 = item.armor;
+                    
                     // Za³o¿enie nowego elementu na g³owê
                     Debug.Log("Equipped helmet: " + item.myItem.name + " on " + tag);
-                    UpdateMesh(eqItems[3], item.Mesh2);
+                  //  UpdateMesh(eqItems[3], item.Mesh2);
                 }
                 break;
             case SlotTag.Weapon:
                 if (item == null)
                 {
-                    damage = 0;
+
                     // Zdejmowanie elementu z g³owy, przywrócenie oryginalnej siatki
-                    Debug.Log("Unequipped" + tag + " " + damage.ToString());
-                    UpdateMesh(eqItems[3], originalMesh);
+                    Debug.Log("Unequipped" + tag + " ");
+                  //  UpdateMesh(eqItems[3], originalMesh);
 
                 }
                 else
                 {
-                    damage = item.damage;
+                  
                     // Za³o¿enie nowego elementu na g³owê
                     Debug.Log("Equipped: " + item.myItem.name + " on " + tag);
-                    UpdateMesh(eqItems[3], item.Mesh2);
+                   // UpdateMesh(eqItems[3], item.Mesh2);
 
                 }
                 break;
         }
 
-        armor = armor0 + armor1 + armor2 + armor3;
-        Debug.Log("Armor" + armor.ToString());
+        
     }
 
     public void SpawnInventoryItem(Item item = null)
