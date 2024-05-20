@@ -154,4 +154,7 @@ public class CharacterStats : MonoBehaviour
         ExperienceSlider.maxValue = experienceToNextLevel;
         ExperienceSlider.value = currentExperience;
     }
+
+    
+   
 }
