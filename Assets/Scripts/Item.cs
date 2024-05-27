@@ -8,7 +8,7 @@ public class Item : ScriptableObject
     public Sprite sprite;
     public SlotTag itemTag;
     public Mesh meshItem;
-
+    
     [Header("Statystyki zbroi")]
     public int armorMin;
     public int armor;
@@ -18,6 +18,9 @@ public class Item : ScriptableObject
     public int damageMin;
     public int damage;
     public int damageMax;
+
+    [Header("Nazwa itemu")]
+    public string name;
 
     [Header("Wymagania")]
     public int requiredStrength;
