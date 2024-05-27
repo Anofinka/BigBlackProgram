@@ -11,24 +11,38 @@ public class TipMenager : MonoBehaviour
     public static Action<string, Vector2> OnMouseHover;
     public static Action OnMouseLoseFocus;
 
+    // Padding values
+    public Vector2 padding = new Vector2(10, 10);
+
     private void OnEnable()
     {
         OnMouseHover += ShowTip;
         OnMouseLoseFocus += HideTip;
     }
+
     private void OnDisable()
     {
         OnMouseHover -= ShowTip;
         OnMouseLoseFocus -= HideTip;
     }
+
     void Start()
     {
         HideTip();
     }
+
     private void ShowTip(string tip, Vector2 mousePos)
     {
+        // Zmniejszenie rozmiaru czcionki
+        tipText.fontSize = 14;
+
         tipText.text = tip;
-        tipWindow.sizeDelta = new Vector2(tipText.preferredHeight > 200 ? 200 : tipText.preferredWidth, tipText.preferredHeight);
+
+        // Ustalenie rozmiaru tipWindow z paddingiem
+        float width = tipText.preferredWidth + padding.x * 2;
+        float height = tipText.preferredHeight + padding.y * 2;
+        tipWindow.sizeDelta = new Vector2(width > 200 ? 200 : width, height);
+
         tipWindow.gameObject.SetActive(true);
 
         // Calculate desired position
@@ -64,12 +78,10 @@ public class TipMenager : MonoBehaviour
 
         tipWindow.transform.position = newPosition;
     }
+
     private void HideTip()
     {
         tipText.text = default;
         tipWindow.gameObject.SetActive(false);
     }
-
-    // Update is called once per frame
-
 }
