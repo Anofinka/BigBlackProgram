@@ -17,6 +17,7 @@ public class EnemyAttributes : MonoBehaviour
     private float Strength;
     public List<DropItem> dropItems; // Lista przedmiotów, które mogą być upuszczane wraz z ich szansą na upuszczenie
     public float dropRadius = 2f; // Promień, w jakim mogą być rozmieszczone upuszczone przedmioty
+    public float dropHeight = 0.5f; // Wysokość nad podłożem, na której będą spawnowane przedmioty
 
     public int expReward = 100; // Nagroda za doświadczenie, którą gracz otrzyma po zabiciu wroga
 
@@ -87,13 +88,13 @@ public class EnemyAttributes : MonoBehaviour
     Vector3 GetRandomPosition(Vector3 center, List<Vector3> occupiedPositions)
     {
         Vector3 randomPosition = center + Random.insideUnitSphere * dropRadius;
-        randomPosition.y = 0f; // Upewnij się, że przedmiot jest rozmieszczony na płaskiej powierzchni
+        randomPosition.y = dropHeight; // Ustawienie wysokości na dropHeight
 
         // Sprawdź czy wygenerowana pozycja nie nachodzi na inną już zajętą pozycję
         while (occupiedPositions.Exists(pos => Vector3.Distance(pos, randomPosition) < 1f))
         {
             randomPosition = center + Random.insideUnitSphere * dropRadius;
-            randomPosition.y = 0f;
+            randomPosition.y = dropHeight;
         }
 
         // Dodaj wygenerowaną pozycję do listy zajętych pozycji
