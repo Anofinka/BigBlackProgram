@@ -4,10 +4,7 @@ using UnityEngine.UI;
 
 public class CharacterStats : MonoBehaviour
 {
-
-   
-
-    [Header("Do�wiadczenie")]
+    [Header("Doświadczenie")]
     public int PlayerLevel = 1;
     public TextMeshProUGUI LvlText;
     public int currentExperience = 0;
@@ -23,15 +20,17 @@ public class CharacterStats : MonoBehaviour
     public int maxMana = 50;
     public int currentMana;
     public Slider ManaSlider;
-    [Header("")]
-    public Text Stats;
+    [Header("Stats")]
+    public Text StatsText;
+    public Text StatsText2;
+    public Text StatsText3;
+    public Text StatsText4;
+    public Text StatsText5;
+    public Text StatsText6;
+    public Text StatsText7;
     public int strength = 10;
     public int dexterity = 10;
     public int armor;
-  //  public int dexterity = 10;
-
-
-    
 
     void Start()
     {
@@ -42,7 +41,6 @@ public class CharacterStats : MonoBehaviour
 
     void Update()
     {
-        // Do test�w
         if (Input.GetKeyDown(KeyCode.Space))
         {
             AddExperience(20);
@@ -65,14 +63,30 @@ public class CharacterStats : MonoBehaviour
         {
             TakeMana(5);
         }
-        LvlText.text = "" + PlayerLevel;
+        LvlText.text = $"{PlayerLevel}";
 
-        Stats.text = "HP: " + currentHealth + " / " + maxHealth + "\n"
-            + " MP: " + currentMana + " / " + maxMana + "\n"
-            + "STR: " + strength + " DEX: " + dexterity + " AR: " + armor + "\n"
-            + "Level: " + PlayerLevel + " || " + currentExperience + " / " + experienceToNextLevel;
+       /* StatsText.text = $"<b>Stats</b>\n" +
+                         $"<color=#D9BA8C><b>Experience</b></color>\n" +
+                         $"<color=#4FA833>{currentExperience} / {experienceToNextLevel}</color>\n" +
+                         $"<color=#ff0000>Health: {currentHealth} / {maxHealth}</color>\n" +
+                         $"<color=#0000ff>Mana: {currentMana} / {maxMana}</color>\n" +
+                         $"<color=#D9BA8C><b>Attributes</b></color>\n" +
+                         $"<color=#D9BA8C>Strength: {strength}</color>\n" +
+                         $"<color=#D9BA8C>Dexterity: {dexterity}</color>\n" +
+                         $"<color=#D9BA8C>Armor: {armor}</color>";
+       */
+        StatsText2.text = $"<color=#D9BA8C><b>Experience</b></color>\n";
+        StatsText3.text = $"<color=#4FA833>{currentExperience} / {experienceToNextLevel}</color>\n";
+        StatsText4.text = $"<color=#D9BA8C><b>Stats</b></color>\n";
+        StatsText5.text = $"<color=#ff0000>Health: {currentHealth} / {maxHealth}</color>\n" +
+                         $"<color=#0000ff>Mana: {currentMana} / {maxMana}</color>\n";
+        StatsText6.text = $"<color=#D9BA8C><b>Attributes</b></color>\n";
+        StatsText7.text = $"<color=#D9BA8C>Strength: {strength}</color>\n" +
+                         $"<color=#D9BA8C>Dexterity: {dexterity}</color>\n" +
+                         $"<color=#D9BA8C>Armor: {armor}</color>";
+
     }
-    //Do test�w
+
     public void Heal(int amount)
     {
         currentHealth += amount;
@@ -80,6 +94,7 @@ public class CharacterStats : MonoBehaviour
         UpdateSlider();
         UpdateStats();
     }
+
     public void TakeDamage(int amount)
     {
         currentHealth -= amount;
@@ -87,6 +102,7 @@ public class CharacterStats : MonoBehaviour
         UpdateSlider();
         UpdateStats();
     }
+
     public void HealMana(int amount)
     {
         currentMana += amount;
@@ -94,6 +110,7 @@ public class CharacterStats : MonoBehaviour
         UpdateSlider();
         UpdateStats();
     }
+
     public void TakeMana(int amount)
     {
         currentMana -= amount;
@@ -102,8 +119,6 @@ public class CharacterStats : MonoBehaviour
         UpdateStats();
     }
 
-
-    // Dodaj do�wiadczenie
     public void AddExperience(int amount)
     {
         currentExperience += amount;
@@ -113,36 +128,30 @@ public class CharacterStats : MonoBehaviour
         }
     }
 
-    // Awansowanie na wy�szy poziom
     private void LevelUp()
     {
         PlayerLevel++;
         currentExperience -= experienceToNextLevel;
         experienceToNextLevel = Mathf.RoundToInt(experienceToNextLevel * 1.5f);
 
-        // Skalowanie zdrowia i many z poziomem gracza
         maxHealth = 100 + (PlayerLevel * 10);
         maxMana = 50 + (PlayerLevel * 5);
 
-        // Skalowanie si�y i zr�czno�ci
         strength = 10 + (PlayerLevel * 2);
         dexterity = 10 + (PlayerLevel * 2);
 
-        UpdateStats();
         currentHealth = maxHealth;
         currentMana = maxMana;
+        UpdateStats();
         UpdateSlider();
     }
 
-    // Aktualizacja wy�wietlania statystyk
     public void UpdateStats()
     {
-      
-
+        // Optional: Additional logic to update other stat-related UI elements
         UpdateSlider();
     }
 
-    // Aktualizacja suwak�w
     public void UpdateSlider()
     {
         HealthSlider.maxValue = maxHealth;
