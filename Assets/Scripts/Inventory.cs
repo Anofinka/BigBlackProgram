@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -6,13 +7,10 @@ public class Inventory : MonoBehaviour
     public static Inventory Singleton;
     public static InventoryItem carriedItem;
     [SerializeField] SkinnedMeshRenderer[] eqItems;
-    // public Mesh originalMesh = null;
     [SerializeField] InventorySlot[] inventorySlots;
     [SerializeField] InventorySlot[] hotbarSlots;
     public CharacterStats characterStats;
-    // 0=Head, 1=Chest, 2=Legs, 3=Feet
     [SerializeField] InventorySlot[] equipmentSlots;
-    private InventoryItem currentEquippedItem;
     [SerializeField] Transform draggablesTransform;
     [SerializeField] InventoryItem itemPrefab;
 
@@ -21,6 +19,9 @@ public class Inventory : MonoBehaviour
 
     [Header("Debug")]
     [SerializeField] Button giveItemBtn;
+
+    // S這wnik przechowuj鉍y aktualnie za這穎ne przedmioty dla poszczeg鏊nych slot闚
+    private Dictionary<SlotTag, InventoryItem> equippedItems = new Dictionary<SlotTag, InventoryItem>();
 
     void Awake()
     {
@@ -31,9 +32,7 @@ public class Inventory : MonoBehaviour
     void Update()
     {
         if (carriedItem == null) return;
-
         carriedItem.transform.position = Input.mousePosition;
-
     }
 
     public void SetCarriedItem(InventoryItem item)
@@ -45,309 +44,78 @@ public class Inventory : MonoBehaviour
         }
 
         if (item.activeSlot.myTag != SlotTag.None)
-        { EquipEquipment(item.activeSlot.myTag, null); }
+        {
+            EquipEquipment(item.activeSlot.myTag, null);
+        }
 
         carriedItem = item;
         carriedItem.canvasGroup.blocksRaycasts = false;
         item.transform.SetParent(draggablesTransform);
     }
 
-   // int damage;
-   // int armor, armor0, armor1, armor2, armor3;
-
-
     public void EquipEquipment(SlotTag tag, InventoryItem item = null)
     {
-        //SkinnedMeshRenderer originalMesh;
-       
-                 
-        switch (tag)
+        // Funkcja aktualizuj鉍a statystyki na podstawie zdejmowania lub zak豉dania przedmiotu
+        void UpdateStats(InventoryItem oldItem, InventoryItem newItem)
         {
-            case SlotTag.Head:
-                if (item == null)
-                {
-                    if (currentEquippedItem != null && currentEquippedItem.myItem != null)
-                    {
-                        characterStats.armor -= currentEquippedItem.armor;
-                        Debug.Log("Unequipped helmet on " + tag);
-                        // UpdateMesh(eqItems[0], originalMesh);
-                        currentEquippedItem = null; // Aktualizacja obecnie za這穎nego przedmiotu na null
-                    }
-                    else
-                    {
-                        Debug.LogWarning("No item equipped in the head slot to unequip.");
-                    }
-                }
+            if (oldItem != null)
+            {
+                if (tag == SlotTag.Weapon)
+                    characterStats.strength -= oldItem.damage;
                 else
-                {
-                    if (item.myItem != null)
-                    {
-                        characterStats.armor += item.armor;
-                        Debug.Log("Equipped helmet: " + item.myItem.name + " on " + item.armor + " " +tag);
-                        // UpdateMesh(eqItems[0], item.Mesh2);
-                        currentEquippedItem = item; // Aktualizacja obecnie za這穎nego przedmiotu na nowy
-                    }
-                    else
-                    {
-                        Debug.LogWarning("The item to equip has no valid 'myItem' property.");
-                    }
-                }
-                break;
-            case SlotTag.Shoulders:
-                if (item == null)
-                {
-                    if (currentEquippedItem != null && currentEquippedItem.myItem != null)
-                    {
-                        characterStats.armor -= currentEquippedItem.armor;
-                        Debug.Log("Unequipped helmet on " + tag);
-                        // UpdateMesh(eqItems[0], originalMesh);
-                        currentEquippedItem = null; // Aktualizacja obecnie za這穎nego przedmiotu na null
-                    }
-                    else
-                    {
-                        Debug.LogWarning("No item equipped in the head slot to unequip.");
-                    }
-                }
+                    characterStats.armor -= oldItem.armor;
+            }
+
+            if (newItem != null)
+            {
+                if (tag == SlotTag.Weapon)
+                    characterStats.strength += newItem.damage;
                 else
-                {
-                    if (item.myItem != null)
-                    {
-                        characterStats.armor += item.armor;
-                        Debug.Log("Equipped helmet: " + item.myItem.name + " on " + item.armor + " " + tag);
-                        // UpdateMesh(eqItems[0], item.Mesh2);
-                        currentEquippedItem = item; // Aktualizacja obecnie za這穎nego przedmiotu na nowy
-                    }
-                    else
-                    {
-                        Debug.LogWarning("The item to equip has no valid 'myItem' property.");
-                    }
-                }
-                break;
-            case SlotTag.Chest:
-                if (item == null)
-                {
-                    if (currentEquippedItem != null && currentEquippedItem.myItem != null)
-                    {
-                        characterStats.armor -= currentEquippedItem.armor;
-                        Debug.Log("Unequipped helmet on " + tag);
-                        // UpdateMesh(eqItems[0], originalMesh);
-                        currentEquippedItem = null; // Aktualizacja obecnie za這穎nego przedmiotu na null
-                    }
-                    else
-                    {
-                        Debug.LogWarning("No item equipped in the head slot to unequip.");
-                    }
-                }
-                else
-                {
-                    if (item.myItem != null)
-                    {
-                        characterStats.armor += item.armor;
-                        Debug.Log("Equipped helmet: " + item.myItem.name + " on " + item.armor + " " + tag);
-                        // UpdateMesh(eqItems[0], item.Mesh2);
-                        currentEquippedItem = item; // Aktualizacja obecnie za這穎nego przedmiotu na nowy
-                    }
-                    else
-                    {
-                        Debug.LogWarning("The item to equip has no valid 'myItem' property.");
-                    }
-                }
-                break;
-            case SlotTag.Gloves:
-                if (item == null)
-                {
-                    if (currentEquippedItem != null && currentEquippedItem.myItem != null)
-                    {
-                        characterStats.armor -= currentEquippedItem.armor;
-                        Debug.Log("Unequipped helmet on " + tag);
-                        // UpdateMesh(eqItems[0], originalMesh);
-                        currentEquippedItem = null; // Aktualizacja obecnie za這穎nego przedmiotu na null
-                    }
-                    else
-                    {
-                        Debug.LogWarning("No item equipped in the head slot to unequip.");
-                    }
-                }
-                else
-                {
-                    if (item.myItem != null)
-                    {
-                        characterStats.armor += item.armor;
-                        Debug.Log("Equipped helmet: " + item.myItem.name + " on " + item.armor + " " + tag);
-                        // UpdateMesh(eqItems[0], item.Mesh2);
-                        currentEquippedItem = item; // Aktualizacja obecnie za這穎nego przedmiotu na nowy
-                    }
-                    else
-                    {
-                        Debug.LogWarning("The item to equip has no valid 'myItem' property.");
-                    }
-                }
-                break;
-            case SlotTag.Boots:
-                if (item == null)
-                {
-                    if (currentEquippedItem != null && currentEquippedItem.myItem != null)
-                    {
-                        characterStats.armor -= currentEquippedItem.armor;
-                        Debug.Log("Unequipped helmet on " + tag);
-                        // UpdateMesh(eqItems[0], originalMesh);
-                        currentEquippedItem = null; // Aktualizacja obecnie za這穎nego przedmiotu na null
-                    }
-                    else
-                    {
-                        Debug.LogWarning("No item equipped in the head slot to unequip.");
-                    }
-                }
-                else
-                {
-                    if (item.myItem != null)
-                    {
-                        characterStats.armor += item.armor;
-                        Debug.Log("Equipped helmet: " + item.myItem.name + " on " + item.armor + " " + tag);
-                        // UpdateMesh(eqItems[0], item.Mesh2);
-                        currentEquippedItem = item; // Aktualizacja obecnie za這穎nego przedmiotu na nowy
-                    }
-                    else
-                    {
-                        Debug.LogWarning("The item to equip has no valid 'myItem' property.");
-                    }
-                }
-                break;
-            case SlotTag.Necklace:
-                if (item == null)
-                {
-                    if (currentEquippedItem != null && currentEquippedItem.myItem != null)
-                    {
-                        characterStats.armor -= currentEquippedItem.armor;
-                        Debug.Log("Unequipped helmet on " + tag);
-                        // UpdateMesh(eqItems[0], originalMesh);
-                        currentEquippedItem = null; // Aktualizacja obecnie za這穎nego przedmiotu na null
-                    }
-                    else
-                    {
-                        Debug.LogWarning("No item equipped in the head slot to unequip.");
-                    }
-                }
-                else
-                {
-                    if (item.myItem != null)
-                    {
-                        characterStats.armor += item.armor;
-                        Debug.Log("Equipped helmet: " + item.myItem.name + " on " + item.armor + " " + tag);
-                        // UpdateMesh(eqItems[0], item.Mesh2);
-                        currentEquippedItem = item; // Aktualizacja obecnie za這穎nego przedmiotu na nowy
-                    }
-                    else
-                    {
-                        Debug.LogWarning("The item to equip has no valid 'myItem' property.");
-                    }
-                }
-                break;
-            case SlotTag.Cape:
-                if (item == null)
-                {
-                    if (currentEquippedItem != null && currentEquippedItem.myItem != null)
-                    {
-                        characterStats.armor -= currentEquippedItem.armor;
-                        Debug.Log("Unequipped helmet on " + tag);
-                        // UpdateMesh(eqItems[0], originalMesh);
-                        currentEquippedItem = null; // Aktualizacja obecnie za這穎nego przedmiotu na null
-                    }
-                    else
-                    {
-                        Debug.LogWarning("No item equipped in the head slot to unequip.");
-                    }
-                }
-                else
-                {
-                    if (item.myItem != null)
-                    {
-                        characterStats.armor += item.armor;
-                        Debug.Log("Equipped helmet: " + item.myItem.name + " on " + item.armor + " " + tag);
-                        // UpdateMesh(eqItems[0], item.Mesh2);
-                        currentEquippedItem = item; // Aktualizacja obecnie za這穎nego przedmiotu na nowy
-                    }
-                    else
-                    {
-                        Debug.LogWarning("The item to equip has no valid 'myItem' property.");
-                    }
-                }
-                break;
-            case SlotTag.Ring:
-                if (item == null)
-                {
-                    if (currentEquippedItem != null && currentEquippedItem.myItem != null)
-                    {
-                        characterStats.armor -= currentEquippedItem.armor;
-                        Debug.Log("Unequipped helmet on " + tag);
-                        // UpdateMesh(eqItems[0], originalMesh);
-                        currentEquippedItem = null; // Aktualizacja obecnie za這穎nego przedmiotu na null
-                    }
-                    else
-                    {
-                        Debug.LogWarning("No item equipped in the head slot to unequip.");
-                    }
-                }
-                else
-                {
-                    if (item.myItem != null)
-                    {
-                        characterStats.armor += item.armor;
-                        Debug.Log("Equipped helmet: " + item.myItem.name + " on " + item.armor + " " + tag);
-                        // UpdateMesh(eqItems[0], item.Mesh2);
-                        currentEquippedItem = item; // Aktualizacja obecnie za這穎nego przedmiotu na nowy
-                    }
-                    else
-                    {
-                        Debug.LogWarning("The item to equip has no valid 'myItem' property.");
-                    }
-                }
-                break;
-            case SlotTag.Weapon:
-                if (item == null)
-                {
-                    if (currentEquippedItem != null && currentEquippedItem.myItem != null)
-                    {
-                        characterStats.strength -= currentEquippedItem.damage;
-                        Debug.Log("Unequipped helmet on " + tag);
-                        // UpdateMesh(eqItems[0], originalMesh);
-                        currentEquippedItem = null; // Aktualizacja obecnie za這穎nego przedmiotu na null
-                    }
-                    else
-                    {
-                        Debug.LogWarning("No item equipped in the head slot to unequip.");
-                    }
-                }
-                else
-                {
-                    if (item.myItem != null)
-                    {
-                        characterStats.strength += item.damage;
-                        Debug.Log("Equipped helmet: " + item.myItem.damage + " on " + item.damage + " " + tag);
-                        // UpdateMesh(eqItems[0], item.Mesh2);
-                        currentEquippedItem = item; // Aktualizacja obecnie za這穎nego przedmiotu na nowy
-                    }
-                    else
-                    {
-                        Debug.LogWarning("The item to equip has no valid 'myItem' property.");
-                    }
-                }
-                break;
-            
+                    characterStats.armor += newItem.armor;
+            }
         }
 
-        
+        // Uzyskaj aktualnie za這穎ny przedmiot dla danego slotu
+        equippedItems.TryGetValue(tag, out InventoryItem currentEquippedItem);
+
+        if (item == null)
+        {
+            if (currentEquippedItem != null && currentEquippedItem.myItem != null)
+            {
+                UpdateStats(currentEquippedItem, null);
+                Debug.Log($"Unequipped item from {tag}");
+                equippedItems[tag] = null; // Aktualizacja obecnie za這穎nego przedmiotu na null
+            }
+            else
+            {
+                Debug.LogWarning($"No item equipped in the {tag} slot to unequip.");
+            }
+        }
+        else
+        {
+            if (item.myItem != null)
+            {
+                UpdateStats(currentEquippedItem, item);
+                Debug.Log($"Equipped item: {item.myItem.name} ({item.armor}) on {tag}");
+                equippedItems[tag] = item; // Aktualizacja obecnie za這穎nego przedmiotu na nowy
+            }
+            else
+            {
+                Debug.LogWarning("The item to equip has no valid 'myItem' property.");
+            }
+        }
     }
 
     public void SpawnInventoryItem(Item item = null)
     {
         Item _item = item;
         if (_item == null)
-        { _item = PickRandomItem(); }
+        {
+            _item = PickRandomItem();
+        }
 
         for (int i = 0; i < inventorySlots.Length; i++)
         {
-            // Check if the slot is empty
             if (inventorySlots[i].myItem == null)
             {
                 Instantiate(itemPrefab, inventorySlots[i].transform).Initialize(_item, inventorySlots[i]);
@@ -361,6 +129,7 @@ public class Inventory : MonoBehaviour
         int random = Random.Range(0, items.Length);
         return items[random];
     }
+
     void AddItemToEquipment(InventoryItem item)
     {
         foreach (var slot in equipmentSlots)
@@ -372,19 +141,17 @@ public class Inventory : MonoBehaviour
             }
         }
     }
+
     public void SpawnInventoryItem2(Item item)
     {
-        //Item item = pickedUpItem.GetComponent<Item>();
-
         if (item == null)
         {
             Debug.LogError("Picked up item does not contain Item component!");
             return;
         }
-        //Debug.LogError("Picked up item ");
+
         for (int i = 0; i < inventorySlots.Length; i++)
         {
-            // Check if the slot is empty
             if (inventorySlots[i].myItem == null)
             {
                 Instantiate(itemPrefab, inventorySlots[i].transform).Initialize(item, inventorySlots[i]);
@@ -392,9 +159,9 @@ public class Inventory : MonoBehaviour
             }
         }
     }
+
     public void UpdateMesh(SkinnedMeshRenderer renderer, Mesh newMesh)
     {
         renderer.sharedMesh = newMesh;
     }
-
 }
