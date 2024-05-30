@@ -30,7 +30,7 @@ public class EnemyController : MonoBehaviour
         if (other.CompareTag("Player"))
         {
             //Debug.Log("Welcome");
-            CreateStopObstacle(); // Tworzenie nowej instancji "stopObstacle"
+            //CreateStopObstacle(); // Tworzenie nowej instancji "stopObstacle"
 
             if (isAgentActive)
             {
@@ -62,8 +62,13 @@ public class EnemyController : MonoBehaviour
     {
         if (stopObstacleInstance != null)
         {
+            //Debug.Log("stop obstacle");
             Destroy(stopObstacleInstance);
             stopObstacleInstance = null;
+        }
+        else
+        {
+            Debug.Log("Null stop obstacle (narazie tak potem fixne moze)");
         }
     }
 
