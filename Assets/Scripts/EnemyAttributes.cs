@@ -22,7 +22,8 @@ public class EnemyAttributes : MonoBehaviour
     public int expReward = 100; // Nagroda za doświadczenie, którą gracz otrzyma po zabiciu wroga
 
     private CharacterStats playerStats; // Referencja do skryptu CharacterStats gracza
-
+    //private EnemyController EnemyController;
+    private GameObject SavedStopObstacle;
     public float GetHP() { return currentHealth; }
     public string GetName() { return enemyName; }
     public int GetLevel()
@@ -35,6 +36,9 @@ public class EnemyAttributes : MonoBehaviour
     {
         currentHealth = maxHealth = (maxHealth * (1 + EnemyLevel / 8));
         playerStats = FindObjectOfType<CharacterStats>(); // Znajdujemy CharacterStats na obiekcie gracza za pomocą FindObjectOfType
+        //EnemyController = GetComponentInChildren<EnemyController>();
+        SavedStopObstacle = GetComponentInChildren<EnemyController>().gameObject; //pozniej zfixuje
+        //Debug.Log();
     }
 
     public void TakeDamage(float damage)
@@ -51,7 +55,9 @@ public class EnemyAttributes : MonoBehaviour
     {
         // Usuń przeciwnika
         Destroy(gameObject);
-
+        //Debug.Log(EnemyController.gameObject.name);
+        Destroy(SavedStopObstacle);
+        //EnemyController.DestroyStopObstacle();
         // Lista przechowująca już wygenerowane pozycje przedmiotów
         List<Vector3> occupiedPositions = new List<Vector3>();
 

@@ -62,8 +62,13 @@ public class EnemyController : MonoBehaviour
     {
         if (stopObstacleInstance != null)
         {
+            Debug.Log("stop obstacle");
             Destroy(stopObstacleInstance);
             stopObstacleInstance = null;
+        }
+        else
+        {
+            Debug.Log("Null stop obstacle");
         }
     }
 
