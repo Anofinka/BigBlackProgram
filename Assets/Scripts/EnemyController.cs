@@ -30,7 +30,7 @@ public class EnemyController : MonoBehaviour
         if (other.CompareTag("Player"))
         {
             //Debug.Log("Welcome");
-            CreateStopObstacle(); // Tworzenie nowej instancji "stopObstacle"
+            //CreateStopObstacle(); // Tworzenie nowej instancji "stopObstacle"
 
             if (isAgentActive)
             {
