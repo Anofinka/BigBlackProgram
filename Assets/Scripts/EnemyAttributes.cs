@@ -14,7 +14,6 @@ public class EnemyAttributes : MonoBehaviour
     public float maxHealth;
     private float currentHealth;
     public int EnemyLevel = 1;
-    private float Strength;
     public List<DropItem> dropItems; // Lista przedmiotów, które mogą być upuszczane wraz z ich szansą na upuszczenie
     public float dropRadius = 2f; // Promień, w jakim mogą być rozmieszczone upuszczone przedmioty
     public float dropHeight = 0.5f; // Wysokość nad podłożem, na której będą spawnowane przedmioty
@@ -24,6 +23,8 @@ public class EnemyAttributes : MonoBehaviour
     private CharacterStats playerStats; // Referencja do skryptu CharacterStats gracza
     //private EnemyController EnemyController;
     private GameObject SavedStopObstacle;
+
+    private MusicChanger musicChanger;
     public float GetHP() { return currentHealth; }
     public string GetName() { return enemyName; }
     public int GetLevel()
@@ -34,10 +35,15 @@ public class EnemyAttributes : MonoBehaviour
 
     void Start()
     {
+        //GameObject n = GameObject.FindGameObjectWithTag("Player").GetComponentInChildren("musicChanger");
+        musicChanger = MusicChanger.Instance;
         currentHealth = maxHealth = (maxHealth * (1 + EnemyLevel / 8));
         playerStats = FindObjectOfType<CharacterStats>(); // Znajdujemy CharacterStats na obiekcie gracza za pomocą FindObjectOfType
         //EnemyController = GetComponentInChildren<EnemyController>();
+        if (GetComponentInChildren<EnemyController>() != null )
+        {
         SavedStopObstacle = GetComponentInChildren<EnemyController>().gameObject; //pozniej zfixuje
+        }
         //Debug.Log();
     }
 
@@ -57,6 +63,7 @@ public class EnemyAttributes : MonoBehaviour
         Destroy(gameObject);
         //Debug.Log(EnemyController.gameObject.name);
         Destroy(SavedStopObstacle);
+        musicChanger.MusicEnemyGone();
         //EnemyController.DestroyStopObstacle();
         // Lista przechowująca już wygenerowane pozycje przedmiotów
         List<Vector3> occupiedPositions = new List<Vector3>();
