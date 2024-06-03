@@ -22,7 +22,6 @@ public class MusicChanger : MonoBehaviour
 
     void Update()
     {   
-        Debug.Log(enemyCount);
         // Weryfikacja i zapewnienie, ¿e liczba wrogów nie jest ujemna
         if (enemyCount < 0)
         {
