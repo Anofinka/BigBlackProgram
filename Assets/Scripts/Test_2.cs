@@ -7,8 +7,6 @@ public class Test_2 : MonoBehaviour
 {
     public GameObject character;
     private Animator characterAnimator;
-    private bool isAttacking = false;
-    private bool ismoving = false;
     private NavMeshAgent agent;
     Dictionary<string, Coroutine> activeCoroutines = new Dictionary<string, Coroutine>();
     public CapsuleCollider Mieczorcolid;
@@ -26,10 +24,10 @@ public class Test_2 : MonoBehaviour
 
     }
 
-    void Update()
+/*    void Update()
     {
         //AnimationAsk();
-    }
+    }*/
     IEnumerator OnShotRoutine(string nameZ, float timeZ)
     {
 
