@@ -2,8 +2,6 @@ using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
-using System.Collections;
-using System.Runtime.CompilerServices;
 
 public class Postać_ruszanie_2 : MonoBehaviour
 {
@@ -57,8 +55,8 @@ public class Postać_ruszanie_2 : MonoBehaviour
             ClickToMove();
         }
 
-        FaceTarget();
-        SetAnimations();
+            FaceTarget();
+            SetAnimations();
        
     }
 

@@ -1,5 +1,6 @@
 using System.Collections;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class MusicChanger : MonoBehaviour
 {
@@ -7,10 +8,14 @@ public class MusicChanger : MonoBehaviour
     public AudioSource ThemeHigh;
     public float enterTransitionTime = 2.0f;
     public float exitTransitionTime = 2.0f;
+    public float WalkEnterTime = 0.2f;
+    public float WalkExitTime = 0.2f;
+    public AudioSource Footsteps;
+    public NavMeshAgent agent;
 
     private int enemyCount = 0;
     private Coroutine transitionCoroutine;
-
+    private Coroutine footstepsCoroutine;
 
     void Start()
     {
@@ -18,15 +23,25 @@ public class MusicChanger : MonoBehaviour
         ThemeHigh.volume = 0;
         ThemeMid.Play();
         ThemeHigh.Play();
+        Footsteps.volume = 0; // Initial volume for footsteps
+        Footsteps.Play();
     }
 
     void Update()
-    {   
-        // Weryfikacja i zapewnienie, ¿e liczba wrogów nie jest ujemna
+    {
+        // Verify and ensure the enemy count is not negative
         if (enemyCount < 0)
         {
             enemyCount = 0;
         }
+
+        if (agent.velocity != Vector3.zero)
+        {
+            isWalking();
+        }
+        else
+            IsNotWalking();
+
     }
 
     void OnTriggerEnter(Collider other)
@@ -45,19 +60,6 @@ public class MusicChanger : MonoBehaviour
             MusicEnemyGone();
         }
     }
-
-/*    void OnTriggerStay(Collider other)
-    {
-        if (other.CompareTag("enemy"))
-        {
-            // Upewnij siê, ¿e liczba wrogów jest poprawna
-            if (enemyCount == 0)
-            {
-                enemyCount = 1;
-                UpdateMusic(true);
-            }
-        }
-    }*/
 
     private void UpdateMusic(bool isEntering)
     {
@@ -97,9 +99,42 @@ public class MusicChanger : MonoBehaviour
         to.volume = 1;
     }
 
+    private IEnumerator FadeFootsteps(AudioSource audioSource, float targetVolume, float duration)
+    {
+        float time = 0;
+        float startVolume = audioSource.volume;
+
+        while (time < duration)
+        {
+            time += Time.deltaTime;
+            audioSource.volume = Mathf.Lerp(startVolume, targetVolume, time / duration);
+            yield return null;
+        }
+
+        audioSource.volume = targetVolume;
+    }
+
     public void MusicEnemyGone()
     {
-        enemyCount--;      
+        enemyCount--;
         UpdateMusic(false);
+    }
+
+    public void isWalking()
+    {
+            if (footstepsCoroutine != null)
+            {
+                StopCoroutine(footstepsCoroutine);
+            }
+            footstepsCoroutine = StartCoroutine(FadeFootsteps(Footsteps, 1, WalkEnterTime)); // Fade in footsteps
+    }
+
+    public void IsNotWalking()
+    {
+        if (footstepsCoroutine != null)
+        {
+            StopCoroutine(footstepsCoroutine);
+        }
+        footstepsCoroutine = StartCoroutine(FadeFootsteps(Footsteps, 0, WalkExitTime)); // Fade out footsteps
     }
 }
