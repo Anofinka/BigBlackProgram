@@ -12,16 +12,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4f01cccb2c080ea45b4d365239347695, type: 3}
   m_Name: StatsGlove
   m_EditorClassIdentifier: 
-  sprite: {fileID: 21300000, guid: abd035fb6332ca349b38f5a611127c07, type: 3}
+  sprite: {fileID: 21300000, guid: 4bb85e9d81dd972438a5d43bf3dd0a87, type: 3}
   itemTag: 10
   meshItem: {fileID: 0}
   armorMin: 10
-  armor: 15
+  armor: 10
   armorMax: 20
   damageMin: 0
   damage: 0
   damageMax: 0
-  name: Warrior's Grip
+  name: Gauntlets of the Bear
   requiredStrength: 0
   requiredDexterity: 0
   requiredLevel: 0

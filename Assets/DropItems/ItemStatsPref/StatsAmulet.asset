@@ -20,8 +20,8 @@ MonoBehaviour:
   armorMax: 10
   damageMin: 0
   damage: 0
-  damageMax: 0
-  name: Wraith Pendant
+  damageMax: 5
+  name: Amulet of Dawn
   requiredStrength: 0
   requiredDexterity: 0
   requiredLevel: 0
