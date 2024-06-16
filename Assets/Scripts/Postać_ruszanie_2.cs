@@ -3,7 +3,6 @@ using UnityEngine.AI;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using System.Collections;
-using System.Runtime.CompilerServices;
 
 public class Postać_ruszanie_2 : MonoBehaviour
 {
@@ -11,17 +10,14 @@ public class Postać_ruszanie_2 : MonoBehaviour
     Animator animator;
     Transform particletransform;
     public Test_2 test;
+
     [Header("Movement")]
     public GameObject clickEffectObj;
     [SerializeField] LayerMask clickableLayers;
     GameObject clickEffectInstance;
-/*    Object swap;*/
+
     float lookRotationSpeed = 8f;
     RaycastHit hit;
-
-/*    GameObject enemyobject;
-    Outline enemyoutline;
-    Outline lastHitOutline;*/
 
     public Image healthImage;
 
@@ -29,13 +25,12 @@ public class Postać_ruszanie_2 : MonoBehaviour
     public bool Life = true;
     public int playerHealth = 10;
 
-
     public float gravityMultiplier = 2;
     [HideInInspector]
     public float gravityValue = -9.81f;
 
     void Start()
-    { 
+    {
         gravityValue *= gravityMultiplier;
         // Inicjalizacja wizualizacji zasięgu umiejętności "Dusha"
     }
@@ -45,21 +40,22 @@ public class Postać_ruszanie_2 : MonoBehaviour
         agent = GetComponent<NavMeshAgent>();
         animator = GetComponent<Animator>();
         particletransform = clickEffectObj.transform;
-/*        lastHitOutline = null;*/
     }
 
     void Update()
     {
-       
-
-        if (Input.GetMouseButtonDown(0) && !EventSystem.current.IsPointerOverGameObject()&& test.IsSpellOver)
+        if (Input.GetMouseButtonDown(0) && !EventSystem.current.IsPointerOverGameObject() && test.IsSpellOver)
         {
             ClickToMove();
         }
 
+        if (Input.GetMouseButton(0) && !EventSystem.current.IsPointerOverGameObject() && test.IsSpellOver)
+        {
+            ContinuousMove();
+        }
+
         FaceTarget();
         SetAnimations();
-       
     }
 
     void ClickToMove()
@@ -69,6 +65,20 @@ public class Postać_ruszanie_2 : MonoBehaviour
             agent.destination = hit.point;
 
             if (clickEffectObj != null)
+            {
+                Destroy(clickEffectInstance);
+                clickEffectInstance = Instantiate(clickEffectObj, hit.point + new Vector3(0, 0.1f, 0), particletransform.rotation);
+            }
+        }
+    }
+
+    void ContinuousMove()
+    {
+        if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit, 100, clickableLayers))
+        {
+            agent.destination = hit.point;
+
+            if (clickEffectObj != null && (clickEffectInstance == null || clickEffectInstance.transform.position != hit.point))
             {
                 Destroy(clickEffectInstance);
                 clickEffectInstance = Instantiate(clickEffectObj, hit.point + new Vector3(0, 0.1f, 0), particletransform.rotation);
@@ -96,8 +106,4 @@ public class Postać_ruszanie_2 : MonoBehaviour
             animator.SetBool("walk", false);
         }
     }
-
-   
- 
-    
 }
