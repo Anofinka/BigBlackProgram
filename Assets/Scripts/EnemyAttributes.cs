@@ -42,14 +42,17 @@ public class EnemyAttributes : MonoBehaviour
         }*/
         //Debug.Log();
     }
+    
 
     public void TakeDamage(float damage)
     {
         currentHealth -= damage;
+        Debug.Log("Zadal damage");
 
         if (currentHealth <= 0)
         {
             Die();
+         
         }
     }
 

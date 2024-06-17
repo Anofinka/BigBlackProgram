@@ -1,6 +1,7 @@
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class CharacterStats : MonoBehaviour
 {
@@ -32,10 +33,19 @@ public class CharacterStats : MonoBehaviour
     public int dexterity = 10;
     public int armor;
 
+    [Header("Death UI")]
+    public GameObject diedImage; // Przypisz zdjęcie "Died" z Canvas
+    public GameObject diedText; // Przypisz napis "Tekst" z Canvas
+    public float resetDelay = 3f; // Czas opóźnienia przed resetem poziomu
+    
+    public AudioSource backgroundMusic;
+    public AudioSource backgroundMusic_2;
     void Start()
     {
         currentHealth = maxHealth;
         currentMana = maxMana;
+        diedImage.SetActive(false);
+        diedText.SetActive(false);
         UpdateStats();
     }
 
@@ -65,16 +75,6 @@ public class CharacterStats : MonoBehaviour
         }
         LvlText.text = $"{PlayerLevel}";
 
-       /* StatsText.text = $"<b>Stats</b>\n" +
-                         $"<color=#D9BA8C><b>Experience</b></color>\n" +
-                         $"<color=#4FA833>{currentExperience} / {experienceToNextLevel}</color>\n" +
-                         $"<color=#ff0000>Health: {currentHealth} / {maxHealth}</color>\n" +
-                         $"<color=#0000ff>Mana: {currentMana} / {maxMana}</color>\n" +
-                         $"<color=#D9BA8C><b>Attributes</b></color>\n" +
-                         $"<color=#D9BA8C>Strength: {strength}</color>\n" +
-                         $"<color=#D9BA8C>Dexterity: {dexterity}</color>\n" +
-                         $"<color=#D9BA8C>Armor: {armor}</color>";
-       */
         StatsText2.text = $"<color=#D9BA8C><b>Experience</b></color>\n";
         StatsText3.text = $"<color=#4FA833>{currentExperience} / {experienceToNextLevel}</color>\n";
         StatsText4.text = $"<color=#D9BA8C><b>Stats</b></color>\n";
@@ -85,6 +85,11 @@ public class CharacterStats : MonoBehaviour
                          $"<color=#D9BA8C>Dexterity: {dexterity}</color>\n" +
                          $"<color=#D9BA8C>Armor: {armor}</color>";
 
+         if (currentHealth <= 0)
+        {
+            Dead();
+         
+        }
     }
 
     public void Heal(int amount)
@@ -98,9 +103,15 @@ public class CharacterStats : MonoBehaviour
     public void TakeDamage(int amount)
     {
         currentHealth -= amount;
+        Debug.Log("TakeDamage called. Current Health: " + currentHealth);
         currentHealth = Mathf.Clamp(currentHealth, 0, maxHealth);
         UpdateSlider();
         UpdateStats();
+        if (currentHealth <= 0)
+        {
+            Dead();
+            Debug.Log("Die");
+        }
     }
 
     public void HealMana(int amount)
@@ -162,5 +173,27 @@ public class CharacterStats : MonoBehaviour
 
         ExperienceSlider.maxValue = experienceToNextLevel;
         ExperienceSlider.value = currentExperience;
+    }
+
+    private void Dead()
+    {
+        Debug.Log("Die called.");
+        diedImage.SetActive(true);
+        diedText.SetActive(true);
+        Invoke("ResetLevel", resetDelay);
+         if (backgroundMusic != null)
+        {
+        backgroundMusic.Stop();
+        }
+         if (backgroundMusic_2 != null)
+        {
+        backgroundMusic_2.Stop();
+        }
+    }
+
+    private void ResetLevel()
+    {
+        Debug.Log("ResetLevel called.");
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 }
