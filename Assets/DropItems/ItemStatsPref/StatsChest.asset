@@ -21,7 +21,7 @@ MonoBehaviour:
   damageMin: 0
   damage: 0
   damageMax: 0
-  name: Warrior's Breastplate
+  name: Chestplate of the Phoenix
   requiredStrength: 0
   requiredDexterity: 0
   requiredLevel: 0
