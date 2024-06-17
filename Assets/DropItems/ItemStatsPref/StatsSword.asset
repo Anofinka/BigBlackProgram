@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4f01cccb2c080ea45b4d365239347695, type: 3}
   m_Name: StatsSword
   m_EditorClassIdentifier: 
-  sprite: {fileID: 0}
+  sprite: {fileID: 21300000, guid: 84be4d56dd14d6b488922340dd809dc4, type: 3}
   itemTag: 7
   meshItem: {fileID: 0}
   armorMin: 0
