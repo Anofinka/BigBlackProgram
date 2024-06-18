@@ -21,6 +21,7 @@ public class SpellCooldown : MonoBehaviour
     public AnimationClip AnimationClip;
     public Test_2 SkillMenagerScript;
     public bool IgnoreCooldown = false;
+    public RandomAudioPlayer RandomAudioPlayer;
 
 
 
@@ -45,6 +46,7 @@ public class SpellCooldown : MonoBehaviour
         }
         else if (Input.GetKeyUp(AbilityKey) && SkillMenagerScript.isAgentNotMoving() && IgnoreCooldown)
             MakeSpell();
+            //UseSpell();
 
         if (isCoolDown && !IgnoreCooldown)
         {
@@ -69,7 +71,7 @@ public class SpellCooldown : MonoBehaviour
 
     }
 
-    public bool UseSpell()
+    public bool UseSpell() // 1-4 attacks
     {
 
         if (isCoolDown)
@@ -86,7 +88,12 @@ public class SpellCooldown : MonoBehaviour
                 cooldownTimer = cooldownTime;
                 textCooldown.text = Mathf.RoundToInt(cooldownTimer).ToString();
                 imageCooldown.fillAmount = 1.0f;
-            }
+            RandomAudioPlayer.PlayRandomClip(RandomAudioPlayer.SpellClips);
+            } //tu + test2 - if (isProcessing)
+            //else
+            //RandomAudioPlayer.PlayRandomClip(RandomAudioPlayer.AttackClips);
+
+
             SkillMenagerScript.ClickRoutine(AnimationTriggerName, AnimationClip);
             return true;
         }
@@ -105,7 +112,7 @@ public class SpellCooldown : MonoBehaviour
         }
         else
         {
-            SkillMenagerScript.ClickRoutine(AnimationTriggerName, AnimationClip);
+            SkillMenagerScript.ClickRoutine(AnimationTriggerName, AnimationClip, true);
         }
     }
 }
