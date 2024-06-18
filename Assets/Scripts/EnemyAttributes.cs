@@ -19,6 +19,8 @@ public class EnemyAttributes : MonoBehaviour
     public float dropHeight = 0.5f; // Wysokość nad podłożem, na której będą spawnowane przedmioty
 
     public int expReward = 100; // Nagroda za doświadczenie, którą gracz otrzyma po zabiciu wroga
+    [Header("Sounds")]
+    /*public RandomAudioMonster randomAudioMonster;*/
 
     private CharacterStats playerStats; // Referencja do skryptu CharacterStats gracza
     private MusicChanger musicChanger;
@@ -46,6 +48,8 @@ public class EnemyAttributes : MonoBehaviour
     public void TakeDamage(float damage)
     {
         currentHealth -= damage;
+
+        RandomAudioMonster.Instance.PlayRandomDamageClip();
 
         if (currentHealth <= 0)
         {

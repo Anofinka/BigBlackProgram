@@ -124,7 +124,7 @@ public class Test_2 : MonoBehaviour
 
         if (isProcessing)
             return;
-        else 
+        else if (ignoreOn)
         {
         isProcessing = true; // Set flag to true to prevent re-entry
         if (activeCoroutines.ContainsKey(animationSequenceKey))

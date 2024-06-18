@@ -22,7 +22,7 @@ public class SpellCooldown : MonoBehaviour
     public Test_2 SkillMenagerScript;
     public bool IgnoreCooldown = false;
     public RandomAudioPlayer RandomAudioPlayer;
-
+    bool firstAttackFix = false; //at this point i dont know
 
 
     // Start is called before the first frame update
@@ -88,13 +88,15 @@ public class SpellCooldown : MonoBehaviour
                 cooldownTimer = cooldownTime;
                 textCooldown.text = Mathf.RoundToInt(cooldownTimer).ToString();
                 imageCooldown.fillAmount = 1.0f;
-            RandomAudioPlayer.PlayRandomClip(RandomAudioPlayer.SpellClips);
+                RandomAudioPlayer.PlayRandomClip(RandomAudioPlayer.SpellClips);
+                firstAttackFix = false;
             } //tu + test2 - if (isProcessing)
-            //else
+            else
+                firstAttackFix = true;
             //RandomAudioPlayer.PlayRandomClip(RandomAudioPlayer.AttackClips);
 
 
-            SkillMenagerScript.ClickRoutine(AnimationTriggerName, AnimationClip);
+            SkillMenagerScript.ClickRoutine(AnimationTriggerName, AnimationClip, firstAttackFix);
             return true;
         }
     }
