@@ -21,7 +21,8 @@ public class SpellCooldown : MonoBehaviour
     public AnimationClip AnimationClip;
     public Test_2 SkillMenagerScript;
     public bool IgnoreCooldown = false;
-
+    public RandomAudioPlayer RandomAudioPlayer;
+    bool firstAttackFix = false; //at this point i dont know
 
 
     // Start is called before the first frame update
@@ -45,6 +46,7 @@ public class SpellCooldown : MonoBehaviour
         }
         else if (Input.GetKeyUp(AbilityKey) && SkillMenagerScript.isAgentNotMoving() && IgnoreCooldown)
             MakeSpell();
+            //UseSpell();
 
         if (isCoolDown && !IgnoreCooldown)
         {
@@ -69,7 +71,7 @@ public class SpellCooldown : MonoBehaviour
 
     }
 
-    public bool UseSpell()
+    public bool UseSpell() // 1-4 attacks
     {
 
         if (isCoolDown)
@@ -86,8 +88,15 @@ public class SpellCooldown : MonoBehaviour
                 cooldownTimer = cooldownTime;
                 textCooldown.text = Mathf.RoundToInt(cooldownTimer).ToString();
                 imageCooldown.fillAmount = 1.0f;
-            }
-            SkillMenagerScript.ClickRoutine(AnimationTriggerName, AnimationClip);
+                RandomAudioPlayer.PlayRandomClip(RandomAudioPlayer.SpellClips);
+                firstAttackFix = false;
+            } //tu + test2 - if (isProcessing)
+            else
+                firstAttackFix = true;
+            //RandomAudioPlayer.PlayRandomClip(RandomAudioPlayer.AttackClips);
+
+
+            SkillMenagerScript.ClickRoutine(AnimationTriggerName, AnimationClip, firstAttackFix);
             return true;
         }
     }
@@ -105,7 +114,7 @@ public class SpellCooldown : MonoBehaviour
         }
         else
         {
-            SkillMenagerScript.ClickRoutine(AnimationTriggerName, AnimationClip);
+            SkillMenagerScript.ClickRoutine(AnimationTriggerName, AnimationClip, true);
         }
     }
 }

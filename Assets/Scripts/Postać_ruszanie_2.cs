@@ -2,7 +2,6 @@ using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
-using System.Collections;
 
 public class Postać_ruszanie_2 : MonoBehaviour
 {
@@ -44,32 +43,16 @@ public class Postać_ruszanie_2 : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetMouseButtonDown(0) && !EventSystem.current.IsPointerOverGameObject() && test.IsSpellOver)
+        if (!EventSystem.current.IsPointerOverGameObject() && test.IsSpellOver)
         {
-            ClickToMove();
-        }
-
-        if (Input.GetMouseButton(0) && !EventSystem.current.IsPointerOverGameObject() && test.IsSpellOver)
-        {
-            ContinuousMove();
+            if (Input.GetMouseButton(0)) // Zamiast GetMouseButtonDown użyj GetMouseButton, aby kontynuować podczas trzymania przycisku.
+            {
+                ContinuousMove();
+            }
         }
 
         FaceTarget();
         SetAnimations();
-    }
-
-    void ClickToMove()
-    {
-        if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit, 100, clickableLayers))
-        {
-            agent.destination = hit.point;
-
-            if (clickEffectObj != null)
-            {
-                Destroy(clickEffectInstance);
-                clickEffectInstance = Instantiate(clickEffectObj, hit.point + new Vector3(0, 0.1f, 0), particletransform.rotation);
-            }
-        }
     }
 
     void ContinuousMove()
@@ -88,7 +71,7 @@ public class Postać_ruszanie_2 : MonoBehaviour
 
     void FaceTarget()
     {
-        if (agent.destination == transform.position) return;
+        if (agent.pathPending || agent.remainingDistance <= agent.stoppingDistance) return;
 
         Vector3 direction = (agent.destination - transform.position).normalized;
         Quaternion lookRotation = Quaternion.LookRotation(new Vector3(direction.x, 0, direction.z));
@@ -97,7 +80,7 @@ public class Postać_ruszanie_2 : MonoBehaviour
 
     void SetAnimations()
     {
-        if (agent.velocity != Vector3.zero)
+        if (agent.velocity.sqrMagnitude > 0.1f) // Użyj sqrMagnitude dla wydajności
         {
             animator.SetBool("walk", true);
         }

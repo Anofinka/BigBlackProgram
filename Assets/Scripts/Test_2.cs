@@ -13,70 +13,57 @@ public class Test_2 : MonoBehaviour
     public float clickduration = 0.3f;
     [Header("Animacje atakow")]
     public AnimationClip Attack1;
+    public AnimationClip Attack2;
     [HideInInspector]
     public bool IsSpellOver = true;
+    public RandomAudioPlayer RandomAudioPlayer;
+
+    private bool isProcessing = false;
 
     void Start()
     {
         Mieczorcolid.enabled = false;
         characterAnimator = character.GetComponent<Animator>();
         agent = character.GetComponent<NavMeshAgent>();
-
     }
 
-/*    void Update()
-    {
-        //AnimationAsk();
-    }*/
     IEnumerator OnShotRoutine(string nameZ, float timeZ)
     {
-
         characterAnimator.SetBool(nameZ, true);
-        //Debug.Log("on");
         yield return new WaitForSeconds(timeZ);
         characterAnimator.SetBool(nameZ, false);
-        // Po zakoñczeniu coroutine usuñ j¹ z listy
-        //Debug.Log("off");
         if (activeCoroutines.ContainsKey(nameZ))
         {
             activeCoroutines.Remove(nameZ);
         }
-
     }
 
     IEnumerator AttackTimer(string nameZ, AnimationClip anim)
     {
         float timeZ = anim.length + 0.1f;
-        //Debug.Log(timeZ);
         odwrocsie();
         IsSpellOver = false;
         Mieczorcolid.enabled = true;
         yield return new WaitForSeconds(timeZ);
         Mieczorcolid.enabled = false;
         IsSpellOver = true;
-
-        // Po zakoñczeniu coroutine usuñ j¹ z listy
         if (activeCoroutines.ContainsKey(nameZ))
         {
             activeCoroutines.Remove(nameZ);
         }
     }
+
     void odwrocsie()
     {
         if (IsSpellOver)
         {
-
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             RaycastHit hit;
-
-            // SprawdŸ, czy promieñ z myszy trafia w NavMesh
             if (Physics.Raycast(ray, out hit))
             {
-                // Pobierz pozycjê na NavMeshu najbli¿sz¹ punktowi trafienia
                 NavMeshHit navHit;
                 if (NavMesh.SamplePosition(hit.point, out navHit, 100f, NavMesh.AllAreas))
                 {
-                    // Obróæ postaæ w kierunku punktu na NavMeshu
                     Vector3 lookDirection = navHit.position - character.transform.position;
                     if (lookDirection != Vector3.zero)
                     {
@@ -86,35 +73,74 @@ public class Test_2 : MonoBehaviour
             }
         }
     }
-    public void StartOrRestartCoroutine(string paramName, AnimationClip anim)
+
+    IEnumerator AnimationSequence(string paramName, AnimationClip anim)
     {
-        // Dodaj sufiks do kluczy dla ró¿nych coroutine
+        //while (characterAnimator.GetBool(paramName))
+        {
+
+        if (characterAnimator.GetBool(paramName))
+        {
+            Debug.Log("First Debug");
+            RandomAudioPlayer.PlayRandomClip(RandomAudioPlayer.AttackClips);
+            yield return new WaitForSeconds(Attack1.length);
+        }
+
+        if (characterAnimator.GetBool(paramName))
+        {
+            Debug.Log("Second Debug");
+            RandomAudioPlayer.PlayRandomClip(RandomAudioPlayer.AttackClips);
+            yield return new WaitForSeconds(Attack2.length - 0.05f);
+        }
+        }
+
+        isProcessing = false; // Reset flag after completion
+    }
+
+    public void StartOrRestartCoroutine(string paramName, AnimationClip anim, bool ignoreOn = false)
+    {
         string attackTimerCoroutineKey = paramName + "_AttackTimer";
         string onShotCoroutineKey = paramName + "_OnShot";
-
-        // Jeœli coroutine dla danego klucza ju¿ istnieje, zatrzymaj j¹ i usuñ z listy
+        string animationSequenceKey = paramName + "_AnimationSequence";
 
         if (activeCoroutines.ContainsKey(onShotCoroutineKey))
         {
             StopCoroutine(activeCoroutines[onShotCoroutineKey]);
             activeCoroutines.Remove(onShotCoroutineKey);
         }
-        // Dodaj coroutine z odpowiednimi kluczami
+
         Coroutine onShotCoroutine = StartCoroutine(OnShotRoutine(paramName, clickduration));
         activeCoroutines.Add(onShotCoroutineKey, onShotCoroutine);
 
-            if (activeCoroutines.ContainsKey(attackTimerCoroutineKey))
-            {
-                StopCoroutine(activeCoroutines[attackTimerCoroutineKey]);
-                activeCoroutines.Remove(attackTimerCoroutineKey);
-            }
+        if (activeCoroutines.ContainsKey(attackTimerCoroutineKey))
+        {
+            StopCoroutine(activeCoroutines[attackTimerCoroutineKey]);
+            activeCoroutines.Remove(attackTimerCoroutineKey);
+        }
 
-            Coroutine attackTimerCoroutine = StartCoroutine(AttackTimer(paramName, anim));
-            activeCoroutines.Add(attackTimerCoroutineKey, attackTimerCoroutine);
+        Coroutine attackTimerCoroutine = StartCoroutine(AttackTimer(paramName, anim));
+        activeCoroutines.Add(attackTimerCoroutineKey, attackTimerCoroutine);
+
+
+        if (isProcessing)
+            return;
+        else if (ignoreOn)
+        {
+        isProcessing = true; // Set flag to true to prevent re-entry
+        if (activeCoroutines.ContainsKey(animationSequenceKey))
+        {
+            StopCoroutine(activeCoroutines[animationSequenceKey]);
+            activeCoroutines.Remove(animationSequenceKey);
+        }
+
+        Coroutine animationSequenceCoroutine = StartCoroutine(AnimationSequence(paramName, anim));
+        activeCoroutines.Add(animationSequenceKey, animationSequenceCoroutine);
+        }
     }
-    public void ClickRoutine(string name, AnimationClip anim)
+
+    public void ClickRoutine(string name, AnimationClip anim, bool ignoreOn = false)
     {
-        StartOrRestartCoroutine(name, anim);
+        StartOrRestartCoroutine(name, anim, ignoreOn);
     }
 
     public bool isAgentNotMoving()
@@ -123,5 +149,7 @@ public class Test_2 : MonoBehaviour
     }
 
     public void AgentStop()
-    { agent.ResetPath(); }
+    {
+        agent.ResetPath();
+    }
 }
