@@ -14,6 +14,7 @@ public class EnemyAttributes : MonoBehaviour
     public float maxHealth;
     private float currentHealth;
     public int EnemyLevel = 1;
+    private float Strength;
     public List<DropItem> dropItems; // Lista przedmiotów, które mogą być upuszczane wraz z ich szansą na upuszczenie
     public float dropRadius = 2f; // Promień, w jakim mogą być rozmieszczone upuszczone przedmioty
     public float dropHeight = 0.5f; // Wysokość nad podłożem, na której będą spawnowane przedmioty
@@ -21,14 +22,16 @@ public class EnemyAttributes : MonoBehaviour
     public int expReward = 100; // Nagroda za doświadczenie, którą gracz otrzyma po zabiciu wroga
 
     private CharacterStats playerStats; // Referencja do skryptu CharacterStats gracza
-    private MusicChanger musicChanger;
     //private EnemyController EnemyController;
-    //private GameObject SavedStopObstacle;
-    
-
+    private GameObject SavedStopObstacle;
+    private MusicChanger musicChanger;
     public float GetHP() { return currentHealth; }
     public string GetName() { return enemyName; }
-    public int GetLevel() {if (EnemyLevel < 1) EnemyLevel = 1;    return EnemyLevel;}
+    public int GetLevel()
+    {
+        if (EnemyLevel < 1) EnemyLevel = 1;
+        return EnemyLevel;
+    }
 
     void Start()
     {
@@ -36,16 +39,15 @@ public class EnemyAttributes : MonoBehaviour
         currentHealth = maxHealth = (maxHealth * (1 + EnemyLevel / 8));
         playerStats = FindObjectOfType<CharacterStats>(); // Znajdujemy CharacterStats na obiekcie gracza za pomocą FindObjectOfType
         //EnemyController = GetComponentInChildren<EnemyController>();
-        /*if (GetComponentInChildren<EnemyController>() != null )*/
-/*        {
         SavedStopObstacle = GetComponentInChildren<EnemyController>().gameObject; //pozniej zfixuje
-        }*/
         //Debug.Log();
     }
 
     public void TakeDamage(float damage)
     {
         currentHealth -= damage;
+
+        RandomAudioMonster.Instance.PlayRandomDamageClip();
 
         if (currentHealth <= 0)
         {
@@ -55,12 +57,11 @@ public class EnemyAttributes : MonoBehaviour
 
     void Die()
     {
-        //Destroy(SavedStopObstacle);
+        // Usuń przeciwnika
         Destroy(gameObject);
-
+        //Debug.Log(EnemyController.gameObject.name);
         musicChanger.MusicEnemyGone();
-       //Debug.Log(musicChanger.enemyCount);
-
+        Destroy(SavedStopObstacle);
         //EnemyController.DestroyStopObstacle();
         // Lista przechowująca już wygenerowane pozycje przedmiotów
         List<Vector3> occupiedPositions = new List<Vector3>();
@@ -88,12 +89,12 @@ public class EnemyAttributes : MonoBehaviour
         }
     }
 
-/*    int CalculateExpReward()
+    int CalculateExpReward()
     {
         // Tutaj możesz zaimplementować własną logikę obliczania nagrody za doświadczenie
         // Na przykład, możesz zwrócić stałą wartość, lub obliczyć ją na podstawie poziomu wroga, etc.
         return expReward; // Zwracamy zmienną expReward jako nagrodę za doświadczenie
-    }*/
+    }
 
     Vector3 GetRandomPosition(Vector3 center, List<Vector3> occupiedPositions)
     {

@@ -21,6 +21,8 @@ public class SpellCooldown : MonoBehaviour
     public AnimationClip AnimationClip;
     public Test_2 SkillMenagerScript;
     public bool IgnoreCooldown = false;
+    public RandomAudioPlayer RandomAudioPlayer;
+    bool firstAttackFix = false;
 
 
 
@@ -86,8 +88,14 @@ public class SpellCooldown : MonoBehaviour
                 cooldownTimer = cooldownTime;
                 textCooldown.text = Mathf.RoundToInt(cooldownTimer).ToString();
                 imageCooldown.fillAmount = 1.0f;
+                RandomAudioPlayer.PlayRandomClip(RandomAudioPlayer.SpellClips);
+                firstAttackFix = false;
             }
-            SkillMenagerScript.ClickRoutine(AnimationTriggerName, AnimationClip);
+            else
+                firstAttackFix = true;
+
+
+            SkillMenagerScript.ClickRoutine(AnimationTriggerName, AnimationClip, firstAttackFix);
             return true;
         }
     }
@@ -105,7 +113,7 @@ public class SpellCooldown : MonoBehaviour
         }
         else
         {
-            SkillMenagerScript.ClickRoutine(AnimationTriggerName, AnimationClip);
+            SkillMenagerScript.ClickRoutine(AnimationTriggerName, AnimationClip, true);
         }
     }
 }
