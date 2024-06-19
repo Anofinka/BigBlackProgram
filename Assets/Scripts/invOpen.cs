@@ -17,7 +17,7 @@ public class InventoryOpener : MonoBehaviour
         }
     }
 
-    void ToggleInventory()
+    public void ToggleInventory()
     {
         //inventoryUI.SetActive(!inventoryUI.activeSelf);
 
