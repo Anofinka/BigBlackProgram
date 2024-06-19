@@ -24,6 +24,7 @@ public class EnemyAttributes : MonoBehaviour
     private CharacterStats playerStats; // Referencja do skryptu CharacterStats gracza
     //private EnemyController EnemyController;
     private GameObject SavedStopObstacle;
+    private MusicChanger musicChanger;
     public float GetHP() { return currentHealth; }
     public string GetName() { return enemyName; }
     public int GetLevel()
@@ -34,6 +35,7 @@ public class EnemyAttributes : MonoBehaviour
 
     void Start()
     {
+        musicChanger = GameObject.FindGameObjectWithTag("Player").GetComponentInChildren<MusicChanger>();
         currentHealth = maxHealth = (maxHealth * (1 + EnemyLevel / 8));
         playerStats = FindObjectOfType<CharacterStats>(); // Znajdujemy CharacterStats na obiekcie gracza za pomocą FindObjectOfType
         //EnemyController = GetComponentInChildren<EnemyController>();
@@ -58,6 +60,7 @@ public class EnemyAttributes : MonoBehaviour
         // Usuń przeciwnika
         Destroy(gameObject);
         //Debug.Log(EnemyController.gameObject.name);
+        musicChanger.MusicEnemyGone();
         Destroy(SavedStopObstacle);
         //EnemyController.DestroyStopObstacle();
         // Lista przechowująca już wygenerowane pozycje przedmiotów

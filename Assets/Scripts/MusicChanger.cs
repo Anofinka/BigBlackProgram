@@ -12,6 +12,7 @@ public class MusicChanger : MonoBehaviour
     public float WalkExitTime = 0.2f;
     public AudioSource Footsteps;
     public NavMeshAgent agent;
+    public float detectionRadius = 5.0f; // Radius to detect enemies
 
     private int enemyCount = 0;
     private Coroutine transitionCoroutine;
@@ -35,29 +36,41 @@ public class MusicChanger : MonoBehaviour
             enemyCount = 0;
         }
 
+        // Check for enemies within detection radius
+        CheckForEnemies();
+
         if (agent.velocity != Vector3.zero)
         {
             isWalking();
         }
         else
-            IsNotWalking();
-
-    }
-
-    void OnTriggerEnter(Collider other)
-    {
-        if (other.CompareTag("enemy"))
         {
-            enemyCount++;
-            UpdateMusic(true);
+            IsNotWalking();
         }
     }
 
-    void OnTriggerExit(Collider other)
+    private void CheckForEnemies()
     {
-        if (other.CompareTag("enemy"))
+        Collider[] hitColliders = Physics.OverlapSphere(transform.position, detectionRadius);
+        int currentEnemyCount = 0;
+
+        foreach (var hitCollider in hitColliders)
         {
-            MusicEnemyGone();
+            if (hitCollider.CompareTag("enemy"))
+            {
+                currentEnemyCount++;
+            }
+        }
+
+        if (currentEnemyCount > enemyCount)
+        {
+            enemyCount = currentEnemyCount;
+            UpdateMusic(true);
+        }
+        else if (currentEnemyCount < enemyCount)
+        {
+            enemyCount = currentEnemyCount;
+            UpdateMusic(false);
         }
     }
 
@@ -116,17 +129,16 @@ public class MusicChanger : MonoBehaviour
 
     public void MusicEnemyGone()
     {
-        enemyCount--;
         UpdateMusic(false);
     }
 
     public void isWalking()
     {
-            if (footstepsCoroutine != null)
-            {
-                StopCoroutine(footstepsCoroutine);
-            }
-            footstepsCoroutine = StartCoroutine(FadeFootsteps(Footsteps, 1, WalkEnterTime)); // Fade in footsteps
+        if (footstepsCoroutine != null)
+        {
+            StopCoroutine(footstepsCoroutine);
+        }
+        footstepsCoroutine = StartCoroutine(FadeFootsteps(Footsteps, 1, WalkEnterTime)); // Fade in footsteps
     }
 
     public void IsNotWalking()
@@ -136,5 +148,12 @@ public class MusicChanger : MonoBehaviour
             StopCoroutine(footstepsCoroutine);
         }
         footstepsCoroutine = StartCoroutine(FadeFootsteps(Footsteps, 0, WalkExitTime)); // Fade out footsteps
+    }
+
+    // Draw the detection radius in the editor
+    private void OnDrawGizmosSelected()
+    {
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(transform.position, detectionRadius);
     }
 }

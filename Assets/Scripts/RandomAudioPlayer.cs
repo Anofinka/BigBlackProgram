@@ -19,7 +19,7 @@ public class RandomAudioPlayer : MonoBehaviour
             int randomIndex = Random.Range(0, AttackClips.Length);
             audioSource.clip = AttackClips[randomIndex];
             audioSource.Play();
-            Debug.Log("playin: " + audioSource.clip.name);
+            //Debug.Log("playin: " + audioSource.clip.name);
         }
         else
         {
