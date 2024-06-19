@@ -105,7 +105,7 @@ public class SpellCooldown : MonoBehaviour
         }
         else
         {
-            SkillMenagerScript.ClickRoutine(AnimationTriggerName, AnimationClip);
+            SkillMenagerScript.ClickRoutine(AnimationTriggerName, AnimationClip, true);
         }
     }
 }

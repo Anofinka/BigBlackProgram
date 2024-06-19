@@ -45,6 +45,8 @@ public class EnemyAttributes : MonoBehaviour
     {
         currentHealth -= damage;
 
+        RandomAudioMonster.Instance.PlayRandomDamageClip();
+
         if (currentHealth <= 0)
         {
             Die();
