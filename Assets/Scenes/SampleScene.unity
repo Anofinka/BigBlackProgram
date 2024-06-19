@@ -14766,6 +14766,10 @@ PrefabInstance:
     m_TransformParent: {fileID: 959754885}
     m_Modifications:
     - target: {fileID: 165703894473288011, guid: 4db87e4a545700b438289d22bf70743d, type: 3}
+      propertyPath: CharacterStats
+      value: 
+      objectReference: {fileID: 348241680}
+    - target: {fileID: 165703894473288011, guid: 4db87e4a545700b438289d22bf70743d, type: 3}
       propertyPath: RandomAudioPlayer
       value: 
       objectReference: {fileID: 9124955661025804761}
@@ -14866,6 +14870,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5072447556808729407, guid: 4db87e4a545700b438289d22bf70743d, type: 3}
+      propertyPath: CharacterStats
+      value: 
+      objectReference: {fileID: 348241680}
+    - target: {fileID: 5072447556808729407, guid: 4db87e4a545700b438289d22bf70743d, type: 3}
       propertyPath: RandomAudioPlayer
       value: 
       objectReference: {fileID: 9124955661025804761}
@@ -14882,6 +14890,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8485763631949229716, guid: 4db87e4a545700b438289d22bf70743d, type: 3}
+      propertyPath: CharacterStats
+      value: 
+      objectReference: {fileID: 348241680}
+    - target: {fileID: 8485763631949229716, guid: 4db87e4a545700b438289d22bf70743d, type: 3}
       propertyPath: RandomAudioPlayer
       value: 
       objectReference: {fileID: 9124955661025804761}
@@ -14889,6 +14901,10 @@ PrefabInstance:
       propertyPath: SkillMenagerScript
       value: 
       objectReference: {fileID: 1819005625}
+    - target: {fileID: 8772092219633397730, guid: 4db87e4a545700b438289d22bf70743d, type: 3}
+      propertyPath: CharacterStats
+      value: 
+      objectReference: {fileID: 348241680}
     - target: {fileID: 8772092219633397730, guid: 4db87e4a545700b438289d22bf70743d, type: 3}
       propertyPath: RandomAudioPlayer
       value: 
@@ -112604,7 +112620,7 @@ AudioSource:
   m_Resource: {fileID: 8300000, guid: afc81148cf88b3c48bfbd59d42bdfa91, type: 3}
   m_PlayOnAwake: 0
   m_Volume: 1
-  m_Pitch: 1
+  m_Pitch: 0.56
   Loop: 1
   Mute: 0
   Spatialize: 0

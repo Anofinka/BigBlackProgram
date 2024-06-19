@@ -22,7 +22,9 @@ public class SpellCooldown : MonoBehaviour
     public Test_2 SkillMenagerScript;
     public bool IgnoreCooldown = false;
     public RandomAudioPlayer RandomAudioPlayer;
+    public CharacterStats CharacterStats;
     bool firstAttackFix = false;
+    private int healamount = 40;
 
 
 
@@ -90,6 +92,11 @@ public class SpellCooldown : MonoBehaviour
                 imageCooldown.fillAmount = 1.0f;
                 RandomAudioPlayer.PlayRandomClip(RandomAudioPlayer.SpellClips);
                 firstAttackFix = false;
+                if (AbilityKey == KeyCode.Alpha4)
+                {
+                    CharacterStats.Heal(healamount);
+                 
+                }
             }
             else
                 firstAttackFix = true;
