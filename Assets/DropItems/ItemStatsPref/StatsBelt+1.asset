@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4f01cccb2c080ea45b4d365239347695, type: 3}
   m_Name: StatsBelt+1
   m_EditorClassIdentifier: 
-  sprite: {fileID: 21300000, guid: c35dcbf36f80e6e42a59207e19f9d018, type: 3}
+  sprite: {fileID: 21300000, guid: a9a73d5e0b4dfb5458b645ccb6382299, type: 3}
   itemTag: 8
   meshItem: {fileID: 0}
   armorMin: 10

@@ -12,11 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4f01cccb2c080ea45b4d365239347695, type: 3}
   m_Name: StatsGlove+2
   m_EditorClassIdentifier: 
-  sprite: {fileID: 0}
+  sprite: {fileID: 21300000, guid: c934a695880d5c8408520c24893c3b5f, type: 3}
   itemTag: 10
   meshItem: {fileID: 0}
   armorMin: 30
-  armor: 30
+  armor: 33
   armorMax: 40
   damageMin: 0
   damage: 0
