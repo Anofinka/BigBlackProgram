@@ -51,7 +51,7 @@ public class CharacterStats : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Space))
+/*        if (Input.GetKeyDown(KeyCode.Space))
         {
             AddExperience(20);
             UpdateSlider();
@@ -72,7 +72,7 @@ public class CharacterStats : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.U))
         {
             TakeMana(5);
-        }
+        }*/
         LvlText.text = $"{PlayerLevel}";
 
         StatsText2.text = $"<color=#D9BA8C><b>Experience</b></color>\n";
