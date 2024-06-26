@@ -20,7 +20,7 @@ MonoBehaviour:
   armorMax: 0
   damageMin: 8
   damage: 8
-  damageMax: 21
+  damageMax: 16
   name: Sword of mercenary
   requiredStrength: 0
   requiredDexterity: 0

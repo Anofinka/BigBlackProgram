@@ -191,7 +191,7 @@ public class CharacterStats : MonoBehaviour
         }
     }
 
-    private void ResetLevel()
+    public void ResetLevel()
     {
         Debug.Log("ResetLevel called.");
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);

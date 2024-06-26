@@ -18,9 +18,9 @@ MonoBehaviour:
   armorMin: 0
   armor: 0
   armorMax: 0
-  damageMin: 41
-  damage: 44
-  damageMax: 55
+  damageMin: 40
+  damage: 47
+  damageMax: 70
   name: Blade of the Dragon
   requiredStrength: 0
   requiredDexterity: 0

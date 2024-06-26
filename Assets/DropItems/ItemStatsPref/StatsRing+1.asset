@@ -19,7 +19,7 @@ MonoBehaviour:
   armor: 10
   armorMax: 15
   damageMin: 5
-  damage: 0
+  damage: 1
   damageMax: 10
   name: Ring of Greater Power
   requiredStrength: 0

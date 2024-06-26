@@ -30,15 +30,8 @@ public class ToggleCanvas : MonoBehaviour
             isCanvasActive = !isCanvasActive; // Prze³¹cza stan
             canvas.SetActive(isCanvasActive); // Ustawia stan aktywnoœci Canvas
 
-            if (isCanvasActive)
-            {
-                Time.timeScale = 0; // Zatrzymuje up³yw czasu
-            }
-            else
-            {
-                Time.timeScale = 1; // Wznawia up³yw czasu
-            }
         }
+    
         else
         {
             Debug.LogWarning("Canvas not assigned!");
@@ -53,7 +46,7 @@ public class ToggleCanvas : MonoBehaviour
         {
             canvas.SetActive(false);
             isCanvasActive = false;
-            Time.timeScale = 1;
+           
         }
         else
         {
