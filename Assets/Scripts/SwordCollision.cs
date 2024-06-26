@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class SwordCollision : MonoBehaviour
 {
-    public float baseDamage = 0.5f; // Podstawowe obra¿enia miecza
+    public float baseDamage = 2f; // Podstawowe obra¿enia miecza
     public float scalingFactor = 0.05f; // Wspó³czynnik skalowania obra¿eñ w zale¿noœci od si³y
 
     private void OnTriggerEnter(Collider other)
