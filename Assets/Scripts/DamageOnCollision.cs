@@ -3,32 +3,38 @@ using UnityEngine;
 
 public class DamageOnCollision : MonoBehaviour
 {
-    //public CharacterStats CharacterStats;
-    public int damage = 10;
-    public float cooldownTime = 0.5f; // Cooldown time in seconds
-    private bool isCooldown = false;  // To track if cooldown is active
+    public int baseDamage = 10; // Podstawowe obra¿enia
+    public float cooldownTime = 0.5f; // Czas odnowienia w sekundach
+    private float armorReductionFactor = 0.02f; // Wspó³czynnik redukcji obra¿eñ na jednostkê pancerza
+    private bool isCooldown = false; // Flaga okreœlaj¹ca aktywnoœæ odnowienia
 
     void OnTriggerEnter(Collider other)
     {
+        if (other.CompareTag("Player") && !isCooldown)
         {
-            if (other.CompareTag("Player") && !isCooldown)
+            CharacterStats playerStats = other.GetComponent<CharacterStats>();
+            if (playerStats != null)
             {
-                CharacterStats playerStats = other.GetComponent<CharacterStats>();
-                if (playerStats != null)
-                {
-                    playerStats.currentHealth -= damage;
-                    playerStats.UpdateSlider();
-
-                    StartCoroutine(Cooldown());
-                }
+                int finalDamage = CalculateDamage(baseDamage, playerStats.armor, armorReductionFactor);
+                playerStats.currentHealth -= finalDamage;
+                playerStats.UpdateSlider();
+                Debug.Log($"Player received {finalDamage} damage.");
+                StartCoroutine(Cooldown());
             }
         }
     }
 
+    int CalculateDamage(int baseDamage, float armor, float reductionFactor)
+    {
+        // Obliczanie ostatecznych obra¿eñ z uwzglêdnieniem pancerza i wspó³czynnika redukcji
+        float damageAfterArmor = baseDamage - armor * reductionFactor;
+        return Mathf.RoundToInt(damageAfterArmor);
+    }
+
     IEnumerator Cooldown()
     {
-        isCooldown = true;  // Start cooldown
-        yield return new WaitForSeconds(cooldownTime);  // Wait for the cooldown time
-        isCooldown = false;  // End cooldown
+        isCooldown = true;
+        yield return new WaitForSeconds(cooldownTime);
+        isCooldown = false;
     }
 }

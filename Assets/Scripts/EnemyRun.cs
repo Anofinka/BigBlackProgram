@@ -8,81 +8,103 @@ public class Enemy : MonoBehaviour
     [SerializeField] GameObject ragdoll;
 
     [Header("Combat")]
-    [SerializeField] float attackCD;
-    [SerializeField] float attackRange;
-    [SerializeField] float aggroRange;
+    [SerializeField] float attackCD = 1f; // Czas odnowienia ataku
+    [SerializeField] float attackRange = 2f; // Zasięg ataku
+    [SerializeField] float aggroRange = 10f; // Zasięg agro
 
     GameObject player;
     NavMeshAgent agent;
     Animator animator;
     float timePassed;
     float newDestinationCD = 0.5f;
-
-
-    //bool isAttacking = false; // Flaga okre�laj�ca, czy wrogowie wykonuj� atak
-    float originalAgentSpeed; // Zmienna przechowuj�ca oryginaln� pr�dko�� agenta
+    float originalAgentSpeed;
 
     void Start()
     {
         agent = GetComponent<NavMeshAgent>();
-        
         player = GameObject.FindGameObjectWithTag("Player");
         animator = GetComponent<Animator>();
-        // Zapisz oryginaln� pr�dko�� agenta
         originalAgentSpeed = agent.speed;
+
+        // Sprawdzamy, czy AnimatorController jest przypisany do Animatora
+        if (animator.runtimeAnimatorController == null)
+        {
+            Debug.LogError("AnimatorController is not assigned to the Animator on " + gameObject.name);
+        }
+
+        // Debugowanie
+        if (player == null)
+        {
+            Debug.LogError("Player not found. Make sure the player object has the tag 'Player'.");
+        }
     }
 
     void Update()
     {
-        agent.speed = originalAgentSpeed;
         if (player == null)
         {
             return;
         }
 
-        if (timePassed >= attackCD)
-        {
-            if (Vector3.Distance(player.transform.position, transform.position) <= attackRange)
-            {
-                animator.SetTrigger("attack");
-                //isAttacking = true; // Ustaw flag� ataku na true
-                agent.speed = 0; // Zatrzymaj agenta podczas ataku
-            }
-        }
+        float distanceToPlayer = Vector3.Distance(player.transform.position, transform.position);
         timePassed += Time.deltaTime;
 
-        if (newDestinationCD <= 0 && Vector3.Distance(player.transform.position, transform.position) <= aggroRange)
+        // Atakowanie gracza
+        if (timePassed >= attackCD && distanceToPlayer <= attackRange)
         {
-            
-            newDestinationCD = 0.5f;
-            if (agent.isActiveAndEnabled)
-                agent.SetDestination(player.transform.position);
+            if (animator != null && animator.runtimeAnimatorController != null)
+            {
+                animator.SetTrigger("attack");
+                agent.speed = 0; // Zatrzymanie agenta podczas ataku
+            }
+            timePassed = 0;
         }
-        newDestinationCD -= Time.deltaTime;
-        transform.LookAt(player.transform);
+        else
+        {
+            // Podążanie za graczem, jeśli znajduje się w zasięgu agro
+            if (distanceToPlayer <= aggroRange)
+            {
+                if (newDestinationCD <= 0)
+                {
+                    if (agent.isActiveAndEnabled)
+                    {
+                        agent.SetDestination(player.transform.position);
+                    }
+                    newDestinationCD = 0.5f;
+                }
+
+                newDestinationCD -= Time.deltaTime;
+            }
+
+            agent.speed = originalAgentSpeed;
+        }
+
+        // Obracanie w kierunku gracza
+        if (distanceToPlayer <= aggroRange)
+        {
+            Vector3 directionToPlayer = (player.transform.position - transform.position).normalized;
+            Quaternion lookRotation = Quaternion.LookRotation(new Vector3(directionToPlayer.x, 0, directionToPlayer.z));
+            transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * 5f);
+        }
 
         SetAnimations();
     }
 
-    private void OnCollisionEnter(Collision collision)
+    void SetAnimations()
     {
-        if (collision.gameObject.CompareTag("Player"))
+        if (animator != null && animator.runtimeAnimatorController != null)
         {
-            print(true);
-            player = collision.gameObject;
+            animator.SetBool("walk", agent.velocity.magnitude > 0.1f);
         }
-    }
-
-    void Die()
-    {
-        Instantiate(ragdoll, transform.position, transform.rotation);
-        Destroy(this.gameObject);
     }
 
     public void TakeDamage(float damageAmount)
     {
         health -= damageAmount;
-        animator.SetTrigger("damage");
+        if (animator != null && animator.runtimeAnimatorController != null)
+        {
+            animator.SetTrigger("damage");
+        }
 
         if (health <= 0)
         {
@@ -90,11 +112,16 @@ public class Enemy : MonoBehaviour
         }
     }
 
+    void Die()
+    {
+        Instantiate(ragdoll, transform.position, transform.rotation);
+        Destroy(gameObject);
+    }
+
     public void AttackAnimationEnd()
     {
-        //isAttacking = false; // Po zako�czeniu animacji ataku ustaw flag� ataku na false
-        agent.speed = originalAgentSpeed; // Przywr�� normaln� pr�dko�� agenta
-        agent.velocity = Vector3.zero; // Zatrzymaj agenta po zako�czeniu animacji ataku
+        agent.speed = originalAgentSpeed;
+        agent.velocity = Vector3.zero;
     }
 
     public void HitVFX(Vector3 hitPosition)
@@ -109,17 +136,5 @@ public class Enemy : MonoBehaviour
         Gizmos.DrawWireSphere(transform.position, attackRange);
         Gizmos.color = Color.yellow;
         Gizmos.DrawWireSphere(transform.position, aggroRange);
-    }
-
-    void SetAnimations()
-    {
-        if (agent.velocity != Vector3.zero)
-        {
-            animator.SetBool("walk", true);
-        }
-        else
-        {
-            animator.SetBool("walk", false);
-        }
     }
 }

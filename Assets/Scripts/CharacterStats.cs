@@ -148,8 +148,8 @@ public class CharacterStats : MonoBehaviour
         maxHealth = 100 + (PlayerLevel * 10);
         maxMana = 50 + (PlayerLevel * 5);
 
-        strength = 10 + (PlayerLevel * 2);
-        dexterity = 10 + (PlayerLevel * 2);
+        strength = strength +(PlayerLevel * 2);
+        dexterity = dexterity +  (PlayerLevel * 2);
 
         currentHealth = maxHealth;
         currentMana = maxMana;
