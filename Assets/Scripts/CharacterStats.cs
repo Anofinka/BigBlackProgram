@@ -51,7 +51,7 @@ public class CharacterStats : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Space))
+/*        if (Input.GetKeyDown(KeyCode.Space))
         {
             AddExperience(20);
             UpdateSlider();
@@ -72,7 +72,7 @@ public class CharacterStats : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.U))
         {
             TakeMana(5);
-        }
+        }*/
         LvlText.text = $"{PlayerLevel}";
 
         StatsText2.text = $"<color=#D9BA8C><b>Experience</b></color>\n";
@@ -148,8 +148,8 @@ public class CharacterStats : MonoBehaviour
         maxHealth = 100 + (PlayerLevel * 10);
         maxMana = 50 + (PlayerLevel * 5);
 
-        strength = 10 + (PlayerLevel * 2);
-        dexterity = 10 + (PlayerLevel * 2);
+        strength = strength +(PlayerLevel * 2);
+        dexterity = dexterity +  (PlayerLevel * 2);
 
         currentHealth = maxHealth;
         currentMana = maxMana;
@@ -191,7 +191,7 @@ public class CharacterStats : MonoBehaviour
         }
     }
 
-    private void ResetLevel()
+    public void ResetLevel()
     {
         Debug.Log("ResetLevel called.");
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);

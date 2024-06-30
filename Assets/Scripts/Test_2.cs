@@ -79,19 +79,19 @@ public class Test_2 : MonoBehaviour
         //while (characterAnimator.GetBool(paramName))
         {
 
-        if (characterAnimator.GetBool(paramName))
-        {
-            Debug.Log("First Debug");
-            RandomAudioPlayer.PlayRandomClip(RandomAudioPlayer.AttackClips);
-            yield return new WaitForSeconds(Attack1.length);
-        }
+            if (characterAnimator.GetBool(paramName))
+            {
+                //Debug.Log("First Debug");
+                RandomAudioPlayer.PlayRandomClip(RandomAudioPlayer.AttackClips);
+                yield return new WaitForSeconds(Attack1.length);
+            }
 
-        if (characterAnimator.GetBool(paramName))
-        {
-            Debug.Log("Second Debug");
-            RandomAudioPlayer.PlayRandomClip(RandomAudioPlayer.AttackClips);
-            yield return new WaitForSeconds(Attack2.length - 0.05f);
-        }
+            if (characterAnimator.GetBool(paramName))
+            {
+                //Debug.Log("Second Debug");
+                RandomAudioPlayer.PlayRandomClip(RandomAudioPlayer.AttackClips);
+                yield return new WaitForSeconds(Attack2.length - 0.05f);
+            }
         }
 
         isProcessing = false; // Reset flag after completion
@@ -126,15 +126,15 @@ public class Test_2 : MonoBehaviour
             return;
         else if (ignoreOn)
         {
-        isProcessing = true; // Set flag to true to prevent re-entry
-        if (activeCoroutines.ContainsKey(animationSequenceKey))
-        {
-            StopCoroutine(activeCoroutines[animationSequenceKey]);
-            activeCoroutines.Remove(animationSequenceKey);
-        }
+            isProcessing = true; // Set flag to true to prevent re-entry
+            if (activeCoroutines.ContainsKey(animationSequenceKey))
+            {
+                StopCoroutine(activeCoroutines[animationSequenceKey]);
+                activeCoroutines.Remove(animationSequenceKey);
+            }
 
-        Coroutine animationSequenceCoroutine = StartCoroutine(AnimationSequence(paramName, anim));
-        activeCoroutines.Add(animationSequenceKey, animationSequenceCoroutine);
+            Coroutine animationSequenceCoroutine = StartCoroutine(AnimationSequence(paramName, anim));
+            activeCoroutines.Add(animationSequenceKey, animationSequenceCoroutine);
         }
     }
 

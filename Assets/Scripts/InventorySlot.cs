@@ -19,7 +19,16 @@ public class InventorySlot : MonoBehaviour, IPointerClickHandler
             if(myTag != SlotTag.None && Inventory.carriedItem.myItem.itemTag != myTag) return;
             SetItem(Inventory.carriedItem);
         }
-    }
+        if (eventData.button == PointerEventData.InputButton.Right)
+        {
+            if (myItem != null)
+            {
+                Destroy(myItem.gameObject); // Usuwa przedmiot ze sceny
+                myItem = null; // Resetuje referencjê do przedmiotu w slocie
+                Inventory.carriedItem = null; // Resetuje przenoszony przedmiot
+            }
+        }
+    }   
 
     public void SetItem(InventoryItem item)
     {

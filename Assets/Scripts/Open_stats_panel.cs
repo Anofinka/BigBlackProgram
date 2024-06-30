@@ -17,7 +17,7 @@ public class Stats_opener : MonoBehaviour
         }
     }
 
-    void ToggleInventory2()
+    public void ToggleInventory2()
     {
         if (statsPanel.activeSelf)
         {

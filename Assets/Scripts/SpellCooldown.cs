@@ -22,7 +22,10 @@ public class SpellCooldown : MonoBehaviour
     public Test_2 SkillMenagerScript;
     public bool IgnoreCooldown = false;
     public RandomAudioPlayer RandomAudioPlayer;
-    bool firstAttackFix = false; //at this point i dont know
+    public CharacterStats CharacterStats;
+    bool firstAttackFix = false;
+    private int healamount = 40;
+
 
 
     // Start is called before the first frame update
@@ -46,7 +49,6 @@ public class SpellCooldown : MonoBehaviour
         }
         else if (Input.GetKeyUp(AbilityKey) && SkillMenagerScript.isAgentNotMoving() && IgnoreCooldown)
             MakeSpell();
-            //UseSpell();
 
         if (isCoolDown && !IgnoreCooldown)
         {
@@ -71,7 +73,7 @@ public class SpellCooldown : MonoBehaviour
 
     }
 
-    public bool UseSpell() // 1-4 attacks
+    public bool UseSpell()
     {
 
         if (isCoolDown)
@@ -90,10 +92,14 @@ public class SpellCooldown : MonoBehaviour
                 imageCooldown.fillAmount = 1.0f;
                 RandomAudioPlayer.PlayRandomClip(RandomAudioPlayer.SpellClips);
                 firstAttackFix = false;
-            } //tu + test2 - if (isProcessing)
+                if (AbilityKey == KeyCode.Alpha4)
+                {
+                    CharacterStats.Heal(healamount);
+                 
+                }
+            }
             else
                 firstAttackFix = true;
-            //RandomAudioPlayer.PlayRandomClip(RandomAudioPlayer.AttackClips);
 
 
             SkillMenagerScript.ClickRoutine(AnimationTriggerName, AnimationClip, firstAttackFix);
